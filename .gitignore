@@ -1,5 +1,6 @@
-﻿*.opendb
+﻿# ignore files and folders
+
 *.db
 *.suo
 *.opendb
-/build/Windows/vs14/vglyph/x64/Debug
+/build/Windows/vs14/vglyph/Debugx64/
