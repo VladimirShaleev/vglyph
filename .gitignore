@@ -3,4 +3,5 @@
 *.db
 *.suo
 *.opendb
-/build/Windows/vs14/vglyph/Debugx64/
+/build/Windows/vs14/Debug/x64
+/build/Windows/vs14/vglyph/Debug/x64
