@@ -9,6 +9,10 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>h;c;rc</Extensions>
     </Filter>
+    <Filter Include="sources\win32">
+      <UniqueIdentifier>{16535416-413e-4346-b8e8-42e3471a15a9}</UniqueIdentifier>
+      <Extensions>h;c;rc</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\vglyph.h">
@@ -28,5 +32,10 @@
     <ClCompile Include="..\..\..\..\sources\vglyph.c">
       <Filter>sources</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\..\sources\win32\vglyph.rc">
+      <Filter>sources\win32</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
