@@ -2,3 +2,4 @@
 *.db
 *.suo
 *.opendb
+/build/Windows/vs14/vglyph/x64/Debug
