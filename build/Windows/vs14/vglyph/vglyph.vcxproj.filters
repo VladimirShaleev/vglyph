@@ -10,4 +10,17 @@
       <Extensions>h;c;rc</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\include\vglyph.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\vglyph-config.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\sources\vglyph.c">
+      <Filter>sources</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>
