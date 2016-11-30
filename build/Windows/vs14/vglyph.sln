@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vglyph", "vglyph\vglyph.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vglyph-test", "vglyph-test\vglyph-test.vcxproj", "{D51E042E-4958-4AE3-AB98-B20F256E462C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vglyph-static", "vglyph-static\vglyph-static.vcxproj", "{82B8EB7F-81DB-48D4-89F2-6E73F3024526}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{D51E042E-4958-4AE3-AB98-B20F256E462C}.Release|x64.Build.0 = Release|x64
 		{D51E042E-4958-4AE3-AB98-B20F256E462C}.Release|x86.ActiveCfg = Release|Win32
 		{D51E042E-4958-4AE3-AB98-B20F256E462C}.Release|x86.Build.0 = Release|Win32
+		{82B8EB7F-81DB-48D4-89F2-6E73F3024526}.Debug|x64.ActiveCfg = Debug|x64
+		{82B8EB7F-81DB-48D4-89F2-6E73F3024526}.Debug|x64.Build.0 = Debug|x64
+		{82B8EB7F-81DB-48D4-89F2-6E73F3024526}.Debug|x86.ActiveCfg = Debug|Win32
+		{82B8EB7F-81DB-48D4-89F2-6E73F3024526}.Debug|x86.Build.0 = Debug|Win32
+		{82B8EB7F-81DB-48D4-89F2-6E73F3024526}.Release|x64.ActiveCfg = Release|x64
+		{82B8EB7F-81DB-48D4-89F2-6E73F3024526}.Release|x64.Build.0 = Release|x64
+		{82B8EB7F-81DB-48D4-89F2-6E73F3024526}.Release|x86.ActiveCfg = Release|Win32
+		{82B8EB7F-81DB-48D4-89F2-6E73F3024526}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

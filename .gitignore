@@ -8,5 +8,7 @@
 /build/Windows/vs14/Release
 /build/Windows/vs14/vglyph/Debug
 /build/Windows/vs14/vglyph/Release
+/build/Windows/vs14/vglyph-static/Debug
+/build/Windows/vs14/vglyph-static/Release
 /build/Windows/vs14/vglyph-test/Debug
 /build/Windows/vs14/vglyph-test/Release
