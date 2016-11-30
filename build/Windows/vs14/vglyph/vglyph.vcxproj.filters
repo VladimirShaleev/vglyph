@@ -33,6 +33,9 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-figure.h">
       <Filter>sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\sources\vglyph-segment.h">
+      <Filter>sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\sources\vglyph.c">
@@ -42,6 +45,9 @@
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\sources\vglyph-figure.c">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\sources\vglyph-segment.c">
       <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>

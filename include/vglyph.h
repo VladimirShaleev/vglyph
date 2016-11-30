@@ -45,9 +45,10 @@
 
 VGLYPH_BEGIN
 
-typedef struct _vglyph_object vglyph_object_t;
-typedef struct _vglyph_figure vglyph_figure_t;
-typedef int                   vglyph_bool_t;
+typedef struct _vglyph_object  vglyph_object_t;
+typedef struct _vglyph_segment vglyph_segment_t;
+typedef struct _vglyph_figure  vglyph_figure_t;
+typedef int                    vglyph_bool_t;
 
 typedef enum _vglyph_state
 {
@@ -79,6 +80,24 @@ vglyph_object_get_reference_count(vglyph_object_t* object);
 
 vglyph_public vglyph_state_t
 vglyph_object_get_state(vglyph_object_t* object);
+
+vglyph_public vglyph_segment_t*
+vglyph_segment_reference(vglyph_segment_t* segment);
+
+vglyph_public void
+vglyph_segment_destroy(vglyph_segment_t* segment);
+
+vglyph_public int
+vglyph_segment_get_reference_count(vglyph_segment_t* segment);
+
+vglyph_public vglyph_state_t
+vglyph_segment_get_state(vglyph_segment_t* segment);
+
+vglyph_public vglyph_object_t*
+vglyph_segment_segment_to_object(vglyph_segment_t* segment);
+
+vglyph_public vglyph_segment_t*
+vglyph_segment_object_to_segment(vglyph_object_t* object);
 
 vglyph_public vglyph_figure_t*
 vglyph_figure_create(void);

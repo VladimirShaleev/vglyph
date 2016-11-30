@@ -23,7 +23,8 @@ typedef uint8_t   vglyph_uint8_t;
 typedef enum _vglyph_type
 {
     VGLYPH_TYPE_OBJECT  = 0,
-    VGLYPH_TYPE_FIGURE  = 1
+    VGLYPH_TYPE_SEGMENT = 1,
+    VGLYPH_TYPE_FIGURE  = 2
 } vglyph_type_t;
 
 #endif
