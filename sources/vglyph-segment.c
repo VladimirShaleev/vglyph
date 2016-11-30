@@ -47,3 +47,14 @@ vglyph_segment_object_to_segment(vglyph_object_t* object)
     assert(object);
     return (vglyph_segment_t*)vglyph_object_to_type(object, VGLYPH_TYPE_SEGMENT);
 }
+
+vglyph_segment_type_t
+vglyph_segment_get_type(vglyph_segment_t* segment)
+{
+    assert(segment);
+
+    if (_vglyph_segment_is_valid(segment))
+        return segment->type;
+
+    return VGLYPH_SEGMENT_UNKNOWN;
+}

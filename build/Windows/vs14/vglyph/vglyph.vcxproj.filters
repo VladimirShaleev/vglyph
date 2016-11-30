@@ -36,6 +36,12 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-segment.h">
       <Filter>sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\sources\vglyph-segment-close-path.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\sources\vglyph-segment-moveto-abs.h">
+      <Filter>sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\sources\vglyph.c">
@@ -48,6 +54,12 @@
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\sources\vglyph-segment.c">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\sources\vglyph-segment-close-path.c">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\sources\vglyph-segment-moveto-abs.c">
       <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>

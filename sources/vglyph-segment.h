@@ -12,6 +12,7 @@
 struct _vglyph_segment
 {
     vglyph_object_t object;
+    vglyph_segment_type_t type;
 };
 
 static inline void
