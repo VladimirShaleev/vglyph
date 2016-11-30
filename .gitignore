@@ -12,3 +12,5 @@
 /build/Windows/vs14/vglyph-static/Release
 /build/Windows/vs14/vglyph-test/Debug
 /build/Windows/vs14/vglyph-test/Release
+/build/Windows/vs14/vglyph-test-static/Debug
+/build/Windows/vs14/vglyph-test-static/Release
