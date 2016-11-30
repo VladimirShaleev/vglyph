@@ -66,6 +66,21 @@ vglyph_is_version_compatible(int compile_version);
 vglyph_public const char*
 vglyph_state_to_string(vglyph_state_t state);
 
+vglyph_public vglyph_figure_t*
+vglyph_figure_create(void);
+
+vglyph_public vglyph_figure_t*
+vglyph_figure_reference(vglyph_figure_t* figure);
+
+vglyph_public void
+vglyph_figure_destroy(vglyph_figure_t* figure);
+
+vglyph_public int
+vglyph_figure_get_reference_count(vglyph_figure_t* figure);
+
+vglyph_public vglyph_state_t
+vglyph_figure_get_state(vglyph_figure_t* figure);
+
 VGLYPH_END
 
 #endif
