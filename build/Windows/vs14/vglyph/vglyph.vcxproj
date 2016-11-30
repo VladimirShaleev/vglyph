@@ -211,9 +211,11 @@
     <ClInclude Include="..\..\..\..\include\vglyph-config.h" />
     <ClInclude Include="..\..\..\..\include\vglyph.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-api.h" />
+    <ClInclude Include="..\..\..\..\sources\vglyph-object.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-types.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\sources\vglyph-object.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph.c" />
   </ItemGroup>
   <ItemGroup>
