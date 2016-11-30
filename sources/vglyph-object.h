@@ -12,21 +12,30 @@
 
 #define VGLYPH_REFERENCE_COUNT_INVALID (-1)
 
-typedef void 
-(*vglyph_object_destroy_func_t)(void* object);
+typedef vglyph_bool_t
+(*vglyph_object_is_cast_func_t)(vglyph_object_t* object,
+                                vglyph_type_t type);
 
-typedef struct
+typedef void 
+(*vglyph_object_destroy_func_t)(vglyph_object_t* object);
+
+struct _vglyph_object
 {
     int ref_count;
     vglyph_state_t state;
+    vglyph_object_is_cast_func_t is_cast_func;
     vglyph_object_destroy_func_t destroy_func;
-} vglyph_object_t;
+};
 
 vglyph_object_t*
 _vglyph_object_out_of_memory();
 
+vglyph_object_t*
+_vglyph_object_invalid_cast();
+
 static inline void
 _vglyph_object_init(vglyph_object_t* object,
+                    vglyph_object_is_cast_func_t is_cast_func,
                     vglyph_object_destroy_func_t destroy_func)
 {
     assert(object);
@@ -34,6 +43,7 @@ _vglyph_object_init(vglyph_object_t* object,
 
     object->ref_count    = 1;
     object->state        = VGLYPH_STATE_SUCCESS;
+    object->is_cast_func = is_cast_func;
     object->destroy_func = destroy_func;
 }
 
@@ -87,6 +97,19 @@ _vglyph_object_is_valid(vglyph_object_t* object)
 {
     assert(object);
     return object->state == VGLYPH_STATE_SUCCESS;
+}
+
+static inline vglyph_object_t*
+vglyph_object_to_type(vglyph_object_t* object,
+                      vglyph_type_t type)
+{
+    if (_vglyph_object_is_valid(object))
+    {
+        if (object->is_cast_func(object, type))
+            return object;
+    }
+
+    return _vglyph_object_invalid_cast();
 }
 
 #endif

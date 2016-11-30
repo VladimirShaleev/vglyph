@@ -35,6 +35,9 @@ vglyph_state_to_string(vglyph_state_t state)
 
         case VGLYPH_STATE_OUT_OF_MEMORY:
             return "out of memory";
+
+        case VGLYPH_STATE_INVALID_CAST:
+            return "invalid cast";
     }
     return "<unknown error state>";
 }

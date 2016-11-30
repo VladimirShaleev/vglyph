@@ -45,6 +45,7 @@
 
 VGLYPH_BEGIN
 
+typedef struct _vglyph_object vglyph_object_t;
 typedef struct _vglyph_figure vglyph_figure_t;
 typedef int                   vglyph_bool_t;
 
@@ -52,6 +53,7 @@ typedef enum _vglyph_state
 {
     VGLYPH_STATE_SUCCESS       = 0,
     VGLYPH_STATE_OUT_OF_MEMORY = 1,
+    VGLYPH_STATE_INVALID_CAST  = 2
 } vglyph_state_t;
 
 vglyph_public int
@@ -65,6 +67,18 @@ vglyph_is_version_compatible(int compile_version);
 
 vglyph_public const char*
 vglyph_state_to_string(vglyph_state_t state);
+
+vglyph_public vglyph_object_t*
+vglyph_object_reference(vglyph_object_t* object);
+
+vglyph_public void
+vglyph_object_destroy(vglyph_object_t* object);
+
+vglyph_public int
+vglyph_object_get_reference_count(vglyph_object_t* object);
+
+vglyph_public vglyph_state_t
+vglyph_object_get_state(vglyph_object_t* object);
 
 vglyph_public vglyph_figure_t*
 vglyph_figure_create(void);
@@ -80,6 +94,12 @@ vglyph_figure_get_reference_count(vglyph_figure_t* figure);
 
 vglyph_public vglyph_state_t
 vglyph_figure_get_state(vglyph_figure_t* figure);
+
+vglyph_public vglyph_object_t*
+vglyph_figure_figure_to_object(vglyph_figure_t* figure);
+
+vglyph_public vglyph_figure_t*
+vglyph_figure_object_to_figure(vglyph_object_t* object);
 
 VGLYPH_END
 
