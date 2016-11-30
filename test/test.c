@@ -31,9 +31,27 @@ void show_glyph_info()
     }
 }
 
+void show_object_state(void* object)
+{
+    const vglyph_state_t state = vglyph_object_get_state((vglyph_object_t*)object);
+
+    if (state != VGLYPH_STATE_SUCCESS)
+    {
+        const char* state_string = vglyph_state_to_string(state);
+
+        printf("runtime error %d: %s\n", state, state_string);
+        exit(EXIT_FAILURE);
+    }
+}
+
 int main(void)
 {
     show_glyph_info();
+
+    vglyph_figure_t* figure = vglyph_figure_create();
+    show_object_state(figure);
+
+    vglyph_figure_destroy(figure);
 
     return EXIT_SUCCESS;
 }
