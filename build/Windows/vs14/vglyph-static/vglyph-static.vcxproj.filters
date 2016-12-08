@@ -33,6 +33,12 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-figure.h">
       <Filter>sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\sources\vglyph-segment-types.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\sources\vglyph-vector.h">
+      <Filter>sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\sources\vglyph.c">

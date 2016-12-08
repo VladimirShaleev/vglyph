@@ -24,7 +24,9 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-api.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-figure.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-object.h" />
+    <ClInclude Include="..\..\..\..\sources\vglyph-segment-types.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-types.h" />
+    <ClInclude Include="..\..\..\..\sources\vglyph-vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\sources\vglyph-figure.c" />

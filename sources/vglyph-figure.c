@@ -12,16 +12,45 @@ _vglyph_figure_init(vglyph_figure_t* figure,
                     vglyph_object_destroy_func_t destroy_func)
 {
     _vglyph_object_init(&figure->object, is_cast_func, destroy_func);
+
+    figure->segment_count = 0;
+    figure->segment_types = NULL;
+    figure->segments      = NULL;
 }
 
 static void
 _vglyph_figure_ctor(vglyph_figure_t* figure)
 {
+    figure->segment_types = _vglyph_vector_create(sizeof(vglyph_segment_type_t) * 8);
+    figure->segments      = _vglyph_vector_create(sizeof(vglyph_float32_t) * 8);
+
+    if (!_vglyph_vector_is_valid(figure->segment_types))
+    {
+        _vglyph_figure_set_state(figure, _vglyph_vector_get_state(figure->segment_types));
+        return;
+    }
+
+    if (!_vglyph_vector_is_valid(figure->segments))
+    {
+        _vglyph_figure_set_state(figure, _vglyph_vector_get_state(figure->segments));
+        return;
+    }
 }
 
 static void
 _vglyph_figure_dtor(vglyph_figure_t* figure)
 {
+    if (figure->segment_types)
+    {
+        _vglyph_vector_destroy(figure->segment_types);
+        figure->segment_types = NULL;
+    }
+
+    if (figure->segments)
+    {
+        _vglyph_vector_destroy(figure->segments);
+        figure->segments = NULL;
+    }
 }
 
 static vglyph_bool_t
@@ -111,6 +140,24 @@ vglyph_figure_draw_moveto(vglyph_figure_t* figure,
                           vglyph_point_t* point)
 {
     assert(figure);
+    assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
+    assert(point);
+
+    if (_vglyph_figure_is_valid(figure))
+    {
+    #undef  VGLYPH_RESULT_TYPE
+    #define VGLYPH_RESULT_TYPE vglyph_segment_moveto_t
+
+        VGLYPH_RESULT_TYPE* result;
+        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_MOVETO_ABS + coordinate, result);
+
+        if (!result)
+            return FALSE;
+
+        result->point = *point;
+        return TRUE;
+    }
+
     return FALSE;
 }
 
@@ -120,6 +167,24 @@ vglyph_figure_draw_lineto(vglyph_figure_t* figure,
                           vglyph_point_t* point)
 {
     assert(figure);
+    assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
+    assert(point);
+
+    if (_vglyph_figure_is_valid(figure))
+    {
+    #undef  VGLYPH_RESULT_TYPE
+    #define VGLYPH_RESULT_TYPE vglyph_segment_lineto_t
+
+        VGLYPH_RESULT_TYPE* result;
+        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_LINETO_ABS + coordinate, result);
+
+        if (!result)
+            return FALSE;
+
+        result->point = *point;
+        return TRUE;
+    }
+
     return FALSE;
 }
 
@@ -131,6 +196,28 @@ vglyph_figure_draw_curveto_cubic(vglyph_figure_t* figure,
                                  vglyph_point_t* point2)
 {
     assert(figure);
+    assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
+    assert(point);
+    assert(point1);
+    assert(point2);
+
+    if (_vglyph_figure_is_valid(figure))
+    {
+    #undef  VGLYPH_RESULT_TYPE
+    #define VGLYPH_RESULT_TYPE vglyph_segment_curveto_cubic_t
+
+        VGLYPH_RESULT_TYPE* result;
+        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_CURVETO_CUBIC_ABS + coordinate, result);
+
+        if (!result)
+            return FALSE;
+
+        result->point  = *point;
+        result->point1 = *point1;
+        result->point2 = *point2;
+        return TRUE;
+    }
+
     return FALSE;
 }
 
@@ -141,6 +228,26 @@ vglyph_figure_draw_curveto_quadratic(vglyph_figure_t* figure,
                                      vglyph_point_t* point1)
 {
     assert(figure);
+    assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
+    assert(point);
+    assert(point1);
+
+    if (_vglyph_figure_is_valid(figure))
+    {
+    #undef  VGLYPH_RESULT_TYPE
+    #define VGLYPH_RESULT_TYPE vglyph_segment_curveto_quadratic_t
+
+        VGLYPH_RESULT_TYPE* result;
+        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS + coordinate, result);
+
+        if (!result)
+            return FALSE;
+
+        result->point  = *point;
+        result->point1 = *point1;
+        return TRUE;
+    }
+
     return FALSE;
 }
 
@@ -154,6 +261,29 @@ vglyph_figure_draw_arc(vglyph_figure_t* figure,
                        vglyph_bool_t sweep_flag)
 {
     assert(figure);
+    assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
+    assert(point);
+    assert(radius);
+
+    if (_vglyph_figure_is_valid(figure))
+    {
+    #undef  VGLYPH_RESULT_TYPE
+    #define VGLYPH_RESULT_TYPE vglyph_segment_arc_t
+
+        VGLYPH_RESULT_TYPE* result;
+        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_ARC_ABS + coordinate, result);
+
+        if (!result)
+            return FALSE;
+
+        result->point          = *point;
+        result->radius         = *radius;
+        result->angle          = angle;
+        result->large_arc_flag = large_arc_flag;
+        result->sweep_flag     = sweep_flag;
+        return TRUE;
+    }
+
     return FALSE;
 }
 
@@ -164,6 +294,24 @@ vglyph_figure_draw_lineto_horizontal(vglyph_figure_t* figure,
                                      vglyph_hinting_t hinting)
 {
     assert(figure);
+    assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
+
+    if (_vglyph_figure_is_valid(figure))
+    {
+    #undef  VGLYPH_RESULT_TYPE
+    #define VGLYPH_RESULT_TYPE vglyph_segment_lineto_horizontal_t
+
+        VGLYPH_RESULT_TYPE* result;
+        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS + coordinate, result);
+
+        if (!result)
+            return FALSE;
+
+        result->x       = x;
+        result->hinting = hinting;
+        return TRUE;
+    }
+
     return FALSE;
 }
 
@@ -174,5 +322,23 @@ vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
                                    vglyph_hinting_t hinting)
 {
     assert(figure);
+    assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
+
+    if (_vglyph_figure_is_valid(figure))
+    {
+    #undef  VGLYPH_RESULT_TYPE
+    #define VGLYPH_RESULT_TYPE vglyph_segment_lineto_vertical_t
+
+        VGLYPH_RESULT_TYPE* result;
+        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS + coordinate, result);
+
+        if (!result)
+            return FALSE;
+
+        result->y       = y;
+        result->hinting = hinting;
+        return TRUE;
+    }
+
     return FALSE;
 }

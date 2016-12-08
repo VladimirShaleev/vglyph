@@ -69,7 +69,7 @@ _vglyph_vector_dtor(vglyph_vector_t* vector)
     vector->data = NULL;
 }
 
-static inline void
+static inline vglyph_bool_t
 _vglyph_vector_is_cast_callback(vglyph_object_t* object,
                                 vglyph_type_t type)
 {
@@ -94,6 +94,7 @@ _vglyph_vector_create(vglyph_uint_t reserved_bytes)
         return (vglyph_vector_t*)_vglyph_object_out_of_memory();
 
     _vglyph_vector_init(vector,
+                        NULL,
                         _vglyph_vector_destroy_callback);
 
     _vglyph_vector_ctor(vector, reserved_bytes);
