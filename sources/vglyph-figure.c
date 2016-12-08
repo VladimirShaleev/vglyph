@@ -97,3 +97,82 @@ vglyph_figure_object_to_figure(vglyph_object_t* object)
     assert(object);
     return (vglyph_figure_t*)vglyph_object_to_type(object, VGLYPH_TYPE_FIGURE);
 }
+
+vglyph_bool_t
+vglyph_figure_draw_closepath(vglyph_figure_t* figure)
+{
+    assert(figure);
+    return FALSE;
+}
+
+vglyph_bool_t
+vglyph_figure_draw_moveto(vglyph_figure_t* figure,
+                          vglyph_coordinate_t coordinate,
+                          vglyph_point_t* point)
+{
+    assert(figure);
+    return FALSE;
+}
+
+vglyph_bool_t
+vglyph_figure_draw_lineto(vglyph_figure_t* figure,
+                          vglyph_coordinate_t coordinate,
+                          vglyph_point_t* point)
+{
+    assert(figure);
+    return FALSE;
+}
+
+vglyph_bool_t
+vglyph_figure_draw_curveto_cubic(vglyph_figure_t* figure,
+                                 vglyph_coordinate_t coordinate,
+                                 vglyph_point_t* point,
+                                 vglyph_point_t* point1,
+                                 vglyph_point_t* point2)
+{
+    assert(figure);
+    return FALSE;
+}
+
+vglyph_bool_t
+vglyph_figure_draw_curveto_quadratic(vglyph_figure_t* figure,
+                                     vglyph_coordinate_t coordinate,
+                                     vglyph_point_t* point,
+                                     vglyph_point_t* point1)
+{
+    assert(figure);
+    return FALSE;
+}
+
+vglyph_bool_t
+vglyph_figure_draw_arc(vglyph_figure_t* figure,
+                       vglyph_coordinate_t coordinate,
+                       vglyph_point_t* point,
+                       vglyph_point_t* radius,
+                       vglyph_float32_t angle,
+                       vglyph_bool_t large_arc_flag,
+                       vglyph_bool_t sweep_flag)
+{
+    assert(figure);
+    return FALSE;
+}
+
+vglyph_bool_t
+vglyph_figure_draw_lineto_horizontal(vglyph_figure_t* figure,
+                                     vglyph_coordinate_t coordinate,
+                                     vglyph_float32_t x,
+                                     vglyph_hinting_t hinting)
+{
+    assert(figure);
+    return FALSE;
+}
+
+vglyph_bool_t
+vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
+                                   vglyph_coordinate_t coordinate,
+                                   vglyph_float32_t y,
+                                   vglyph_hinting_t hinting)
+{
+    assert(figure);
+    return FALSE;
+}

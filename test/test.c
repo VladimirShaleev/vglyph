@@ -48,6 +48,11 @@ int main(void)
 {
     show_glyph_info();
 
+    vglyph_point_t point;
+    point.x = 0.5f;
+    point.y = 0.5f;
+    point.hinting = VGLYPH_HINTING_HORIZONTAL | VGLYPH_HINTING_VERTICAL;
+
     vglyph_figure_t* figure = vglyph_figure_create();
     show_object_state(figure);
 
