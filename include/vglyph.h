@@ -47,6 +47,7 @@ VGLYPH_BEGIN
 
 typedef struct _vglyph_object  vglyph_object_t;
 typedef struct _vglyph_figure  vglyph_figure_t;
+typedef struct _vglyph_surface vglyph_surface_t;
 typedef int                    vglyph_bool_t;
 typedef float                  vglyph_float32_t;
 
@@ -171,6 +172,27 @@ vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
                                    vglyph_coordinate_t coordinate,
                                    vglyph_float32_t y,
                                    vglyph_hinting_t hinting);
+
+vglyph_public vglyph_surface_t*
+vglyph_surface_create(void);
+
+vglyph_public vglyph_surface_t*
+vglyph_surface_reference(vglyph_surface_t* surface);
+
+vglyph_public void
+vglyph_surface_destroy(vglyph_surface_t* surface);
+
+vglyph_public int
+vglyph_surface_get_reference_count(vglyph_surface_t* surface);
+
+vglyph_public vglyph_state_t
+vglyph_surface_get_state(vglyph_surface_t* surface);
+
+vglyph_public vglyph_object_t*
+vglyph_surface_surface_to_object(vglyph_surface_t* surface);
+
+vglyph_public vglyph_surface_t*
+vglyph_surface_object_to_surface(vglyph_object_t* object);
 
 VGLYPH_END
 
