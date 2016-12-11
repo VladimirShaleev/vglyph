@@ -100,12 +100,12 @@ _vglyph_object_is_valid(vglyph_object_t* object)
 }
 
 static inline vglyph_object_t*
-vglyph_object_to_type(vglyph_object_t* object,
-                      vglyph_type_t type)
+_vglyph_object_to_type(vglyph_object_t* object,
+                       vglyph_type_t type)
 {
     if (_vglyph_object_is_valid(object))
     {
-        if (object->is_cast_func(object, type))
+        if (object->is_cast_func(object, type) || type == VGLYPH_TYPE_OBJECT)
             return _vglyph_object_reference(object);
     }
 

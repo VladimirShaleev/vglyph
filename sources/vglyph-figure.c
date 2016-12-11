@@ -124,7 +124,7 @@ vglyph_figure_t*
 vglyph_figure_object_to_figure(vglyph_object_t* object)
 {
     assert(object);
-    return (vglyph_figure_t*)vglyph_object_to_type(object, VGLYPH_TYPE_FIGURE);
+    return (vglyph_figure_t*)_vglyph_object_to_type(object, VGLYPH_TYPE_FIGURE);
 }
 
 vglyph_bool_t

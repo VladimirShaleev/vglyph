@@ -94,7 +94,7 @@ _vglyph_vector_create(vglyph_uint_t reserved_bytes)
         return (vglyph_vector_t*)_vglyph_object_out_of_memory();
 
     _vglyph_vector_init(vector,
-                        NULL,
+                        _vglyph_vector_is_cast_callback,
                         _vglyph_vector_destroy_callback);
 
     _vglyph_vector_ctor(vector, reserved_bytes);
@@ -127,6 +127,20 @@ _vglyph_vector_get_state(vglyph_vector_t* vector)
 {
     assert(vector);
     return _vglyph_object_get_state(&vector->object);
+}
+
+static inline vglyph_object_t*
+_vglyph_vector_vector_to_object(vglyph_vector_t* vector)
+{
+    assert(vector);
+    return _vglyph_object_reference(&vector->object);
+}
+
+static inline vglyph_vector_t*
+_vglyph_vector_object_to_vector(vglyph_object_t* object)
+{
+    assert(object);
+    return (vglyph_vector_t*)_vglyph_object_to_type(object, VGLYPH_TYPE_FIGURE);
 }
 
 static inline vglyph_uint_t
