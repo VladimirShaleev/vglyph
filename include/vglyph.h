@@ -123,6 +123,9 @@ vglyph_public vglyph_figure_t*
 vglyph_figure_object_to_figure(vglyph_object_t* object);
 
 vglyph_public vglyph_bool_t
+vglyph_figure_draw_clear(vglyph_figure_t* figure);
+
+vglyph_public vglyph_bool_t
 vglyph_figure_draw_closepath(vglyph_figure_t* figure);
 
 vglyph_public vglyph_bool_t

@@ -165,4 +165,18 @@ _vglyph_vector_at(vglyph_vector_t* vector,
     return vector->data + offset;
 }
 
+static inline void
+_vglyph_vector_clear(vglyph_vector_t* vector)
+{
+    assert(vector);
+    assert(_vglyph_vector_is_valid(vector));
+
+    free(vector->data);
+
+    vector->data = NULL;
+    vector->count_bytes = 0; 
+    
+    _vglyph_vector_ctor(vector, vector->reserved_bytes);
+}
+
 #endif

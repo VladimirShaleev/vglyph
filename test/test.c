@@ -48,13 +48,21 @@ int main(void)
 {
     show_glyph_info();
 
-    vglyph_point_t point;
-    point.x = 0.5f;
-    point.y = 0.5f;
-    point.hinting = VGLYPH_HINTING_HORIZONTAL | VGLYPH_HINTING_VERTICAL;
+    vglyph_point_t point1;
+    point1.x = 0.5f;
+    point1.y = 0.5f;
+    point1.hinting = VGLYPH_HINTING_HORIZONTAL | VGLYPH_HINTING_VERTICAL;
+
+    vglyph_point_t point2;
+    point2.x = 0.3f;
+    point2.y = 0.1f;
+    point2.hinting = VGLYPH_HINTING_HORIZONTAL | VGLYPH_HINTING_VERTICAL;
 
     vglyph_figure_t* figure = vglyph_figure_create();
     show_object_state(figure);
+
+    vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
+    vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_RELATIVE, &point2);
 
     vglyph_figure_destroy(figure);
 

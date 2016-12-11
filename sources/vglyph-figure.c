@@ -128,6 +128,25 @@ vglyph_figure_object_to_figure(vglyph_object_t* object)
 }
 
 vglyph_bool_t
+vglyph_figure_draw_clear(vglyph_figure_t* figure)
+{
+    assert(figure);
+
+    if (_vglyph_figure_is_valid(figure))
+    {
+        _vglyph_vector_clear(figure->segment_types);
+        _vglyph_vector_clear(figure->segments);
+
+        figure->segment_count = 0;
+
+        return _vglyph_vector_is_valid(figure->segment_types) &&
+               _vglyph_vector_is_valid(figure->segments);
+    }
+
+    return FALSE;
+}
+
+vglyph_bool_t
 vglyph_figure_draw_closepath(vglyph_figure_t* figure)
 {
     assert(figure);
