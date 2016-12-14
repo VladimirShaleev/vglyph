@@ -9,6 +9,8 @@
 
 #include "vglyph-object.h"
 
+extern vglyph_uuid_t _vglyph_vector_type;
+
 typedef struct _vglyph_vector
 {
     vglyph_object_t object;
@@ -70,10 +72,9 @@ _vglyph_vector_dtor(vglyph_vector_t* vector)
 }
 
 static inline vglyph_bool_t
-_vglyph_vector_is_cast_callback(vglyph_object_t* object,
-                                vglyph_type_t type)
+_vglyph_vector_is_cast_callback(vglyph_uuid_t* uuid)
 {
-    return type == VGLYPH_TYPE_VECTOR ? TRUE : FALSE;
+    return _vglyph_uuid_equal(uuid, &_vglyph_vector_type);
 }
 
 static inline void
@@ -140,7 +141,7 @@ static inline vglyph_vector_t*
 _vglyph_vector_object_to_vector(vglyph_object_t* object)
 {
     assert(object);
-    return (vglyph_vector_t*)_vglyph_object_to_type(object, VGLYPH_TYPE_FIGURE);
+    return (vglyph_vector_t*)_vglyph_object_to_type(object, &_vglyph_vector_type);
 }
 
 static inline vglyph_uint_t

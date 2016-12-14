@@ -6,6 +6,10 @@
 
 #include "vglyph-figure.h"
 
+static vglyph_uuid_t _vglyph_figure_type = {
+    0x384643d6, 0x004c, 0x49fd, 0xbb, 0x22,{ 0x73, 0xf5, 0x99, 0x91, 0xad, 0xbf }
+};
+
 static void
 _vglyph_figure_init(vglyph_figure_t* figure,
                     vglyph_object_is_cast_func_t is_cast_func,
@@ -54,10 +58,9 @@ _vglyph_figure_dtor(vglyph_figure_t* figure)
 }
 
 static vglyph_bool_t
-_vglyph_figure_is_cast(vglyph_object_t* object,
-                       vglyph_type_t type)
+_vglyph_figure_is_cast(vglyph_uuid_t* uuid)
 {
-    return type == VGLYPH_TYPE_FIGURE ? TRUE : FALSE;
+    return _vglyph_uuid_equal(uuid, &_vglyph_figure_type);
 }
 
 static void
@@ -124,7 +127,7 @@ vglyph_figure_t*
 vglyph_figure_object_to_figure(vglyph_object_t* object)
 {
     assert(object);
-    return (vglyph_figure_t*)_vglyph_object_to_type(object, VGLYPH_TYPE_FIGURE);
+    return (vglyph_figure_t*)_vglyph_object_to_type(object, &_vglyph_figure_type);
 }
 
 vglyph_bool_t

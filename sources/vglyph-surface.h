@@ -25,6 +25,10 @@ _vglyph_surface_ctor(vglyph_surface_t* surface);
 void
 _vglyph_surface_dtor(vglyph_surface_t* surface);
 
+vglyph_bool_t
+_vglyph_surface_is_cast(vglyph_object_t* object,
+                        vglyph_uuid_t* uuid);
+
 static inline void
 _vglyph_surface_set_state(vglyph_surface_t* surface,
                           vglyph_state_t state)
@@ -38,13 +42,6 @@ _vglyph_surface_is_valid(vglyph_surface_t* surface)
 {
     assert(surface);
     return _vglyph_object_is_valid(&surface->object);
-}
-
-static inline vglyph_bool_t
-_vglyph_surface_is_cast(vglyph_object_t* object,
-                        vglyph_type_t type)
-{
-    return type == VGLYPH_TYPE_SURFACE ? TRUE : FALSE;
 }
 
 #endif

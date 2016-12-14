@@ -216,12 +216,14 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-segment-types.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-surface.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-types.h" />
+    <ClInclude Include="..\..\..\..\sources\vglyph-uuid.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\sources\vglyph-figure.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-object.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-surface.c" />
+    <ClCompile Include="..\..\..\..\sources\vglyph-vector.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph.c" />
   </ItemGroup>
   <ItemGroup>

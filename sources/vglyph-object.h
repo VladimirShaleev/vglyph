@@ -9,12 +9,12 @@
 
 #include "vglyph-api.h"
 #include "vglyph-types.h"
+#include "vglyph-uuid.h"
 
 #define VGLYPH_REFERENCE_COUNT_INVALID (-1)
 
 typedef vglyph_bool_t
-(*vglyph_object_is_cast_func_t)(vglyph_object_t* object,
-                                vglyph_type_t type);
+(*vglyph_object_is_cast_func_t)(vglyph_uuid_t* uuid);
 
 typedef void 
 (*vglyph_object_destroy_func_t)(vglyph_object_t* object);
@@ -32,6 +32,10 @@ _vglyph_object_out_of_memory();
 
 vglyph_object_t*
 _vglyph_object_invalid_cast();
+
+vglyph_object_t*
+_vglyph_object_to_type(vglyph_object_t* object,
+                       vglyph_uuid_t* uuid);
 
 static inline void
 _vglyph_object_init(vglyph_object_t* object,
@@ -97,19 +101,6 @@ _vglyph_object_is_valid(vglyph_object_t* object)
 {
     assert(object);
     return object->state == VGLYPH_STATE_SUCCESS;
-}
-
-static inline vglyph_object_t*
-_vglyph_object_to_type(vglyph_object_t* object,
-                       vglyph_type_t type)
-{
-    if (_vglyph_object_is_valid(object))
-    {
-        if (object->is_cast_func(object, type) || type == VGLYPH_TYPE_OBJECT)
-            return _vglyph_object_reference(object);
-    }
-
-    return _vglyph_object_invalid_cast();
 }
 
 #endif
