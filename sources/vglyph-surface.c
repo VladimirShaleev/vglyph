@@ -91,7 +91,7 @@ vglyph_object_t*
 vglyph_surface_surface_to_object(vglyph_surface_t* surface)
 {
     assert(surface);
-    return _vglyph_object_reference(&surface->object);
+    return &surface->object;
 }
 
 vglyph_surface_t*

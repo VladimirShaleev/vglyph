@@ -134,7 +134,7 @@ static inline vglyph_object_t*
 _vglyph_vector_vector_to_object(vglyph_vector_t* vector)
 {
     assert(vector);
-    return _vglyph_object_reference(&vector->object);
+    return &vector->object;
 }
 
 static inline vglyph_vector_t*

@@ -120,7 +120,7 @@ vglyph_object_t*
 vglyph_figure_figure_to_object(vglyph_figure_t* figure)
 {
     assert(figure);
-    return _vglyph_object_reference(&figure->object);
+    return &figure->object;
 }
 
 vglyph_figure_t*
