@@ -6,16 +6,15 @@
 
 #include "vglyph-figure.h"
 
-static vglyph_uuid_t _vglyph_figure_type = {
+static vglyph_uuid_t vglyph_figure_type = {
     0x384643d6, 0x004c, 0x49fd, 0xbb, 0x22,{ 0x73, 0xf5, 0x99, 0x91, 0xad, 0xbf }
 };
 
 static void
 _vglyph_figure_init(vglyph_figure_t* figure,
-                    vglyph_object_is_cast_func_t is_cast_func,
-                    vglyph_object_destroy_func_t destroy_func)
+                    const vglyph_object_backend_t* object_backend)
 {
-    _vglyph_object_init(&figure->object, is_cast_func, destroy_func);
+    _vglyph_object_init(&figure->object, object_backend);
 
     figure->segment_count = 0;
     figure->segment_types = NULL;
@@ -60,7 +59,7 @@ _vglyph_figure_dtor(vglyph_figure_t* figure)
 static vglyph_bool_t
 _vglyph_figure_is_cast(vglyph_uuid_t* uuid)
 {
-    return _vglyph_uuid_equal(uuid, &_vglyph_figure_type);
+    return _vglyph_uuid_equal(uuid, &vglyph_figure_type);
 }
 
 static void
@@ -72,6 +71,11 @@ _vglyph_figure_destroy(vglyph_object_t* object)
     free(figure);
 }
 
+static const vglyph_object_backend_t vglyph_figure_object_backend = {
+    _vglyph_figure_is_cast,
+    _vglyph_figure_destroy
+};
+
 vglyph_figure_t*
 vglyph_figure_create(void)
 {
@@ -80,11 +84,9 @@ vglyph_figure_create(void)
     if (!figure)
         return (vglyph_figure_t*)_vglyph_object_out_of_memory();
 
-    _vglyph_figure_init(figure,
-                        _vglyph_figure_is_cast,
-                        _vglyph_figure_destroy);
-    
+    _vglyph_figure_init(figure, &vglyph_figure_object_backend);
     _vglyph_figure_ctor(figure);
+
     return figure;
 }
 
@@ -99,7 +101,7 @@ vglyph_figure_t*
 vglyph_object_to_figure(vglyph_object_t* object)
 {
     assert(object);
-    return (vglyph_figure_t*)_vglyph_object_to_type(object, &_vglyph_figure_type);
+    return (vglyph_figure_t*)_vglyph_object_to_type(object, &vglyph_figure_type);
 }
 
 vglyph_bool_t

@@ -13,18 +13,17 @@
 
 #define VGLYPH_REFERENCE_COUNT_INVALID (-1)
 
-typedef vglyph_bool_t
-(*vglyph_object_is_cast_func_t)(vglyph_uuid_t* uuid);
-
-typedef void 
-(*vglyph_object_destroy_func_t)(vglyph_object_t* object);
+typedef struct _vglyph_object_backend
+{
+    vglyph_bool_t (*is_cast)(vglyph_uuid_t* uuid);
+    void          (*destroy)(vglyph_object_t* object);
+} vglyph_object_backend_t;
 
 struct _vglyph_object
 {
     int ref_count;
     vglyph_state_t state;
-    vglyph_object_is_cast_func_t is_cast_func;
-    vglyph_object_destroy_func_t destroy_func;
+    const vglyph_object_backend_t* backend;
 };
 
 vglyph_object_t*
@@ -39,16 +38,14 @@ _vglyph_object_to_type(vglyph_object_t* object,
 
 static inline void
 _vglyph_object_init(vglyph_object_t* object,
-                    vglyph_object_is_cast_func_t is_cast_func,
-                    vglyph_object_destroy_func_t destroy_func)
+                    const vglyph_object_backend_t* backend)
 {
     assert(object);
-    assert(destroy_func);
+    assert(backend);
 
-    object->ref_count    = 1;
-    object->state        = VGLYPH_STATE_SUCCESS;
-    object->is_cast_func = is_cast_func;
-    object->destroy_func = destroy_func;
+    object->ref_count = 1;
+    object->state     = VGLYPH_STATE_SUCCESS;
+    object->backend   = backend;
 }
 
 static inline vglyph_object_t*
@@ -70,7 +67,7 @@ _vglyph_object_destroy(vglyph_object_t* object)
     if (object->ref_count != VGLYPH_REFERENCE_COUNT_INVALID)
     {
         if (--object->ref_count == 0)
-            object->destroy_func(object);
+            object->backend->destroy(object);
     }
 }
 

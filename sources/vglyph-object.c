@@ -38,7 +38,7 @@ _vglyph_object_to_type(vglyph_object_t* object,
 
     if (_vglyph_object_is_valid(object))
     {
-        if (object->is_cast_func(uuid) || _vglyph_uuid_equal(uuid, &type))
+        if (object->backend->is_cast(uuid) || _vglyph_uuid_equal(uuid, &type))
             return object;
     }
 

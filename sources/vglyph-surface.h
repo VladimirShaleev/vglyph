@@ -16,8 +16,7 @@ struct _vglyph_surface
 
 void
 _vglyph_surface_init(vglyph_surface_t* surface,
-                     vglyph_object_is_cast_func_t is_cast_func,
-                     vglyph_object_destroy_func_t destroy_func);
+                     const vglyph_object_backend_t* object_backend);
 
 void
 _vglyph_surface_ctor(vglyph_surface_t* surface);

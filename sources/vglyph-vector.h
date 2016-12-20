@@ -11,6 +11,8 @@
 
 extern vglyph_uuid_t _vglyph_vector_type;
 
+extern const vglyph_object_backend_t _vglyph_vector_object_backend;
+
 typedef struct _vglyph_vector
 {
     vglyph_object_t object;
@@ -37,10 +39,9 @@ _vglyph_vector_is_valid(vglyph_vector_t* vector)
 
 static inline void
 _vglyph_vector_init(vglyph_vector_t* vector,
-                    vglyph_object_is_cast_func_t is_cast_func,
-                    vglyph_object_destroy_func_t destroy_func)
+                    const vglyph_object_backend_t* object_backend)
 {
-    _vglyph_object_init(&vector->object, is_cast_func, destroy_func);
+    _vglyph_object_init(&vector->object, object_backend);
 
     vector->data           = NULL;
     vector->reserved_bytes = 0;
@@ -71,21 +72,6 @@ _vglyph_vector_dtor(vglyph_vector_t* vector)
     vector->data = NULL;
 }
 
-static inline vglyph_bool_t
-_vglyph_vector_is_cast_callback(vglyph_uuid_t* uuid)
-{
-    return _vglyph_uuid_equal(uuid, &_vglyph_vector_type);
-}
-
-static inline void
-_vglyph_vector_destroy_callback(void* object)
-{
-    vglyph_vector_t* vector = (vglyph_vector_t*)object;
-    _vglyph_vector_dtor(vector);
-
-    free(vector);
-}
-
 static inline vglyph_vector_t*
 _vglyph_vector_create(vglyph_uint_t reserved_bytes)
 {
@@ -94,11 +80,9 @@ _vglyph_vector_create(vglyph_uint_t reserved_bytes)
     if (!vector)
         return (vglyph_vector_t*)_vglyph_object_out_of_memory();
 
-    _vglyph_vector_init(vector,
-                        _vglyph_vector_is_cast_callback,
-                        _vglyph_vector_destroy_callback);
-
+    _vglyph_vector_init(vector, &_vglyph_vector_object_backend);
     _vglyph_vector_ctor(vector, reserved_bytes);
+
     return vector;
 }
 
