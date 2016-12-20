@@ -17,7 +17,7 @@ _vglyph_vector_is_cast_callback(vglyph_uuid_t* uuid)
 }
 
 static void
-_vglyph_vector_destroy_callback(void* object)
+_vglyph_vector_destroy_callback(vglyph_object_t* object)
 {
     vglyph_vector_t* vector = (vglyph_vector_t*)object;
     _vglyph_vector_dtor(vector);

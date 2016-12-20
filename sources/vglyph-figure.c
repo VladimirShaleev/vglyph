@@ -145,7 +145,8 @@ vglyph_figure_draw_moveto(vglyph_figure_t* figure,
     #define VGLYPH_RESULT_TYPE vglyph_segment_moveto_t
 
         VGLYPH_RESULT_TYPE* result;
-        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_MOVETO_ABS + coordinate, result);
+        _vglyph_figure_add_segment(
+            figure, (vglyph_segment_t)(VGLYPH_SEGMENT_MOVETO_ABS + coordinate), result);
 
         if (!result)
             return FALSE;
@@ -172,7 +173,8 @@ vglyph_figure_draw_lineto(vglyph_figure_t* figure,
     #define VGLYPH_RESULT_TYPE vglyph_segment_lineto_t
 
         VGLYPH_RESULT_TYPE* result;
-        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_LINETO_ABS + coordinate, result);
+        _vglyph_figure_add_segment(
+            figure, (vglyph_segment_t)(VGLYPH_SEGMENT_LINETO_ABS + coordinate), result);
 
         if (!result)
             return FALSE;
@@ -203,7 +205,8 @@ vglyph_figure_draw_curveto_cubic(vglyph_figure_t* figure,
     #define VGLYPH_RESULT_TYPE vglyph_segment_curveto_cubic_t
 
         VGLYPH_RESULT_TYPE* result;
-        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_CURVETO_CUBIC_ABS + coordinate, result);
+        _vglyph_figure_add_segment(
+            figure, (vglyph_segment_t)(VGLYPH_SEGMENT_CURVETO_CUBIC_ABS + coordinate), result);
 
         if (!result)
             return FALSE;
@@ -234,7 +237,8 @@ vglyph_figure_draw_curveto_quadratic(vglyph_figure_t* figure,
     #define VGLYPH_RESULT_TYPE vglyph_segment_curveto_quadratic_t
 
         VGLYPH_RESULT_TYPE* result;
-        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS + coordinate, result);
+        _vglyph_figure_add_segment(
+            figure, (vglyph_segment_t)(VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS + coordinate), result);
 
         if (!result)
             return FALSE;
@@ -267,7 +271,8 @@ vglyph_figure_draw_arc(vglyph_figure_t* figure,
     #define VGLYPH_RESULT_TYPE vglyph_segment_arc_t
 
         VGLYPH_RESULT_TYPE* result;
-        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_ARC_ABS + coordinate, result);
+        _vglyph_figure_add_segment(
+            figure, (vglyph_segment_t)(VGLYPH_SEGMENT_ARC_ABS + coordinate), result);
 
         if (!result)
             return FALSE;
@@ -298,7 +303,8 @@ vglyph_figure_draw_lineto_horizontal(vglyph_figure_t* figure,
     #define VGLYPH_RESULT_TYPE vglyph_segment_lineto_horizontal_t
 
         VGLYPH_RESULT_TYPE* result;
-        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS + coordinate, result);
+        _vglyph_figure_add_segment(
+            figure, (vglyph_segment_t)(VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS + coordinate), result);
 
         if (!result)
             return FALSE;
@@ -326,7 +332,8 @@ vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
     #define VGLYPH_RESULT_TYPE vglyph_segment_lineto_vertical_t
 
         VGLYPH_RESULT_TYPE* result;
-        _vglyph_figure_add_segment(figure, VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS + coordinate, result);
+        _vglyph_figure_add_segment(
+            figure, (vglyph_segment_t)(VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS + coordinate), result);
 
         if (!result)
             return FALSE;

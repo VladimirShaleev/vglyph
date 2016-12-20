@@ -62,7 +62,8 @@ typedef enum _vglyph_hinting
 {
     VGLYPH_HINTING_NONE       = 0x0,
     VGLYPH_HINTING_HORIZONTAL = 0x1,
-    VGLYPH_HINTING_VERTICAL   = 0x2
+    VGLYPH_HINTING_VERTICAL   = 0x2,
+    VGLYPH_HINTING_ALL        = VGLYPH_HINTING_HORIZONTAL | VGLYPH_HINTING_VERTICAL
 } vglyph_hinting_t;
 
 typedef enum _vglyph_coordinate

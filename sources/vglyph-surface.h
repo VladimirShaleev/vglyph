@@ -25,8 +25,7 @@ void
 _vglyph_surface_dtor(vglyph_surface_t* surface);
 
 vglyph_bool_t
-_vglyph_surface_is_cast(vglyph_object_t* object,
-                        vglyph_uuid_t* uuid);
+_vglyph_surface_is_cast(vglyph_uuid_t* uuid);
 
 static inline void
 _vglyph_surface_set_state(vglyph_surface_t* surface,

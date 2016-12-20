@@ -71,12 +71,12 @@ int main(void)
     vglyph_point_t point1;
     point1.x = 0.5f;
     point1.y = 0.5f;
-    point1.hinting = VGLYPH_HINTING_HORIZONTAL | VGLYPH_HINTING_VERTICAL;
+    point1.hinting = VGLYPH_HINTING_ALL;
 
     vglyph_point_t point2;
     point2.x = 0.3f;
     point2.y = 0.1f;
-    point2.hinting = VGLYPH_HINTING_HORIZONTAL | VGLYPH_HINTING_VERTICAL;
+    point2.hinting = VGLYPH_HINTING_ALL;
 
     vglyph_figure_t* figure = vglyph_figure_create();
     show_object_state(vglyph_figure_to_object(figure));

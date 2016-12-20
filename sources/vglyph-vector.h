@@ -56,7 +56,7 @@ _vglyph_vector_ctor(vglyph_vector_t* vector,
     vector->reserved_bytes = reserved_bytes;
     vector->max_bytes      = reserved_bytes;
 
-    vector->data = malloc(vector->max_bytes);
+    vector->data = (vglyph_uint8_t*)malloc(vector->max_bytes);
 
     if (!vector->data)
     {
@@ -115,14 +115,14 @@ _vglyph_vector_get_state(vglyph_vector_t* vector)
 }
 
 static inline vglyph_object_t*
-_vglyph_vector_vector_to_object(vglyph_vector_t* vector)
+_vglyph_vector_to_object(vglyph_vector_t* vector)
 {
     assert(vector);
     return &vector->object;
 }
 
 static inline vglyph_vector_t*
-_vglyph_vector_object_to_vector(vglyph_object_t* object)
+_vglyph_object_to_vector(vglyph_object_t* object)
 {
     assert(object);
     return (vglyph_vector_t*)_vglyph_object_to_type(object, &_vglyph_vector_type);
@@ -141,7 +141,7 @@ _vglyph_vector_push(vglyph_vector_t* vector,
     if (vector->count_bytes > vector->max_bytes)
     {
         vector->max_bytes += vector->reserved_bytes;
-        vector->data = realloc(vector->data, vector->max_bytes);
+        vector->data = (vglyph_uint8_t*)realloc(vector->data, vector->max_bytes);
 
         if (!vector->data)
         {
