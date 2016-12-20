@@ -59,43 +59,15 @@ vglyph_surface_create(void)
     return surface;
 }
 
-vglyph_surface_t*
-vglyph_surface_reference(vglyph_surface_t* surface)
-{
-    assert(surface);
-    return (vglyph_surface_t*)_vglyph_object_reference(&surface->object);
-}
-
-void
-vglyph_surface_destroy(vglyph_surface_t* surface)
-{
-    assert(surface);
-    _vglyph_object_destroy(&surface->object);
-}
-
-int
-vglyph_surface_get_reference_count(vglyph_surface_t* surface)
-{
-    assert(surface);
-    return _vglyph_object_get_reference_count(&surface->object);
-}
-
-vglyph_state_t
-vglyph_surface_get_state(vglyph_surface_t* surface)
-{
-    assert(surface);
-    return _vglyph_object_get_state(&surface->object);
-}
-
 vglyph_object_t*
-vglyph_surface_surface_to_object(vglyph_surface_t* surface)
+vglyph_surface_to_object(vglyph_surface_t* surface)
 {
     assert(surface);
     return &surface->object;
 }
 
 vglyph_surface_t*
-vglyph_surface_object_to_surface(vglyph_object_t* object)
+vglyph_object_to_surface(vglyph_object_t* object)
 {
     assert(object);
     return (vglyph_surface_t*)_vglyph_object_to_type(object, &_vglyph_surface_type);

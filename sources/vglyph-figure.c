@@ -88,43 +88,15 @@ vglyph_figure_create(void)
     return figure;
 }
 
-vglyph_figure_t*
-vglyph_figure_reference(vglyph_figure_t* figure)
-{
-    assert(figure);
-    return (vglyph_figure_t*)_vglyph_object_reference(&figure->object);
-}
-
-void
-vglyph_figure_destroy(vglyph_figure_t* figure)
-{
-    assert(figure);
-    _vglyph_object_destroy(&figure->object);
-}
-
-int
-vglyph_figure_get_reference_count(vglyph_figure_t* figure)
-{
-    assert(figure);
-    return _vglyph_object_get_reference_count(&figure->object);
-}
-
-vglyph_state_t
-vglyph_figure_get_state(vglyph_figure_t* figure)
-{
-    assert(figure);
-    return _vglyph_object_get_state(&figure->object);
-}
-
 vglyph_object_t*
-vglyph_figure_figure_to_object(vglyph_figure_t* figure)
+vglyph_figure_to_object(vglyph_figure_t* figure)
 {
     assert(figure);
     return &figure->object;
 }
 
 vglyph_figure_t*
-vglyph_figure_object_to_figure(vglyph_object_t* object)
+vglyph_object_to_figure(vglyph_object_t* object)
 {
     assert(object);
     return (vglyph_figure_t*)_vglyph_object_to_type(object, &_vglyph_figure_type);

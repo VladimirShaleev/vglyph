@@ -31,9 +31,9 @@ void show_glyph_info()
     }
 }
 
-void show_object_state(void* object)
+void show_object_state(vglyph_object_t* object)
 {
-    const vglyph_state_t state = vglyph_object_get_state((vglyph_object_t*)object);
+    const vglyph_state_t state = vglyph_object_get_state(object);
 
     if (state != VGLYPH_STATE_SUCCESS)
     {
@@ -41,6 +41,26 @@ void show_object_state(void* object)
 
         printf("runtime error %d: %s\n", state, state_string);
         exit(EXIT_FAILURE);
+    }
+}
+
+void show_object_type(vglyph_object_t* object)
+{
+    vglyph_state_t state = vglyph_object_get_state(object);
+
+    if (state == VGLYPH_STATE_SUCCESS)
+    {
+        vglyph_figure_t*  figure  = vglyph_object_to_figure(object);
+        vglyph_surface_t* surface = vglyph_object_to_surface(object);
+
+        if (vglyph_object_get_state(vglyph_figure_to_object(figure)) == VGLYPH_STATE_SUCCESS)
+            printf("object type: vglyph_figure_t\n");
+        else if (vglyph_object_get_state(vglyph_surface_to_object(surface)) == VGLYPH_STATE_SUCCESS)
+            printf("object type: vglyph_surface_t\n");
+    }
+    else
+    {
+        show_object_state(object);
     }
 }
 
@@ -59,12 +79,18 @@ int main(void)
     point2.hinting = VGLYPH_HINTING_HORIZONTAL | VGLYPH_HINTING_VERTICAL;
 
     vglyph_figure_t* figure = vglyph_figure_create();
-    show_object_state(figure);
+    show_object_state(vglyph_figure_to_object(figure));
+    show_object_type(vglyph_figure_to_object(figure));
 
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
     vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_RELATIVE, &point2);
 
-    vglyph_figure_destroy(figure);
+    vglyph_surface_t* surface = vglyph_surface_create();
+    show_object_state(vglyph_surface_to_object(surface));
+    show_object_type(vglyph_surface_to_object(surface));
 
+    vglyph_object_destroy(vglyph_surface_to_object(surface));
+    vglyph_object_destroy(vglyph_figure_to_object(figure));
+    
     return EXIT_SUCCESS;
 }

@@ -103,25 +103,16 @@ vglyph_public vglyph_state_t
 vglyph_object_get_state(vglyph_object_t* object);
 
 vglyph_public vglyph_figure_t*
+vglyph_object_to_figure(vglyph_object_t* object);
+
+vglyph_public vglyph_surface_t*
+vglyph_object_to_surface(vglyph_object_t* object);
+
+vglyph_public vglyph_figure_t*
 vglyph_figure_create(void);
 
-vglyph_public vglyph_figure_t*
-vglyph_figure_reference(vglyph_figure_t* figure);
-
-vglyph_public void
-vglyph_figure_destroy(vglyph_figure_t* figure);
-
-vglyph_public int
-vglyph_figure_get_reference_count(vglyph_figure_t* figure);
-
-vglyph_public vglyph_state_t
-vglyph_figure_get_state(vglyph_figure_t* figure);
-
 vglyph_public vglyph_object_t*
-vglyph_figure_figure_to_object(vglyph_figure_t* figure);
-
-vglyph_public vglyph_figure_t*
-vglyph_figure_object_to_figure(vglyph_object_t* object);
+vglyph_figure_to_object(vglyph_figure_t* figure);
 
 vglyph_public vglyph_bool_t
 vglyph_figure_draw_clear(vglyph_figure_t* figure);
@@ -176,23 +167,8 @@ vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
 vglyph_public vglyph_surface_t*
 vglyph_surface_create(void);
 
-vglyph_public vglyph_surface_t*
-vglyph_surface_reference(vglyph_surface_t* surface);
-
-vglyph_public void
-vglyph_surface_destroy(vglyph_surface_t* surface);
-
-vglyph_public int
-vglyph_surface_get_reference_count(vglyph_surface_t* surface);
-
-vglyph_public vglyph_state_t
-vglyph_surface_get_state(vglyph_surface_t* surface);
-
 vglyph_public vglyph_object_t*
-vglyph_surface_surface_to_object(vglyph_surface_t* surface);
-
-vglyph_public vglyph_surface_t*
-vglyph_surface_object_to_surface(vglyph_object_t* object);
+vglyph_surface_to_object(vglyph_surface_t* surface);
 
 VGLYPH_END
 
