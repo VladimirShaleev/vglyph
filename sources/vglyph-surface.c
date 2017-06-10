@@ -5,10 +5,7 @@
  */
 
 #include "vglyph-surface.h"
-
-static vglyph_uuid_t vglyph_surface_type = {
-    0x018f0c8d, 0xb600, 0x4bcb, 0xb6, 0xce, { 0xfc, 0xf6, 0x31, 0xfd, 0xfe, 0x2b }
-};
+#include "vglyph-type.h"
 
 void
 _vglyph_surface_init(vglyph_surface_t* surface,
@@ -28,9 +25,9 @@ _vglyph_surface_dtor(vglyph_surface_t* surface)
 }
 
 vglyph_bool_t
-_vglyph_surface_is_cast(vglyph_uuid_t* uuid)
+_vglyph_surface_is_cast(vglyph_type_t* type)
 {
-    return _vglyph_uuid_equal(uuid, &vglyph_surface_type);
+    return vglyph_get_surface_type() == type;
 }
 
 static void
@@ -43,20 +40,28 @@ _vglyph_surface_destroy(vglyph_object_t* object)
 }
 
 static const vglyph_object_backend_t vglyph_surface_object_backend = {
+    vglyph_get_surface_type,
     _vglyph_surface_is_cast,
     _vglyph_surface_destroy
 };
 
-vglyph_object_t*
-vglyph_surface_to_object(vglyph_surface_t* surface)
+vglyph_type_t*
+vglyph_get_surface_type(void)
 {
-    assert(surface);
-    return &surface->object;
+    static vglyph_type_t type = _vglyph_type_create(&vglyph_surface_object_backend);
+    return &type;
 }
 
 vglyph_surface_t*
 vglyph_object_to_surface(vglyph_object_t* object)
 {
     assert(object);
-    return (vglyph_surface_t*)_vglyph_object_to_type(object, &vglyph_surface_type);
+    return (vglyph_surface_t*)_vglyph_object_to_type(object, vglyph_get_surface_type());
+}
+
+vglyph_object_t*
+vglyph_surface_to_object(vglyph_surface_t* surface)
+{
+    assert(surface);
+    return &surface->object;
 }

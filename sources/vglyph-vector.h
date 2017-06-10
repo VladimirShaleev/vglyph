@@ -9,8 +9,6 @@
 
 #include "vglyph-object.h"
 
-extern vglyph_uuid_t _vglyph_vector_type;
-
 extern const vglyph_object_backend_t _vglyph_vector_object_backend;
 
 typedef struct _vglyph_vector
@@ -21,6 +19,16 @@ typedef struct _vglyph_vector
     vglyph_uint_t   count_bytes;
     vglyph_uint_t   max_bytes;
 } vglyph_vector_t;
+
+vglyph_type_t*
+_vglyph_vector_get_type(void);
+
+static inline vglyph_vector_t*
+_vglyph_object_to_vector(vglyph_object_t* object)
+{
+    assert(object);
+    return (vglyph_vector_t*)_vglyph_object_to_type(object, _vglyph_vector_get_type());
+}
 
 static inline void
 _vglyph_vector_set_state(vglyph_vector_t* vector,
@@ -119,13 +127,6 @@ _vglyph_vector_to_object(vglyph_vector_t* vector)
 {
     assert(vector);
     return &vector->object;
-}
-
-static inline vglyph_vector_t*
-_vglyph_object_to_vector(vglyph_object_t* object)
-{
-    assert(object);
-    return (vglyph_vector_t*)_vglyph_object_to_type(object, &_vglyph_vector_type);
 }
 
 static inline vglyph_uint_t

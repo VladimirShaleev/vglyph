@@ -42,9 +42,6 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-surface.h">
       <Filter>sources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-uuid.h">
-      <Filter>sources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\sources\vglyph-data-surface.h">
       <Filter>sources</Filter>
     </ClInclude>
@@ -52,6 +49,9 @@
       <Filter>sources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint-format.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\sources\vglyph-type.h">
       <Filter>sources</Filter>
     </ClInclude>
   </ItemGroup>
@@ -78,6 +78,9 @@
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint-format.c">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\sources\vglyph-type.c">
       <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>

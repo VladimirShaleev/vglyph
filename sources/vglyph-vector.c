@@ -5,15 +5,25 @@
  */
 
 #include "vglyph-vector.h"
+#include "vglyph-type.h"
 
-vglyph_uuid_t _vglyph_vector_type = {
-    0x018f0c8d, 0xb600, 0x4bcb, 0xb6, 0xce,{ 0xfc, 0xf6, 0x31, 0xfd, 0xfe, 0x2b }
-};
+vglyph_type_t*
+_vglyph_vector_get_type(void)
+{
+    static vglyph_type_t type = _vglyph_type_create(&_vglyph_vector_object_backend);
+    return &type;
+}
+
+static vglyph_type_t*
+_vglyph_vector_get_type_callback(void)
+{
+    return _vglyph_vector_get_type();
+}
 
 static vglyph_bool_t
-_vglyph_vector_is_cast_callback(vglyph_uuid_t* uuid)
+_vglyph_vector_is_cast_callback(vglyph_type_t* type)
 {
-    return _vglyph_uuid_equal(uuid, &_vglyph_vector_type);
+    return _vglyph_vector_get_type() == type;
 }
 
 static void
@@ -26,6 +36,7 @@ _vglyph_vector_destroy_callback(vglyph_object_t* object)
 }
 
 const vglyph_object_backend_t _vglyph_vector_object_backend = {
+    _vglyph_vector_get_type_callback,
     _vglyph_vector_is_cast_callback,
     _vglyph_vector_destroy_callback
 };

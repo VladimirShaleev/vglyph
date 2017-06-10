@@ -5,10 +5,7 @@
  */
 
 #include "vglyph-figure.h"
-
-static vglyph_uuid_t vglyph_figure_type = {
-    0x384643d6, 0x004c, 0x49fd, 0xbb, 0x22,{ 0x73, 0xf5, 0x99, 0x91, 0xad, 0xbf }
-};
+#include "vglyph-type.h"
 
 static void
 _vglyph_figure_init(vglyph_figure_t* figure,
@@ -57,9 +54,9 @@ _vglyph_figure_dtor(vglyph_figure_t* figure)
 }
 
 static vglyph_bool_t
-_vglyph_figure_is_cast(vglyph_uuid_t* uuid)
+_vglyph_figure_is_cast(vglyph_type_t* type)
 {
-    return _vglyph_uuid_equal(uuid, &vglyph_figure_type);
+    return vglyph_get_figure_type() == type;
 }
 
 static void
@@ -72,9 +69,24 @@ _vglyph_figure_destroy(vglyph_object_t* object)
 }
 
 static const vglyph_object_backend_t vglyph_figure_object_backend = {
+    vglyph_get_figure_type,
     _vglyph_figure_is_cast,
     _vglyph_figure_destroy
 };
+
+vglyph_type_t*
+vglyph_get_figure_type(void)
+{
+    static vglyph_type_t type = _vglyph_type_create(&vglyph_figure_object_backend);
+    return &type;
+}
+
+vglyph_figure_t*
+vglyph_object_to_figure(vglyph_object_t* object)
+{
+    assert(object);
+    return (vglyph_figure_t*)_vglyph_object_to_type(object, vglyph_get_figure_type());
+}
 
 vglyph_figure_t*
 vglyph_figure_create(void)
@@ -95,13 +107,6 @@ vglyph_figure_to_object(vglyph_figure_t* figure)
 {
     assert(figure);
     return &figure->object;
-}
-
-vglyph_figure_t*
-vglyph_object_to_figure(vglyph_object_t* object)
-{
-    assert(object);
-    return (vglyph_figure_t*)_vglyph_object_to_type(object, &vglyph_figure_type);
 }
 
 vglyph_bool_t

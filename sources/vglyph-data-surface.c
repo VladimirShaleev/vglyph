@@ -5,10 +5,7 @@
  */
 
 #include "vglyph-data-surface.h"
-
-static vglyph_uuid_t vglyph_data_surface_type = {
-    0x00714ba3, 0xa35f, 0x43c2, 0x9b, 0x6a, { 0x69, 0x40, 0x70, 0x42, 0x11, 0x34 }
-};
+#include "vglyph-type.h"
 
 void
 _vglyph_data_surface_init(vglyph_data_surface_t* surface,
@@ -34,10 +31,10 @@ _vglyph_data_surface_dtor(vglyph_data_surface_t* surface)
 }
 
 vglyph_bool_t
-_vglyph_data_surface_is_cast(vglyph_uuid_t* uuid)
+_vglyph_data_surface_is_cast(vglyph_type_t* type)
 {
-    return _vglyph_uuid_equal(uuid, &vglyph_data_surface_type)
-        || _vglyph_surface_is_cast(uuid);
+    return _vglyph_data_surface_get_type() == type
+        || _vglyph_surface_is_cast(type);
 }
 
 static void
@@ -50,9 +47,17 @@ _vglyph_data_surface_destroy(vglyph_object_t* object)
 }
 
 static const vglyph_object_backend_t vglyph_data_surface_object_backend = {
+    _vglyph_data_surface_get_type,
     _vglyph_data_surface_is_cast,
     _vglyph_data_surface_destroy
 };
+
+vglyph_type_t*
+_vglyph_data_surface_get_type(void)
+{
+    static vglyph_type_t type = _vglyph_type_create(&vglyph_data_surface_object_backend);
+    return &type;
+}
 
 vglyph_surface_t*
 vglyph_surface_create_for_data(unsigned char* data,

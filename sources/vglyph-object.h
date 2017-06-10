@@ -9,14 +9,14 @@
 
 #include "vglyph-api.h"
 #include "vglyph-types.h"
-#include "vglyph-uuid.h"
 
 #define VGLYPH_REFERENCE_COUNT_INVALID (-1)
 
 typedef struct _vglyph_object_backend
 {
-    vglyph_bool_t (*is_cast)(vglyph_uuid_t* uuid);
-    void          (*destroy)(vglyph_object_t* object);
+    vglyph_type_t* (*get_type)(void);
+    vglyph_bool_t  (*is_cast)(vglyph_type_t* type);
+    void           (*destroy)(vglyph_object_t* object);
 } vglyph_object_backend_t;
 
 struct _vglyph_object
@@ -34,7 +34,7 @@ _vglyph_object_invalid_cast();
 
 vglyph_object_t*
 _vglyph_object_to_type(vglyph_object_t* object,
-                       vglyph_uuid_t* uuid);
+                       vglyph_type_t* type);
 
 static inline void
 _vglyph_object_init(vglyph_object_t* object,
@@ -98,6 +98,13 @@ _vglyph_object_is_valid(vglyph_object_t* object)
 {
     assert(object);
     return object->state == VGLYPH_STATE_SUCCESS;
+}
+
+static inline vglyph_type_t*
+_vglyph_object_get_type(vglyph_object_t* object)
+{
+    assert(object);
+    return object->backend->get_type();
 }
 
 #endif

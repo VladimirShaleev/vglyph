@@ -181,6 +181,27 @@ vglyph_is_version_compatible(int compile_version);
 vglyph_public const char*
 vglyph_state_to_string(vglyph_state_t state);
 
+vglyph_public vglyph_type_t*
+vglyph_get_object_type(void);
+
+vglyph_public vglyph_type_t*
+vglyph_get_type_type(void);
+
+vglyph_public vglyph_type_t*
+vglyph_get_figure_type(void);
+
+vglyph_public vglyph_type_t*
+vglyph_get_format_type(void);
+
+vglyph_public vglyph_type_t*
+vglyph_get_rgba_uint_format_type(void);
+
+//vglyph_public vglyph_type_t*
+//vglyph_get_rgba_float_format_type(void);
+
+vglyph_public vglyph_type_t*
+vglyph_get_surface_type(void);
+
 vglyph_public vglyph_object_t*
 vglyph_object_reference(vglyph_object_t* object);
 
@@ -192,6 +213,16 @@ vglyph_object_get_reference_count(vglyph_object_t* object);
 
 vglyph_public vglyph_state_t
 vglyph_object_get_state(vglyph_object_t* object);
+
+vglyph_public vglyph_type_t*
+vglyph_object_get_type(vglyph_object_t* object);
+
+vglyph_public vglyph_bool_t
+vglyph_object_is_cast(vglyph_object_t* object, 
+                      vglyph_type_t* type);
+
+vglyph_public vglyph_type_t*
+vglyph_object_to_type(vglyph_object_t* object);
 
 vglyph_public vglyph_figure_t*
 vglyph_object_to_figure(vglyph_object_t* object);
@@ -207,6 +238,13 @@ vglyph_object_to_rgba_uint_format(vglyph_object_t* object);
 
 vglyph_public vglyph_surface_t*
 vglyph_object_to_surface(vglyph_object_t* object);
+
+vglyph_public vglyph_object_t*
+vglyph_type_to_object(vglyph_type_t* type);
+
+vglyph_public vglyph_bool_t
+vglyph_type_is_type(vglyph_type_t* type,
+                    vglyph_type_t* equal_type);
 
 vglyph_public vglyph_figure_t*
 vglyph_figure_create(void);

@@ -25,7 +25,7 @@ void
 _vglyph_format_dtor(vglyph_format_t* format);
 
 vglyph_bool_t
-_vglyph_format_is_cast(vglyph_uuid_t* uuid);
+_vglyph_format_is_cast(vglyph_type_t* type);
 
 static inline void
 _vglyph_format_set_state(vglyph_format_t* format,

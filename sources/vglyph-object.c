@@ -5,6 +5,7 @@
  */
 
 #include "vglyph-object.h"
+#include "vglyph-type.h"
 
 vglyph_object_t*
 _vglyph_object_out_of_memory()
@@ -30,19 +31,19 @@ _vglyph_object_invalid_cast()
 
 vglyph_object_t*
 _vglyph_object_to_type(vglyph_object_t* object,
-                       vglyph_uuid_t* uuid)
+                       vglyph_type_t* type)
 {
-    static vglyph_uuid_t type = { 
-        0x8690b4de, 0xb6de, 0x4762, 0xa6, 0xfa, { 0x6c, 0xbf, 0xd3, 0x60, 0xf4, 0x0e }
-    };
-
-    if (_vglyph_object_is_valid(object))
-    {
-        if (object->backend->is_cast(uuid) || _vglyph_uuid_equal(uuid, &type))
-            return object;
-    }
+    if (vglyph_object_is_cast(object, type))
+        return object;
 
     return _vglyph_object_invalid_cast();
+}
+
+vglyph_type_t*
+vglyph_get_object_type(void)
+{
+    static vglyph_type_t type = _vglyph_type_create(NULL);
+    return &type;
 }
 
 vglyph_object_t*
@@ -71,4 +72,26 @@ vglyph_object_get_state(vglyph_object_t* object)
 {
     assert(object);
     return _vglyph_object_get_state(object);
+}
+
+vglyph_type_t*
+vglyph_object_get_type(vglyph_object_t* object)
+{
+    assert(object);
+    return _vglyph_object_get_type(object);
+}
+
+vglyph_bool_t
+vglyph_object_is_cast(vglyph_object_t* object,
+                      vglyph_type_t* type)
+{
+    assert(object);
+
+    if (_vglyph_object_is_valid(object))
+    {
+        if (object->backend->is_cast(type) || vglyph_get_object_type() == type)
+            return TRUE;
+    }
+
+    return FALSE;
 }

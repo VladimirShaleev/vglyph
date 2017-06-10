@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void show_glyph_info()
+void show_glyph_info(void)
 {
 #ifdef VGLYPH_STATIC_BUILD
     printf("=================================================\n");
@@ -50,19 +50,18 @@ void show_object_type(vglyph_object_t* object)
 
     if (state == VGLYPH_STATE_SUCCESS)
     {
-        vglyph_figure_t*           figure           = vglyph_object_to_figure(object);
-        vglyph_rgba_uint_format_t* rgba_uint_format = vglyph_object_to_rgba_uint_format(object);
-        vglyph_format_t*           format           = vglyph_object_to_format(object);
-        vglyph_surface_t*          surface          = vglyph_object_to_surface(object);
-
-        if (vglyph_object_get_state(vglyph_figure_to_object(figure)) == VGLYPH_STATE_SUCCESS)
-            printf("object type: vglyph_figure_t\n");
-        else if (vglyph_object_get_state(vglyph_rgba_uint_format_to_object(rgba_uint_format)) == VGLYPH_STATE_SUCCESS)
-            printf("object type: vglyph_rgba_uint_format_t\n");
-        else if (vglyph_object_get_state(vglyph_format_to_object(format)) == VGLYPH_STATE_SUCCESS)
-            printf("object type: vglyph_format_t\n");
-        else if (vglyph_object_get_state(vglyph_surface_to_object(surface)) == VGLYPH_STATE_SUCCESS)
+        if (vglyph_object_is_cast(object, vglyph_get_surface_type()))
             printf("object type: vglyph_surface_t\n");
+        else if (vglyph_object_is_cast(object, vglyph_get_rgba_uint_format_type()))
+            printf("object type: vglyph_rgba_uint_format_t\n");
+        else if (vglyph_object_is_cast(object, vglyph_get_format_type()))
+            printf("object type: vglyph_format_t\n");
+        else if (vglyph_object_is_cast(object, vglyph_get_figure_type()))
+            printf("object type: vglyph_figure_t\n");
+        else if (vglyph_object_is_cast(object, vglyph_get_type_type()))
+            printf("object type: vglyph_type_t\n");
+        else if (vglyph_object_is_cast(object, vglyph_get_object_type()))
+            printf("object type: vglyph_object_t\n");
     }
     else
     {
@@ -86,6 +85,9 @@ int main(void)
 
     vglyph_figure_t* figure = vglyph_figure_create();
     show_object_type(vglyph_figure_to_object(figure));
+
+    vglyph_type_t* type = vglyph_object_get_type(vglyph_figure_to_object(figure));
+    show_object_type(vglyph_type_to_object(type));
 
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
     vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_RELATIVE, &point2);
@@ -115,6 +117,7 @@ int main(void)
 
     vglyph_object_destroy(vglyph_surface_to_object(surface));
     vglyph_object_destroy(vglyph_format_to_object(format));
+    vglyph_object_destroy(vglyph_type_to_object(type));
     vglyph_object_destroy(vglyph_figure_to_object(figure));
 
     return EXIT_SUCCESS;
