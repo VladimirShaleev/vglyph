@@ -133,7 +133,7 @@ vglyph_figure_draw_closepath(vglyph_figure_t* figure)
 vglyph_bool_t
 vglyph_figure_draw_moveto(vglyph_figure_t* figure,
                           vglyph_coordinate_t coordinate,
-                          vglyph_point_t* point)
+                          const vglyph_point_t* point)
 {
     assert(figure);
     assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
@@ -161,7 +161,7 @@ vglyph_figure_draw_moveto(vglyph_figure_t* figure,
 vglyph_bool_t
 vglyph_figure_draw_lineto(vglyph_figure_t* figure,
                           vglyph_coordinate_t coordinate,
-                          vglyph_point_t* point)
+                          const vglyph_point_t* point)
 {
     assert(figure);
     assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
@@ -189,9 +189,9 @@ vglyph_figure_draw_lineto(vglyph_figure_t* figure,
 vglyph_bool_t
 vglyph_figure_draw_curveto_cubic(vglyph_figure_t* figure,
                                  vglyph_coordinate_t coordinate,
-                                 vglyph_point_t* point,
-                                 vglyph_point_t* point1,
-                                 vglyph_point_t* point2)
+                                 const vglyph_point_t* point,
+                                 const vglyph_point_t* point1,
+                                 const vglyph_point_t* point2)
 {
     assert(figure);
     assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
@@ -223,8 +223,8 @@ vglyph_figure_draw_curveto_cubic(vglyph_figure_t* figure,
 vglyph_bool_t
 vglyph_figure_draw_curveto_quadratic(vglyph_figure_t* figure,
                                      vglyph_coordinate_t coordinate,
-                                     vglyph_point_t* point,
-                                     vglyph_point_t* point1)
+                                     const vglyph_point_t* point,
+                                     const vglyph_point_t* point1)
 {
     assert(figure);
     assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
@@ -254,8 +254,8 @@ vglyph_figure_draw_curveto_quadratic(vglyph_figure_t* figure,
 vglyph_bool_t
 vglyph_figure_draw_arc(vglyph_figure_t* figure,
                        vglyph_coordinate_t coordinate,
-                       vglyph_point_t* point,
-                       vglyph_point_t* radius,
+                       const vglyph_point_t* point,
+                       const vglyph_point_t* radius,
                        vglyph_float32_t angle,
                        vglyph_bool_t large_arc_flag,
                        vglyph_bool_t sweep_flag)

@@ -46,15 +46,21 @@ void show_object_state(vglyph_object_t* object)
 
 void show_object_type(vglyph_object_t* object)
 {
-    vglyph_state_t state = vglyph_object_get_state(object);
+    const vglyph_state_t state = vglyph_object_get_state(object);
 
     if (state == VGLYPH_STATE_SUCCESS)
     {
-        vglyph_figure_t*  figure  = vglyph_object_to_figure(object);
-        vglyph_surface_t* surface = vglyph_object_to_surface(object);
+        vglyph_figure_t*           figure           = vglyph_object_to_figure(object);
+        vglyph_rgba_uint_format_t* rgba_uint_format = vglyph_object_to_rgba_uint_format(object);
+        vglyph_format_t*           format           = vglyph_object_to_format(object);
+        vglyph_surface_t*          surface          = vglyph_object_to_surface(object);
 
         if (vglyph_object_get_state(vglyph_figure_to_object(figure)) == VGLYPH_STATE_SUCCESS)
             printf("object type: vglyph_figure_t\n");
+        else if (vglyph_object_get_state(vglyph_rgba_uint_format_to_object(rgba_uint_format)) == VGLYPH_STATE_SUCCESS)
+            printf("object type: vglyph_rgba_uint_format_t\n");
+        else if (vglyph_object_get_state(vglyph_format_to_object(format)) == VGLYPH_STATE_SUCCESS)
+            printf("object type: vglyph_format_t\n");
         else if (vglyph_object_get_state(vglyph_surface_to_object(surface)) == VGLYPH_STATE_SUCCESS)
             printf("object type: vglyph_surface_t\n");
     }
@@ -79,18 +85,37 @@ int main(void)
     point2.hinting = VGLYPH_HINTING_ALL;
 
     vglyph_figure_t* figure = vglyph_figure_create();
-    show_object_state(vglyph_figure_to_object(figure));
     show_object_type(vglyph_figure_to_object(figure));
 
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
     vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_RELATIVE, &point2);
 
-    vglyph_surface_t* surface = vglyph_surface_create();
-    show_object_state(vglyph_surface_to_object(surface));
+    vglyph_rgba_components_t components;
+    components.r = VGLYPH_COMPONENT_RED;
+    components.g = VGLYPH_COMPONENT_GREEN;
+    components.b = VGLYPH_COMPONENT_BLUE;
+    components.a = VGLYPH_COMPONENT_ALPHA;
+
+    vglyph_rgba_uint_bit_count_t bit_count;
+    bit_count.r = 5;
+    bit_count.g = 6;
+    bit_count.b = 5;
+    bit_count.a = 0;
+    
+    vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
+        vglyph_rgba_uint_format_create(&components, &bit_count));
+    show_object_type(vglyph_format_to_object(format));
+
+    unsigned char* data = (unsigned char*)malloc(256 * 128 * 2);
+
+    vglyph_surface_t* surface = vglyph_surface_create_for_data(data, format, 256, 128);
     show_object_type(vglyph_surface_to_object(surface));
 
+    free(data);
+
     vglyph_object_destroy(vglyph_surface_to_object(surface));
+    vglyph_object_destroy(vglyph_format_to_object(format));
     vglyph_object_destroy(vglyph_figure_to_object(figure));
-    
+
     return EXIT_SUCCESS;
 }

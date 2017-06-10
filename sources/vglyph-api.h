@@ -9,7 +9,6 @@
 
 #include <assert.h>
 #include <stdlib.h>
-#include <stdint.h>
 
 #if defined (_MSC_VER) && !defined (VGLYPH_STATIC_BUILD)
 # define vglyph_public __declspec(dllexport)

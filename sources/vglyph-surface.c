@@ -47,20 +47,6 @@ static const vglyph_object_backend_t vglyph_surface_object_backend = {
     _vglyph_surface_destroy
 };
 
-vglyph_surface_t*
-vglyph_surface_create(void)
-{
-    vglyph_surface_t* surface = (vglyph_surface_t*)malloc(sizeof(vglyph_surface_t));
-
-    if (!surface)
-        return (vglyph_surface_t*)_vglyph_object_out_of_memory();
-
-    _vglyph_surface_init(surface, &vglyph_surface_object_backend);
-    _vglyph_surface_ctor(surface);
-
-    return surface;
-}
-
 vglyph_object_t*
 vglyph_surface_to_object(vglyph_surface_t* surface)
 {

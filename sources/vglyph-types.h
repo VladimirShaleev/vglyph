@@ -7,6 +7,8 @@
 #ifndef VGLYPH_TYPES_H
 #define VGLYPH_TYPES_H
 
+#include <stdint.h>
+
 #ifndef FALSE
 # define FALSE 0
 #endif
