@@ -5,6 +5,7 @@
 *.opendb
 *.aps
 *.ipch
+/.vs
 /build/Windows/vs14/.vs
 /build/Windows/vs14/Debug
 /build/Windows/vs14/Release
