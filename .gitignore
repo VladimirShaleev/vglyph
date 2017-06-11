@@ -4,6 +4,8 @@
 *.suo
 *.opendb
 *.aps
+*.ipch
+/build/Windows/vs14/.vs
 /build/Windows/vs14/Debug
 /build/Windows/vs14/Release
 /build/Windows/vs14/vglyph/Debug
