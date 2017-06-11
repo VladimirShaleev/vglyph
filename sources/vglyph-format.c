@@ -48,7 +48,7 @@ static const vglyph_object_backend_t vglyph_format_object_backend = {
 vglyph_type_t*
 vglyph_get_format_type(void)
 {
-    static vglyph_type_t type = _vglyph_type_create(&vglyph_format_object_backend);
+    static vglyph_type_t type = _vglyph_type_create(_vglyph_format_is_cast);
     return &type;
 }
 

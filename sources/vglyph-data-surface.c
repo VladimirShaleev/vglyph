@@ -37,6 +37,13 @@ _vglyph_data_surface_is_cast(vglyph_type_t* type)
         || _vglyph_surface_is_cast(type);
 }
 
+vglyph_type_t*
+_vglyph_data_surface_get_type(void)
+{
+    static vglyph_type_t type = _vglyph_type_create(_vglyph_data_surface_is_cast);
+    return &type;
+}
+
 static void
 _vglyph_data_surface_destroy(vglyph_object_t* object)
 {
@@ -51,13 +58,6 @@ static const vglyph_object_backend_t vglyph_data_surface_object_backend = {
     _vglyph_data_surface_is_cast,
     _vglyph_data_surface_destroy
 };
-
-vglyph_type_t*
-_vglyph_data_surface_get_type(void)
-{
-    static vglyph_type_t type = _vglyph_type_create(&vglyph_data_surface_object_backend);
-    return &type;
-}
 
 vglyph_surface_t*
 vglyph_surface_create_for_data(unsigned char* data,

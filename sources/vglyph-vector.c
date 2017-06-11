@@ -7,13 +7,6 @@
 #include "vglyph-vector.h"
 #include "vglyph-type.h"
 
-vglyph_type_t*
-_vglyph_vector_get_type(void)
-{
-    static vglyph_type_t type = _vglyph_type_create(&_vglyph_vector_object_backend);
-    return &type;
-}
-
 static vglyph_type_t*
 _vglyph_vector_get_type_callback(void)
 {
@@ -33,6 +26,13 @@ _vglyph_vector_destroy_callback(vglyph_object_t* object)
     _vglyph_vector_dtor(vector);
 
     free(vector);
+}
+
+vglyph_type_t*
+_vglyph_vector_get_type(void)
+{
+    static vglyph_type_t type = _vglyph_type_create(_vglyph_vector_is_cast_callback);
+    return &type;
 }
 
 const vglyph_object_backend_t _vglyph_vector_object_backend = {

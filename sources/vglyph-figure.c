@@ -77,7 +77,7 @@ static const vglyph_object_backend_t vglyph_figure_object_backend = {
 vglyph_type_t*
 vglyph_get_figure_type(void)
 {
-    static vglyph_type_t type = _vglyph_type_create(&vglyph_figure_object_backend);
+    static vglyph_type_t type = _vglyph_type_create(_vglyph_figure_is_cast);
     return &type;
 }
 
