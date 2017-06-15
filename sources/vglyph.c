@@ -7,7 +7,7 @@
 #include "vglyph-api.h"
 #include "vglyph-types.h"
 
-int
+vglyph_uint32_t
 vglyph_version(void)
 {
     return VGLYPH_VERSION;
@@ -20,7 +20,7 @@ vglyph_version_string(void)
 }
 
 vglyph_bool_t
-vglyph_is_version_compatible(int compile_version)
+vglyph_is_version_compatible(vglyph_uint32_t compile_version)
 {
     return (VGLYPH_VERSION >> 8) >= (compile_version >> 8) ? TRUE : FALSE;
 }

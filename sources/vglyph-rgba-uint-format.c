@@ -10,10 +10,11 @@
 void
 _vglyph_rgba_uint_format_init(vglyph_rgba_uint_format_t* format,
                               const vglyph_object_backend_t* object_backend,
+                              const vglyph_format_backend_t* format_backend,
                               const vglyph_rgba_components_t* components,
                               const vglyph_rgba_uint_bit_count_t* bit_count)
 {
-    _vglyph_format_init(&format->base, object_backend);
+    _vglyph_format_init(&format->base, object_backend, format_backend);
 
     format->components = *components;
     format->bit_count  = *bit_count;
@@ -51,10 +52,26 @@ _vglyph_rgba_uint_format_destroy(vglyph_object_t* object)
     free(format);
 }
 
+static unsigned int
+_vglyph_rgba_uint_format_get_bits_per_pixel(vglyph_format_t* format)
+{
+    vglyph_rgba_uint_format_t* rgba_uint_format = (vglyph_rgba_uint_format_t*)format;
+
+    return (unsigned int)
+        rgba_uint_format->bit_count.r +
+        rgba_uint_format->bit_count.g +
+        rgba_uint_format->bit_count.b +
+        rgba_uint_format->bit_count.a;
+}
+
 static const vglyph_object_backend_t vglyph_rgba_uint_format_object_backend = {
     vglyph_get_rgba_uint_format_type,
     _vglyph_rgba_uint_format_is_cast,
     _vglyph_rgba_uint_format_destroy
+};
+
+static const vglyph_format_backend_t vglyph_rgba_uint_format_backend = {
+    _vglyph_rgba_uint_format_get_bits_per_pixel,
 };
 
 vglyph_type_t*
@@ -94,7 +111,12 @@ vglyph_rgba_uint_format_create(const vglyph_rgba_components_t* components,
     if (!format)
         return (vglyph_rgba_uint_format_t*)_vglyph_object_out_of_memory();
 
-    _vglyph_rgba_uint_format_init(format, &vglyph_rgba_uint_format_object_backend, components, bit_count);
+    _vglyph_rgba_uint_format_init(format, 
+                                  &vglyph_rgba_uint_format_object_backend, 
+                                  &vglyph_rgba_uint_format_backend, 
+                                  components, 
+                                  bit_count);
+
     _vglyph_rgba_uint_format_ctor(format);
 
     return format;

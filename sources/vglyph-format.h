@@ -9,14 +9,21 @@
 
 #include "vglyph-object.h"
 
+typedef struct _vglyph_format_backend
+{
+    unsigned int (*get_bits_per_pixel)(vglyph_format_t* format);
+} vglyph_format_backend_t;
+
 struct _vglyph_format
 {
     vglyph_object_t object;
+    const vglyph_format_backend_t* backend;
 };
 
 void
 _vglyph_format_init(vglyph_format_t* format,
-                    const vglyph_object_backend_t* object_backend);
+                    const vglyph_object_backend_t* object_backend,
+                    const vglyph_format_backend_t* format_backend);
 
 void
 _vglyph_format_ctor(vglyph_format_t* format);

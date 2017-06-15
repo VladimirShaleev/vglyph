@@ -54,6 +54,9 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-type.h">
       <Filter>sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\vglyph-platform.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\sources\vglyph.c">

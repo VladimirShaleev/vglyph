@@ -60,11 +60,11 @@ vglyph_object_destroy(vglyph_object_t* object)
     _vglyph_object_destroy(object);
 }
 
-int
+vglyph_sint32_t
 vglyph_object_get_reference_count(vglyph_object_t* object)
 {
     assert(object);
-    return _vglyph_object_get_reference_count(object);
+    return (vglyph_sint32_t)_vglyph_object_get_reference_count(object);
 }
 
 vglyph_state_t

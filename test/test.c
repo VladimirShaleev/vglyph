@@ -99,18 +99,26 @@ int main(void)
     components.a = VGLYPH_COMPONENT_ALPHA;
 
     vglyph_rgba_uint_bit_count_t bit_count;
-    bit_count.r = 5;
-    bit_count.g = 6;
-    bit_count.b = 5;
+    bit_count.r = 1;
+    bit_count.g = 2;
+    bit_count.b = 0;
     bit_count.a = 0;
     
     vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
         vglyph_rgba_uint_format_create(&components, &bit_count));
     show_object_type(vglyph_format_to_object(format));
 
-    unsigned char* data = (unsigned char*)malloc(256 * 128 * 2);
+    printf("\tbit per pixel: %d\n\n", vglyph_format_get_bits_per_pixel(format));
 
-    vglyph_surface_t* surface = vglyph_surface_create_for_data(data, format, 256, 128);
+    vglyph_uint32_t width  = (vglyph_uint32_t)100;
+    vglyph_uint32_t height = (vglyph_uint32_t)2;
+    vglyph_uint32_t align  = (vglyph_uint32_t)4;
+
+    vglyph_uint32_t data_size = vglyph_surface_get_data_size(format, width, height, align);
+
+    void* data = malloc(data_size);
+
+    vglyph_surface_t* surface = vglyph_surface_create_for_data(data, data_size, format, width, height, align);
     show_object_type(vglyph_surface_to_object(surface));
 
     free(data);

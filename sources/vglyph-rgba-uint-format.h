@@ -19,6 +19,7 @@ struct _vglyph_rgba_uint_format
 void
 _vglyph_rgba_uint_format_init(vglyph_rgba_uint_format_t* format,
                               const vglyph_object_backend_t* object_backend,
+                              const vglyph_format_backend_t* format_backend,
                               const vglyph_rgba_components_t* components,
                               const vglyph_rgba_uint_bit_count_t* bit_count);
 

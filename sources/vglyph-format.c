@@ -9,9 +9,12 @@
 
 void
 _vglyph_format_init(vglyph_format_t* format,
-                    const vglyph_object_backend_t* object_backend)
+                    const vglyph_object_backend_t* object_backend,
+                    const vglyph_format_backend_t* format_backend)
 {
     _vglyph_object_init(&format->object, object_backend);
+
+    format->backend = format_backend;
 }
 
 void
@@ -64,4 +67,15 @@ vglyph_format_to_object(vglyph_format_t* format)
 {
     assert(format);
     return &format->object;
+}
+
+vglyph_uint32_t
+vglyph_format_get_bits_per_pixel(vglyph_format_t* format)
+{
+    assert(format);
+
+    if (_vglyph_format_is_valid(format))
+        return (vglyph_uint32_t)format->backend->get_bits_per_pixel(format);
+
+    return 0;
 }

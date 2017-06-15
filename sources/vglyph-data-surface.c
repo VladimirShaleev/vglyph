@@ -59,14 +59,37 @@ static const vglyph_object_backend_t vglyph_data_surface_object_backend = {
     _vglyph_data_surface_destroy
 };
 
+vglyph_uint32_t
+vglyph_surface_get_data_size(vglyph_format_t* format,
+                             vglyph_uint32_t width,
+                             vglyph_uint32_t height,
+                             vglyph_alignment_t row_alignment)
+{
+    assert(format);
+    assert(row_alignment == VGLYPH_ALIGNMENT_1 ||
+           row_alignment == VGLYPH_ALIGNMENT_2 ||
+           row_alignment == VGLYPH_ALIGNMENT_4 ||
+           row_alignment == VGLYPH_ALIGNMENT_8);
+
+    vglyph_uint32_t bits_per_pixel = vglyph_format_get_bits_per_pixel(format);
+    vglyph_uint32_t pitch = (width * bits_per_pixel + 7) >> 3;
+    vglyph_uint32_t align = row_alignment - 1;
+    pitch = (pitch + align) & ~align;
+
+    return pitch * height;
+}
+
 vglyph_surface_t*
-vglyph_surface_create_for_data(unsigned char* data,
-                               const vglyph_format_t* format,
-                               unsigned int width,
-                               unsigned int height)
+vglyph_surface_create_for_data(void* data,
+                               vglyph_uint32_t data_size,
+                               vglyph_format_t* format,
+                               vglyph_uint32_t width,
+                               vglyph_uint32_t height,
+                               vglyph_alignment_t row_alignment)
 {
     assert(data);
     assert(format);
+    assert(data_size >= vglyph_surface_get_data_size(format, width, height, row_alignment));
 
     vglyph_data_surface_t* surface = (vglyph_data_surface_t*)malloc(sizeof(vglyph_data_surface_t));
 

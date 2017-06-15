@@ -8,6 +8,7 @@
 #define VGLYPH_H
 
 #include "vglyph-config.h"
+#include "vglyph-platform.h"
 
 #define VGLYPH_VERSION_MAJON 1
 #define VGLYPH_VERSION_MINOR 0
@@ -27,22 +28,6 @@
     VGLYPH_VERSION_MINOR, \
     VGLYPH_VERSION_MICRO)
 
-#ifdef __cplusplus
-# define VGLYPH_BEGIN extern "C" {
-# define VGLYPH_END   }
-#else
-# define VGLYPH_BEGIN
-# define VGLYPH_END
-#endif
-
-#ifndef vglyph_public
-# if defined (_MSC_VER) && !defined (VGLYPH_STATIC_BUILD)
-#  define vglyph_public __declspec(dllimport)
-# else
-#  define vglyph_public
-# endif
-#endif
-
 VGLYPH_BEGIN
 
 typedef struct _vglyph_object            vglyph_object_t;
@@ -52,8 +37,15 @@ typedef struct _vglyph_format            vglyph_format_t;
 typedef struct _vglyph_rgba_uint_format  vglyph_rgba_uint_format_t;
 typedef struct _vglyph_rgba_float_format vglyph_rgba_float_format_t;
 typedef struct _vglyph_surface           vglyph_surface_t;
-typedef int                              vglyph_bool_t;
-typedef float                            vglyph_float32_t;
+
+typedef _vglyph_bool    vglyph_bool_t;
+typedef _vglyph_sint8   vglyph_sint8_t;
+typedef _vglyph_uint8   vglyph_uint8_t;
+typedef _vglyph_sint16  vglyph_sint16_t;
+typedef _vglyph_uint16  vglyph_uint16_t;
+typedef _vglyph_sint32  vglyph_sint32_t;
+typedef _vglyph_uint32  vglyph_uint32_t;
+typedef _vglyph_float32 vglyph_float32_t;
 
 #define VGLYPH_FORMAT_R4G4_UINT          "R4G4_UINT"
 #define VGLYPH_FORMAT_R4G4B4A4_UINT      "R4G4B4A4_UINT"
@@ -120,6 +112,15 @@ typedef enum _vglyph_coordinate
     VGLYPH_COORDINATE_RELATIVE = 1
 } vglyph_coordinate_t;
 
+typedef enum _vglyph_alignment
+{
+    VGLYPH_ALIGNMENT_UNKNOWN = 0,
+    VGLYPH_ALIGNMENT_1       = 1,
+    VGLYPH_ALIGNMENT_2       = 2,
+    VGLYPH_ALIGNMENT_4       = 4,
+    VGLYPH_ALIGNMENT_8       = 8
+} vglyph_alignment_t;
+
 typedef enum _vglyph_component
 {
     VGLYPH_COMPONENT_ZERO  = 0,
@@ -155,10 +156,10 @@ typedef struct _vglyph_rgba_components
 
 typedef struct _vglyph_rgba_uint_bit_count
 {
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
+    vglyph_uint8_t r;
+    vglyph_uint8_t g;
+    vglyph_uint8_t b;
+    vglyph_uint8_t a;
 } vglyph_rgba_uint_bit_count_t;
 
 typedef struct _vglyph_rgba_float_bit_count
@@ -169,14 +170,14 @@ typedef struct _vglyph_rgba_float_bit_count
     vglyph_rgba_float_size_t a;
 } vglyph_rgba_float_bit_count_t;
 
-vglyph_public int
+vglyph_public vglyph_uint32_t
 vglyph_version(void);
 
 vglyph_public const char*
 vglyph_version_string(void);
 
 vglyph_public vglyph_bool_t
-vglyph_is_version_compatible(int compile_version);
+vglyph_is_version_compatible(vglyph_uint32_t compile_version);
 
 vglyph_public const char*
 vglyph_state_to_string(vglyph_state_t state);
@@ -208,7 +209,7 @@ vglyph_object_reference(vglyph_object_t* object);
 vglyph_public void
 vglyph_object_destroy(vglyph_object_t* object);
 
-vglyph_public int
+vglyph_public vglyph_sint32_t
 vglyph_object_get_reference_count(vglyph_object_t* object);
 
 vglyph_public vglyph_state_t
@@ -314,6 +315,9 @@ vglyph_format_to_rgba_uint_format(vglyph_format_t* format);
 //vglyph_public vglyph_rgba_float_format_t*
 //vglyph_format_to_rgba_float_format(vglyph_format_t* format);
 
+vglyph_public vglyph_uint32_t
+vglyph_format_get_bits_per_pixel(vglyph_format_t* format);
+
 vglyph_public vglyph_rgba_uint_format_t*
 vglyph_rgba_uint_format_create(const vglyph_rgba_components_t* components,
                                const vglyph_rgba_uint_bit_count_t* bit_count);
@@ -334,16 +338,24 @@ vglyph_rgba_uint_format_to_format(vglyph_rgba_uint_format_t* format);
 //vglyph_public vglyph_format_t*
 //vglyph_rgba_float_format_to_format(vglyph_rgba_float_format_t* format);
 
+vglyph_public vglyph_uint32_t
+vglyph_surface_get_data_size(vglyph_format_t* format,
+                             vglyph_uint32_t width,
+                             vglyph_uint32_t height,
+                             vglyph_alignment_t row_alignment);
+
 //vglyph_public vglyph_surface_t*
 //vglyph_surface_create(const vglyph_format_t* format,
 //                      unsigned int width,
 //                      unsigned int height);
 
 vglyph_public vglyph_surface_t*
-vglyph_surface_create_for_data(unsigned char* data,
-                               const vglyph_format_t* format,
-                               unsigned int width,
-                               unsigned int height);
+vglyph_surface_create_for_data(void* data,
+                               vglyph_uint32_t data_size,
+                               vglyph_format_t* format,
+                               vglyph_uint32_t width,
+                               vglyph_uint32_t height,
+                               vglyph_alignment_t row_alignment);
 
 vglyph_public vglyph_object_t*
 vglyph_surface_to_object(vglyph_surface_t* surface);

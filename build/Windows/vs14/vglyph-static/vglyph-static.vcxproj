@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\vglyph-config.h" />
+    <ClInclude Include="..\..\..\..\include\vglyph-platform.h" />
     <ClInclude Include="..\..\..\..\include\vglyph.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-api.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-data-surface.h" />
