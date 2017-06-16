@@ -21,7 +21,7 @@ typedef struct _vglyph_object_backend
 
 struct _vglyph_object
 {
-    int ref_count;
+    vglyph_sint32_t ref_count;
     vglyph_state_t state;
     const vglyph_object_backend_t* backend;
 };

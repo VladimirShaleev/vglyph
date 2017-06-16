@@ -11,7 +11,7 @@
 
 typedef struct _vglyph_format_backend
 {
-    unsigned int (*get_bits_per_pixel)(vglyph_format_t* format);
+    vglyph_uint32_t (*get_bits_per_pixel)(vglyph_format_t* format);
 } vglyph_format_backend_t;
 
 struct _vglyph_format

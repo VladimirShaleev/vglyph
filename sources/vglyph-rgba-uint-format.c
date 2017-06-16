@@ -52,12 +52,12 @@ _vglyph_rgba_uint_format_destroy(vglyph_object_t* object)
     free(format);
 }
 
-static unsigned int
+static vglyph_uint32_t
 _vglyph_rgba_uint_format_get_bits_per_pixel(vglyph_format_t* format)
 {
     vglyph_rgba_uint_format_t* rgba_uint_format = (vglyph_rgba_uint_format_t*)format;
 
-    return (unsigned int)
+    return (vglyph_uint32_t)
         rgba_uint_format->bit_count.r +
         rgba_uint_format->bit_count.g +
         rgba_uint_format->bit_count.b +

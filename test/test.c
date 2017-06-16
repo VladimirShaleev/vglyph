@@ -112,7 +112,7 @@ int main(void)
 
     vglyph_uint32_t width  = (vglyph_uint32_t)100;
     vglyph_uint32_t height = (vglyph_uint32_t)2;
-    vglyph_uint32_t align  = (vglyph_uint32_t)4;
+    vglyph_alignment_t align  = VGLYPH_ALIGNMENT_4;
 
     vglyph_uint32_t data_size = vglyph_surface_get_data_size(format, width, height, align);
 
