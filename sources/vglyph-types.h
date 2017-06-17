@@ -7,8 +7,6 @@
 #ifndef VGLYPH_TYPES_H
 #define VGLYPH_TYPES_H
 
-#include <stdint.h>
-
 #ifndef FALSE
 # define FALSE 0
 #endif
@@ -17,7 +15,14 @@
 # define TRUE 1
 #endif
 
-typedef intptr_t  vglyph_sint_t;
-typedef uintptr_t vglyph_uint_t;
+#ifdef VGLYPH_NO_STDINT_H
+# include <stddef.h>
+  typedef ptrdiff_t vglyph_sint_t;
+  typedef size_t    vglyph_uint_t;
+#else
+# include <stdint.h>
+  typedef intptr_t  vglyph_sint_t;
+  typedef uintptr_t vglyph_uint_t;
+#endif
 
 #endif

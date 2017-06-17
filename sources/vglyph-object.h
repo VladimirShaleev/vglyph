@@ -87,7 +87,7 @@ _vglyph_object_get_state(vglyph_object_t* object)
 
 static inline void
 _vglyph_object_set_state(vglyph_object_t* object,
-                        vglyph_state_t state)
+                         vglyph_state_t state)
 {
     assert(object);
     object->state = state;
