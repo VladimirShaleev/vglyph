@@ -93,9 +93,10 @@ typedef _vglyph_float32 vglyph_float32_t;
 
 typedef enum _vglyph_state
 {
-    VGLYPH_STATE_SUCCESS       = 0,
-    VGLYPH_STATE_OUT_OF_MEMORY = 1,
-    VGLYPH_STATE_INVALID_CAST  = 2
+    VGLYPH_STATE_SUCCESS        = 0,
+    VGLYPH_STATE_OUT_OF_MEMORY  = 1,
+    VGLYPH_STATE_INVALID_CAST   = 2,
+    VGLYPH_STATE_INVALID_FORMAT = 3
 } vglyph_state_t;
 
 typedef enum _vglyph_hinting
@@ -350,7 +351,7 @@ vglyph_surface_get_data_size(vglyph_format_t* format,
 //                      unsigned int height);
 
 vglyph_public vglyph_surface_t*
-vglyph_surface_create_for_data(void* data,
+vglyph_surface_create_for_data(vglyph_uint8_t* data,
                                vglyph_uint32_t data_size,
                                vglyph_format_t* format,
                                vglyph_uint32_t width,
@@ -359,6 +360,28 @@ vglyph_surface_create_for_data(void* data,
 
 vglyph_public vglyph_object_t*
 vglyph_surface_to_object(vglyph_surface_t* surface);
+
+vglyph_public vglyph_format_t*
+vglyph_surface_get_format(vglyph_surface_t* surface);
+
+vglyph_public vglyph_uint32_t
+vglyph_surface_get_width(vglyph_surface_t* surface);
+
+vglyph_public vglyph_uint32_t
+vglyph_surface_get_height(vglyph_surface_t* surface);
+
+vglyph_public vglyph_uint32_t
+vglyph_surface_get_pitch(vglyph_surface_t* surface);
+
+vglyph_public vglyph_uint8_t*
+vglyph_surface_lock(vglyph_surface_t* surface,
+                    vglyph_uint32_t x,
+                    vglyph_uint32_t y,
+                    vglyph_uint32_t width,
+                    vglyph_uint32_t height);
+
+vglyph_public void
+vglyph_surface_unlock(vglyph_surface_t* surface);
 
 VGLYPH_END
 

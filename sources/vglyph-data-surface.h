@@ -12,11 +12,18 @@
 typedef struct _vglyph_data_surface
 {
     vglyph_surface_t base;
+    vglyph_uint8_t*  data;
 } vglyph_data_surface_t;
 
 void
 _vglyph_data_surface_init(vglyph_data_surface_t* surface,
-                          const vglyph_object_backend_t* object_backend);
+                          const vglyph_object_backend_t* object_backend,
+                          const vglyph_surface_backend_t* surface_backend,
+                          vglyph_format_t* format,
+                          vglyph_uint32_t width,
+                          vglyph_uint32_t height,
+                          vglyph_uint32_t pitch,
+                          vglyph_uint8_t* data);
 
 void
 _vglyph_data_surface_ctor(vglyph_data_surface_t* surface);

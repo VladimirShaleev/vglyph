@@ -38,6 +38,9 @@ vglyph_state_to_string(vglyph_state_t state)
 
         case VGLYPH_STATE_INVALID_CAST:
             return "invalid cast";
+
+        case VGLYPH_STATE_INVALID_FORMAT:
+            return "invalid format";
     }
     return "<unknown error state>";
 }

@@ -34,7 +34,7 @@ _vglyph_format_is_cast(vglyph_type_t* type)
 }
 
 static void
-_vglyph_format_destroy(vglyph_object_t* object)
+_vglyph_format_destroy_callback(vglyph_object_t* object)
 {
     vglyph_format_t* format = (vglyph_format_t*)object;
     _vglyph_format_dtor(format);
@@ -45,7 +45,7 @@ _vglyph_format_destroy(vglyph_object_t* object)
 static const vglyph_object_backend_t vglyph_format_object_backend = {
     vglyph_get_format_type,
     _vglyph_format_is_cast,
-    _vglyph_format_destroy
+    _vglyph_format_destroy_callback
 };
 
 vglyph_type_t*

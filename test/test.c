@@ -108,7 +108,7 @@ int main(void)
         vglyph_rgba_uint_format_create(&components, &bit_count));
     show_object_type(vglyph_format_to_object(format));
 
-    printf("\tbit per pixel: %d\n\n", vglyph_format_get_bits_per_pixel(format));
+    printf("\tbits per pixel: %d\n\n", vglyph_format_get_bits_per_pixel(format));
 
     vglyph_uint32_t width  = (vglyph_uint32_t)100;
     vglyph_uint32_t height = (vglyph_uint32_t)2;
@@ -120,6 +120,10 @@ int main(void)
 
     vglyph_surface_t* surface = vglyph_surface_create_for_data(data, data_size, format, width, height, align);
     show_object_type(vglyph_surface_to_object(surface));
+
+    printf("\twidth:  %d\n", vglyph_surface_get_width(surface));
+    printf("\theight: %d\n", vglyph_surface_get_height(surface));
+    printf("\tpitch:  %d\n\n", vglyph_surface_get_pitch(surface));
 
     free(data);
 

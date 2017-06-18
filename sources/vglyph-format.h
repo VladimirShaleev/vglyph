@@ -34,6 +34,27 @@ _vglyph_format_dtor(vglyph_format_t* format);
 vglyph_bool_t
 _vglyph_format_is_cast(vglyph_type_t* type);
 
+static inline vglyph_format_t*
+_vglyph_format_reference(vglyph_format_t* format)
+{
+    assert(format);
+    return (vglyph_format_t*)_vglyph_object_reference(&format->object);
+}
+
+static inline void
+_vglyph_format_destroy(vglyph_format_t* format)
+{
+    assert(format);
+    _vglyph_object_destroy(&format->object);
+}
+
+static inline int
+_vglyph_format_get_reference_count(vglyph_format_t* format)
+{
+    assert(format);
+    return _vglyph_object_get_reference_count(&format->object);
+}
+
 static inline void
 _vglyph_format_set_state(vglyph_format_t* format,
                          vglyph_state_t state)

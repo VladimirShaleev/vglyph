@@ -8,15 +8,36 @@
 #define VGLYPH_SURFACE_H
 
 #include "vglyph-object.h"
+#include "vglyph-format.h"
+
+typedef struct _vglyph_surface_backend
+{
+    vglyph_uint8_t* (*lock)(vglyph_surface_t* surface,
+                            vglyph_uint32_t x,
+                            vglyph_uint32_t y,
+                            vglyph_uint32_t width,
+                            vglyph_uint32_t height);
+    void (*unlock)(vglyph_surface_t* surface);
+} vglyph_surface_backend_t;
 
 struct _vglyph_surface
 {
-    vglyph_object_t object;
+    vglyph_object_t  object;
+    const vglyph_surface_backend_t* backend;
+    vglyph_format_t* format;
+    vglyph_uint32_t width;
+    vglyph_uint32_t height;
+    vglyph_uint32_t pitch;
 };
 
 void
 _vglyph_surface_init(vglyph_surface_t* surface,
-                     const vglyph_object_backend_t* object_backend);
+                     const vglyph_object_backend_t* object_backend,
+                     const vglyph_surface_backend_t* surface_backend,
+                     vglyph_format_t* format,
+                     vglyph_uint32_t width,
+                     vglyph_uint32_t height,
+                     vglyph_uint32_t pitch);
 
 void
 _vglyph_surface_ctor(vglyph_surface_t* surface);

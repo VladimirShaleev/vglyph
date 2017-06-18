@@ -9,19 +9,41 @@
 
 void
 _vglyph_surface_init(vglyph_surface_t* surface,
-                     const vglyph_object_backend_t* object_backend)
+                     const vglyph_object_backend_t* object_backend,
+                     const vglyph_surface_backend_t* surface_backend,
+                     vglyph_format_t* format,
+                     vglyph_uint32_t width,
+                     vglyph_uint32_t height,
+                     vglyph_uint32_t pitch)
 {
+    assert(surface);
+    assert(object_backend);
+    assert(surface_backend);
+    assert(format);
+
     _vglyph_object_init(&surface->object, object_backend);
+
+    surface->backend = surface_backend;
+    surface->format  = _vglyph_format_reference(format);
+    surface->width   = width;
+    surface->height  = height;
+    surface->pitch   = pitch;
 }
 
 void
 _vglyph_surface_ctor(vglyph_surface_t* surface)
 {
+    if (!_vglyph_format_is_valid(surface->format))
+    {
+        _vglyph_surface_set_state(surface, VGLYPH_STATE_INVALID_FORMAT);
+        return;
+    }
 }
 
 void
 _vglyph_surface_dtor(vglyph_surface_t* surface)
 {
+    _vglyph_format_destroy(surface->format);
 }
 
 vglyph_bool_t
@@ -64,4 +86,70 @@ vglyph_surface_to_object(vglyph_surface_t* surface)
 {
     assert(surface);
     return &surface->object;
+}
+
+vglyph_format_t*
+vglyph_surface_get_format(vglyph_surface_t* surface)
+{
+    assert(surface);
+    return _vglyph_format_reference(surface->format);
+}
+
+vglyph_uint32_t
+vglyph_surface_get_width(vglyph_surface_t* surface)
+{
+    assert(surface);
+
+    if (_vglyph_surface_is_valid(surface))
+        return surface->width;
+
+    return 0;
+}
+
+vglyph_uint32_t
+vglyph_surface_get_height(vglyph_surface_t* surface)
+{
+    assert(surface);
+
+    if (_vglyph_surface_is_valid(surface))
+        return surface->height;
+
+    return 0;
+}
+
+vglyph_uint32_t
+vglyph_surface_get_pitch(vglyph_surface_t* surface)
+{
+    assert(surface);
+
+    if (_vglyph_surface_is_valid(surface))
+        return surface->pitch;
+
+    return 0;
+}
+
+vglyph_uint8_t*
+vglyph_surface_lock(vglyph_surface_t* surface,
+                    vglyph_uint32_t x,
+                    vglyph_uint32_t y,
+                    vglyph_uint32_t width,
+                    vglyph_uint32_t height)
+{
+    assert(surface);
+    assert(x + width <= surface->width);
+    assert(y + height <= surface->height);
+
+    if (_vglyph_surface_is_valid(surface))
+        return surface->backend->lock(surface, x, y, width, height);
+
+    return NULL;
+}
+
+void
+vglyph_surface_unlock(vglyph_surface_t* surface)
+{
+    assert(surface);
+
+    if (_vglyph_surface_is_valid(surface))
+        return surface->backend->unlock(surface);
 }
