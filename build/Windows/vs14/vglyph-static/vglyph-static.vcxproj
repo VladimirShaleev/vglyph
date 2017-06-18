@@ -26,6 +26,7 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-data-surface.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-figure.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-format.h" />
+    <ClInclude Include="..\..\..\..\sources\vglyph-heap-data-surface.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-object.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint-format.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-segment-types.h" />
@@ -38,6 +39,7 @@
     <ClCompile Include="..\..\..\..\sources\vglyph-data-surface.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-figure.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-format.c" />
+    <ClCompile Include="..\..\..\..\sources\vglyph-heap-data-surface.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-object.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint-format.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-surface.c" />

@@ -57,6 +57,9 @@
     <ClInclude Include="..\..\..\..\include\vglyph-platform.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\sources\vglyph-heap-data-surface.h">
+      <Filter>sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\sources\vglyph.c">
@@ -84,6 +87,9 @@
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\sources\vglyph-type.c">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\sources\vglyph-heap-data-surface.c">
       <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>

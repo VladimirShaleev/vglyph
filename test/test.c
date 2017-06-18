@@ -114,18 +114,12 @@ int main(void)
     vglyph_uint32_t height = (vglyph_uint32_t)2;
     vglyph_alignment_t align  = VGLYPH_ALIGNMENT_4;
 
-    vglyph_uint32_t data_size = vglyph_surface_get_data_size(format, width, height, align);
-
-    void* data = malloc(data_size);
-
-    vglyph_surface_t* surface = vglyph_surface_create_for_data(data, data_size, format, width, height, align);
+    vglyph_surface_t* surface = vglyph_surface_create(format, width, height, align);
     show_object_type(vglyph_surface_to_object(surface));
 
     printf("\twidth:  %d\n", vglyph_surface_get_width(surface));
     printf("\theight: %d\n", vglyph_surface_get_height(surface));
     printf("\tpitch:  %d\n\n", vglyph_surface_get_pitch(surface));
-
-    free(data);
 
     vglyph_object_destroy(vglyph_surface_to_object(surface));
     vglyph_object_destroy(vglyph_format_to_object(format));

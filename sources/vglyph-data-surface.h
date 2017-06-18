@@ -37,6 +37,22 @@ _vglyph_data_surface_is_cast(vglyph_type_t* type);
 vglyph_type_t*
 _vglyph_data_surface_get_type(void);
 
+vglyph_uint8_t*
+_vglyph_data_surface_lock(vglyph_surface_t* surface,
+                          vglyph_uint32_t x,
+                          vglyph_uint32_t y,
+                          vglyph_uint32_t width,
+                          vglyph_uint32_t height);
+
+void
+_vglyph_data_surface_unlock(vglyph_surface_t* surface);
+
+vglyph_uint32_t
+_vglyph_data_surface_get_pitch(vglyph_format_t* format,
+                               vglyph_uint32_t width,
+                               vglyph_uint32_t height,
+                               vglyph_alignment_t row_alignment);
+
 static inline void
 _vglyph_data_surface_set_state(vglyph_data_surface_t* surface,
                                vglyph_state_t state)

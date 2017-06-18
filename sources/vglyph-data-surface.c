@@ -7,26 +7,6 @@
 #include "vglyph-data-surface.h"
 #include "vglyph-type.h"
 
-static vglyph_uint32_t
-_vglyph_data_surface_get_pitch(vglyph_format_t* format,
-                               vglyph_uint32_t width,
-                               vglyph_uint32_t height,
-                               vglyph_alignment_t row_alignment)
-{
-    assert(format);
-    assert(row_alignment == VGLYPH_ALIGNMENT_1 ||
-           row_alignment == VGLYPH_ALIGNMENT_2 ||
-           row_alignment == VGLYPH_ALIGNMENT_4 ||
-           row_alignment == VGLYPH_ALIGNMENT_8);
-
-    vglyph_uint32_t bits_per_pixel = vglyph_format_get_bits_per_pixel(format);
-    vglyph_uint32_t pitch = (width * bits_per_pixel + 7) >> 3;
-    vglyph_uint32_t align = row_alignment - 1;
-    pitch = (pitch + align) & ~align;
-
-    return pitch;
-}
-
 void
 _vglyph_data_surface_init(vglyph_data_surface_t* surface,
                           const vglyph_object_backend_t* object_backend,
@@ -110,11 +90,30 @@ static const vglyph_object_backend_t vglyph_data_surface_object_backend = {
     _vglyph_data_surface_destroy
 };
 
-static const vglyph_surface_backend_t vglyph_data_surface_backend =
-{
+static const vglyph_surface_backend_t vglyph_data_surface_backend = {
     _vglyph_data_surface_lock,
     _vglyph_data_surface_unlock
 };
+
+vglyph_uint32_t
+_vglyph_data_surface_get_pitch(vglyph_format_t* format,
+                               vglyph_uint32_t width,
+                               vglyph_uint32_t height,
+                               vglyph_alignment_t row_alignment)
+{
+    assert(format);
+    assert(row_alignment == VGLYPH_ALIGNMENT_1 ||
+           row_alignment == VGLYPH_ALIGNMENT_2 ||
+           row_alignment == VGLYPH_ALIGNMENT_4 ||
+           row_alignment == VGLYPH_ALIGNMENT_8);
+
+    vglyph_uint32_t bits_per_pixel = vglyph_format_get_bits_per_pixel(format);
+    vglyph_uint32_t pitch = (width * bits_per_pixel + 7) >> 3;
+    vglyph_uint32_t align = row_alignment - 1;
+    pitch = (pitch + align) & ~align;
+
+    return pitch;
+}
 
 vglyph_uint32_t
 vglyph_surface_get_data_size(vglyph_format_t* format,

@@ -345,10 +345,11 @@ vglyph_surface_get_data_size(vglyph_format_t* format,
                              vglyph_uint32_t height,
                              vglyph_alignment_t row_alignment);
 
-//vglyph_public vglyph_surface_t*
-//vglyph_surface_create(const vglyph_format_t* format,
-//                      unsigned int width,
-//                      unsigned int height);
+vglyph_public vglyph_surface_t*
+vglyph_surface_create(vglyph_format_t* format,
+                      vglyph_uint32_t width,
+                      vglyph_uint32_t height,
+                      vglyph_alignment_t row_alignment);
 
 vglyph_public vglyph_surface_t*
 vglyph_surface_create_for_data(vglyph_uint8_t* data,
