@@ -5,6 +5,8 @@
  */
 
 #include "vglyph-data-surface.h"
+#include "vglyph-rgba-uint-format.h"
+#include "vglyph-rgba-uint-data-render.h"
 #include "vglyph-type.h"
 
 void
@@ -12,6 +14,7 @@ _vglyph_data_surface_init(vglyph_data_surface_t* surface,
                           const vglyph_object_backend_t* object_backend,
                           const vglyph_surface_backend_t* surface_backend,
                           vglyph_format_t* format,
+                          vglyph_render_t* render,
                           vglyph_uint32_t width,
                           vglyph_uint32_t height,
                           vglyph_uint32_t pitch,
@@ -23,6 +26,7 @@ _vglyph_data_surface_init(vglyph_data_surface_t* surface,
                          object_backend, 
                          surface_backend,
                          format, 
+                         render,
                          width, 
                          height, 
                          pitch);
@@ -90,7 +94,7 @@ static const vglyph_object_backend_t vglyph_data_surface_object_backend = {
     _vglyph_data_surface_destroy
 };
 
-static const vglyph_surface_backend_t vglyph_data_surface_backend = {
+const vglyph_surface_backend_t vglyph_data_surface_backend = {
     _vglyph_data_surface_lock,
     _vglyph_data_surface_unlock
 };
@@ -113,6 +117,36 @@ _vglyph_data_surface_get_pitch(vglyph_format_t* format,
     pitch = (pitch + align) & ~align;
 
     return pitch;
+}
+
+vglyph_render_t*
+_vglyph_data_surface_create_render(vglyph_format_t* format)
+{
+    if (vglyph_object_is_cast(&format->object, vglyph_get_rgba_uint_format_type()))
+    {
+        vglyph_rgba_uint_format_t* rgba_uint_format = (vglyph_rgba_uint_format_t*)format;
+
+        if (rgba_uint_format->bit_count.r == 8 &&
+            rgba_uint_format->bit_count.g == 8 &&
+            rgba_uint_format->bit_count.b == 8 &&
+            rgba_uint_format->bit_count.a == 8 &&
+            rgba_uint_format->components.r == VGLYPH_COMPONENT_RED &&
+            rgba_uint_format->components.g == VGLYPH_COMPONENT_GREEN &&
+            rgba_uint_format->components.b == VGLYPH_COMPONENT_BLUE &&
+            rgba_uint_format->components.a == VGLYPH_COMPONENT_ALPHA)
+        {
+            //return _vglyph_r8g8b8a8_uint_data_surface_create(data,
+            //                                                 data_size,
+            //                                                 format,
+            //                                                 width,
+            //                                                 height,
+            //                                                 row_alignment);
+        }
+
+        return _vglyph_rgba_uint_data_render_create();
+    }
+
+    return (vglyph_render_t*)_vglyph_object_invalid_format();
 }
 
 vglyph_uint32_t
@@ -147,14 +181,19 @@ vglyph_surface_create_for_data(vglyph_uint8_t* data,
     vglyph_uint32_t pitch =
         _vglyph_data_surface_get_pitch(format, width, height, row_alignment);
 
+    vglyph_render_t* render = _vglyph_data_surface_create_render(format);
+
     _vglyph_data_surface_init(surface,
                               &vglyph_data_surface_object_backend,
                               &vglyph_data_surface_backend, 
                               format,
+                              render,
                               width,
                               height,
                               pitch,
                               data);
+
+    _vglyph_render_destroy(render);
 
     _vglyph_data_surface_ctor(surface);
 

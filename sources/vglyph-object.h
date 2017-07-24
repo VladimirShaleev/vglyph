@@ -27,10 +27,13 @@ struct _vglyph_object
 };
 
 vglyph_object_t*
-_vglyph_object_out_of_memory();
+_vglyph_object_out_of_memory(void);
 
 vglyph_object_t*
-_vglyph_object_invalid_cast();
+_vglyph_object_invalid_cast(void);
+
+vglyph_object_t*
+_vglyph_object_invalid_format(void);
 
 vglyph_object_t*
 _vglyph_object_to_type(vglyph_object_t* object,

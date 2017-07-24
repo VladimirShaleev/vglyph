@@ -44,5 +44,6 @@ typedef uint16_t _vglyph_uint16;
 typedef int32_t  _vglyph_sint32;
 typedef uint32_t _vglyph_uint32;
 typedef float    _vglyph_float32;
+typedef double   _vglyph_float64;
 
 #endif

@@ -46,6 +46,7 @@ typedef _vglyph_uint16  vglyph_uint16_t;
 typedef _vglyph_sint32  vglyph_sint32_t;
 typedef _vglyph_uint32  vglyph_uint32_t;
 typedef _vglyph_float32 vglyph_float32_t;
+typedef _vglyph_float64 vglyph_float64_t;
 
 #define VGLYPH_FORMAT_R4G4_UINT          "R4G4_UINT"
 #define VGLYPH_FORMAT_R4G4B4A4_UINT      "R4G4B4A4_UINT"
@@ -146,6 +147,14 @@ typedef struct _vglyph_point
     vglyph_float32_t y;
     vglyph_hinting_t hinting;
 } vglyph_point_t;
+
+typedef struct _vglyph_color
+{
+    vglyph_float64_t red;
+    vglyph_float64_t green;
+    vglyph_float64_t blue;
+    vglyph_float64_t alpha;
+} vglyph_color_t;
 
 typedef struct _vglyph_rgba_components
 {
@@ -383,6 +392,12 @@ vglyph_surface_lock(vglyph_surface_t* surface,
 
 vglyph_public void
 vglyph_surface_unlock(vglyph_surface_t* surface);
+
+vglyph_public void
+vglyph_surface_set_pixel(vglyph_surface_t* surface,
+                         vglyph_float32_t x,
+                         vglyph_float32_t y,
+                         const vglyph_color_t* color);
 
 VGLYPH_END
 

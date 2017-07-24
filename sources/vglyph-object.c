@@ -8,7 +8,7 @@
 #include "vglyph-type.h"
 
 vglyph_object_t*
-_vglyph_object_out_of_memory()
+_vglyph_object_out_of_memory(void)
 {
     static vglyph_object_t vglyph_object_out_of_memory = {
         VGLYPH_REFERENCE_COUNT_INVALID,
@@ -19,7 +19,7 @@ _vglyph_object_out_of_memory()
 }
 
 vglyph_object_t*
-_vglyph_object_invalid_cast()
+_vglyph_object_invalid_cast(void)
 {
     static vglyph_object_t vglyph_object_invalid_cast = {
         VGLYPH_REFERENCE_COUNT_INVALID,
@@ -27,6 +27,17 @@ _vglyph_object_invalid_cast()
     };
 
     return &vglyph_object_invalid_cast;
+}
+
+vglyph_object_t*
+_vglyph_object_invalid_format(void)
+{
+    static vglyph_object_t vglyph_object_invalid_format = {
+        VGLYPH_REFERENCE_COUNT_INVALID,
+        VGLYPH_STATE_INVALID_FORMAT
+    };
+
+    return &vglyph_object_invalid_format;
 }
 
 vglyph_object_t*

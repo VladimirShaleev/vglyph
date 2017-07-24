@@ -9,6 +9,7 @@
 
 #include "vglyph-object.h"
 #include "vglyph-format.h"
+#include "vglyph-render.h"
 
 typedef struct _vglyph_surface_backend
 {
@@ -25,6 +26,7 @@ struct _vglyph_surface
     vglyph_object_t  object;
     const vglyph_surface_backend_t* backend;
     vglyph_format_t* format;
+    vglyph_render_t* render;
     vglyph_uint32_t width;
     vglyph_uint32_t height;
     vglyph_uint32_t pitch;
@@ -35,6 +37,7 @@ _vglyph_surface_init(vglyph_surface_t* surface,
                      const vglyph_object_backend_t* object_backend,
                      const vglyph_surface_backend_t* surface_backend,
                      vglyph_format_t* format,
+                     vglyph_render_t* render,
                      vglyph_uint32_t width,
                      vglyph_uint32_t height,
                      vglyph_uint32_t pitch);

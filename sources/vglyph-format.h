@@ -55,6 +55,13 @@ _vglyph_format_get_reference_count(vglyph_format_t* format)
     return _vglyph_object_get_reference_count(&format->object);
 }
 
+static inline vglyph_state_t
+_vglyph_format_get_state(vglyph_format_t* format)
+{
+    assert(format);
+    return _vglyph_object_get_state(&format->object);
+}
+
 static inline void
 _vglyph_format_set_state(vglyph_format_t* format,
                          vglyph_state_t state)

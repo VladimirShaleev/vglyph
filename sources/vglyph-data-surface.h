@@ -9,6 +9,8 @@
 
 #include "vglyph-surface.h"
 
+extern const vglyph_surface_backend_t vglyph_data_surface_backend;
+
 typedef struct _vglyph_data_surface
 {
     vglyph_surface_t base;
@@ -20,6 +22,7 @@ _vglyph_data_surface_init(vglyph_data_surface_t* surface,
                           const vglyph_object_backend_t* object_backend,
                           const vglyph_surface_backend_t* surface_backend,
                           vglyph_format_t* format,
+                          vglyph_render_t* render,
                           vglyph_uint32_t width,
                           vglyph_uint32_t height,
                           vglyph_uint32_t pitch,
@@ -52,6 +55,9 @@ _vglyph_data_surface_get_pitch(vglyph_format_t* format,
                                vglyph_uint32_t width,
                                vglyph_uint32_t height,
                                vglyph_alignment_t row_alignment);
+
+vglyph_render_t*
+_vglyph_data_surface_create_render(vglyph_format_t* format);
 
 static inline void
 _vglyph_data_surface_set_state(vglyph_data_surface_t* surface,

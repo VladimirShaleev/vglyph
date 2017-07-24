@@ -19,6 +19,7 @@ _vglyph_heap_data_surface_init(vglyph_heap_data_surface_t* surface,
                                const vglyph_object_backend_t* object_backend,
                                const vglyph_surface_backend_t* surface_backend,
                                vglyph_format_t* format,
+                               vglyph_render_t* render,
                                vglyph_uint32_t width,
                                vglyph_uint32_t height,
                                vglyph_uint32_t pitch,
@@ -35,16 +36,6 @@ _vglyph_heap_data_surface_is_cast(vglyph_type_t* type);
 
 vglyph_type_t*
 _vglyph_heap_data_surface_get_type(void);
-
-vglyph_uint8_t*
-_vglyph_heap_data_surface_lock(vglyph_surface_t* surface,
-                               vglyph_uint32_t x,
-                               vglyph_uint32_t y,
-                               vglyph_uint32_t width,
-                               vglyph_uint32_t height);
-
-void
-_vglyph_heap_data_surface_unlock(vglyph_surface_t* surface);
 
 static inline void
 _vglyph_heap_data_surface_set_state(vglyph_heap_data_surface_t* surface,

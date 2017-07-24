@@ -12,6 +12,7 @@ _vglyph_surface_init(vglyph_surface_t* surface,
                      const vglyph_object_backend_t* object_backend,
                      const vglyph_surface_backend_t* surface_backend,
                      vglyph_format_t* format,
+                     vglyph_render_t* render,
                      vglyph_uint32_t width,
                      vglyph_uint32_t height,
                      vglyph_uint32_t pitch)
@@ -20,11 +21,13 @@ _vglyph_surface_init(vglyph_surface_t* surface,
     assert(object_backend);
     assert(surface_backend);
     assert(format);
+    assert(render);
 
     _vglyph_object_init(&surface->object, object_backend);
 
     surface->backend = surface_backend;
     surface->format  = _vglyph_format_reference(format);
+    surface->render  = _vglyph_render_reference(render);
     surface->width   = width;
     surface->height  = height;
     surface->pitch   = pitch;
@@ -35,7 +38,13 @@ _vglyph_surface_ctor(vglyph_surface_t* surface)
 {
     if (!_vglyph_format_is_valid(surface->format))
     {
-        _vglyph_surface_set_state(surface, VGLYPH_STATE_INVALID_FORMAT);
+        _vglyph_surface_set_state(surface, _vglyph_format_get_state(surface->format));
+        return;
+    }
+
+    if (!_vglyph_render_is_valid(surface->render))
+    {
+        _vglyph_surface_set_state(surface, _vglyph_render_get_state(surface->render));
         return;
     }
 }
@@ -43,6 +52,7 @@ _vglyph_surface_ctor(vglyph_surface_t* surface)
 void
 _vglyph_surface_dtor(vglyph_surface_t* surface)
 {
+    _vglyph_render_destroy(surface->render);
     _vglyph_format_destroy(surface->format);
 }
 
@@ -151,5 +161,21 @@ vglyph_surface_unlock(vglyph_surface_t* surface)
     assert(surface);
 
     if (_vglyph_surface_is_valid(surface))
-        return surface->backend->unlock(surface);
+        surface->backend->unlock(surface);
+}
+
+void
+vglyph_surface_set_pixel(vglyph_surface_t* surface,
+                         vglyph_float32_t x,
+                         vglyph_float32_t y,
+                         const vglyph_color_t* color)
+{
+    assert(surface);
+    assert(color);
+
+    if (_vglyph_surface_is_valid(surface))
+    {
+        vglyph_render_t* render = surface->render;
+        render->backend->set_pixel(render, surface, x, y, color);
+    }
 }
