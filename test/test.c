@@ -100,7 +100,7 @@ int main(void)
 
     vglyph_rgba_uint_bit_count_t bit_count;
     bit_count.r = 1;
-    bit_count.g = 2;
+    bit_count.g = 4;
     bit_count.b = 0;
     bit_count.a = 0;
     
@@ -121,8 +121,8 @@ int main(void)
     printf("\theight: %d\n", vglyph_surface_get_height(surface));
     printf("\tpitch:  %d\n\n", vglyph_surface_get_pitch(surface));
 
-    vglyph_color_t color = { 1.0, 0.0, 0.0, 1.0 };
-    vglyph_surface_set_pixel(surface, 0, 0, &color);
+    vglyph_color_t color = { 1.0, 0.5, 0.0, 1.0 };
+    vglyph_surface_set_pixel(surface, 1, 0, &color);
 
     vglyph_object_destroy(vglyph_surface_to_object(surface));
     vglyph_object_destroy(vglyph_format_to_object(format));

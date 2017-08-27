@@ -27,6 +27,19 @@ _vglyph_rgba_uint_format_ctor(vglyph_rgba_uint_format_t* format)
 
     if (_vglyph_rgba_uint_format_is_valid(format))
     {
+        if (format->bit_count.r > (sizeof(format->capacity.r) << 3) ||
+            format->bit_count.g > (sizeof(format->capacity.g) << 3) ||
+            format->bit_count.b > (sizeof(format->capacity.b) << 3) ||
+            format->bit_count.a > (sizeof(format->capacity.a) << 3))
+        {
+            _vglyph_rgba_uint_format_set_state(format, VGLYPH_STATE_INVALID_FORMAT);
+            return;
+        }
+
+        format->capacity.r = _vglyph_rgba_uint_format_get_capacity(format->bit_count.r);
+        format->capacity.g = _vglyph_rgba_uint_format_get_capacity(format->bit_count.g);
+        format->capacity.b = _vglyph_rgba_uint_format_get_capacity(format->bit_count.b);
+        format->capacity.a = _vglyph_rgba_uint_format_get_capacity(format->bit_count.a);
     }
 }
 

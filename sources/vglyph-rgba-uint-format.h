@@ -9,11 +9,20 @@
 
 #include "vglyph-format.h"
 
+typedef struct _vglyph_rgba_uint_capacity
+{
+    vglyph_uint32_t r;
+    vglyph_uint32_t g;
+    vglyph_uint32_t b;
+    vglyph_uint32_t a;
+} vglyph_rgba_uint_capacity_t;
+
 struct _vglyph_rgba_uint_format
 {
     vglyph_format_t              base;
     vglyph_rgba_components_t     components;
     vglyph_rgba_uint_bit_count_t bit_count;
+    vglyph_rgba_uint_capacity_t  capacity;
 };
 
 void
@@ -45,6 +54,17 @@ _vglyph_rgba_uint_format_is_valid(vglyph_rgba_uint_format_t* format)
 {
     assert(format);
     return _vglyph_format_is_valid(&format->base);
+}
+
+static inline vglyph_uint32_t
+_vglyph_rgba_uint_format_get_capacity(vglyph_uint32_t bit_count)
+{
+    vglyph_uint32_t capacity = 0;
+
+    for (vglyph_uint32_t i = 0; i < bit_count; ++i)
+        capacity |= 1 << i;
+
+    return capacity;
 }
 
 #endif
