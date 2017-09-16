@@ -146,6 +146,8 @@ vglyph_surface_lock(vglyph_surface_t* surface,
                     vglyph_uint32_t height)
 {
     assert(surface);
+    assert(x >= 0);
+    assert(y >= 0);
     assert(x + width <= surface->width);
     assert(y + height <= surface->height);
 
