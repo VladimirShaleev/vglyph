@@ -7,6 +7,7 @@
 #include "vglyph-data-surface.h"
 #include "vglyph-rgba-uint-format.h"
 #include "vglyph-rgba-uint-data-render.h"
+#include "vglyph-rgba-uint32-data-render.h"
 #include "vglyph-type.h"
 
 void
@@ -126,22 +127,11 @@ _vglyph_data_surface_create_render(vglyph_format_t* format)
     {
         vglyph_rgba_uint_format_t* rgba_uint_format = (vglyph_rgba_uint_format_t*)format;
 
-        if (rgba_uint_format->bit_count.r == 8 &&
-            rgba_uint_format->bit_count.g == 8 &&
-            rgba_uint_format->bit_count.b == 8 &&
-            rgba_uint_format->bit_count.a == 8 &&
-            rgba_uint_format->components.r == VGLYPH_COMPONENT_RED &&
-            rgba_uint_format->components.g == VGLYPH_COMPONENT_GREEN &&
-            rgba_uint_format->components.b == VGLYPH_COMPONENT_BLUE &&
-            rgba_uint_format->components.a == VGLYPH_COMPONENT_ALPHA)
-        {
-            //return _vglyph_r8g8b8a8_uint_data_surface_create(data,
-            //                                                 data_size,
-            //                                                 format,
-            //                                                 width,
-            //                                                 height,
-            //                                                 row_alignment);
-        }
+        if (rgba_uint_format->bit_count.r +
+            rgba_uint_format->bit_count.g +
+            rgba_uint_format->bit_count.b +
+            rgba_uint_format->bit_count.a == 32)
+            return _vglyph_rgba_uint32_data_render_create();
 
         return _vglyph_rgba_uint_data_render_create();
     }

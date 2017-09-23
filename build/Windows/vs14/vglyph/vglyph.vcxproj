@@ -220,6 +220,7 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-render.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint-data-render.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint-format.h" />
+    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint32-data-render.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-segment-types.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-surface.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-type.h" />
@@ -235,6 +236,7 @@
     <ClCompile Include="..\..\..\..\sources\vglyph-render.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint-data-render.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint-format.c" />
+    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint32-data-render.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-surface.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-type.c" />
     <ClCompile Include="..\..\..\..\sources\vglyph-vector.c" />

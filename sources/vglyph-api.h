@@ -26,4 +26,11 @@
 
 #include "vglyph.h"
 
+static inline vglyph_bool_t
+_vglyph_is_little_endian(void)
+{
+    const vglyph_uint32_t i = 1;
+    return *((vglyph_uint8_t*)&i) == 1;
+}
+
 #endif

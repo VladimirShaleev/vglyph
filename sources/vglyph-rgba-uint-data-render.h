@@ -49,4 +49,42 @@ _vglyph_rgba_uint_data_render_is_valid(vglyph_rgba_uint_data_render_t* render)
     return _vglyph_render_is_valid(&render->base);
 }
 
+static inline vglyph_uint32_t
+_vglyph_rgba_uint_data_render_get_channel(vglyph_float64_t channel,
+                                          vglyph_uint32_t capacity)
+{
+    if (channel < 0.0)
+        channel = 0.0;
+    else if (channel > 1.0)
+        channel = 1.0;
+
+    return (vglyph_uint32_t)(channel * capacity + 0.5);
+}
+
+static inline vglyph_uint32_t
+_vglyph_rgba_uint_data_render_bind_channel(const vglyph_color_t* color,
+                                           vglyph_component_t component,
+                                           vglyph_uint32_t capacity)
+{
+    vglyph_uint32_t bind_channel;
+
+    switch (component)
+    {
+        case VGLYPH_COMPONENT_ZERO:
+            bind_channel = 0;
+            break;
+
+        case VGLYPH_COMPONENT_ONE:
+            bind_channel = capacity;
+            break;
+
+        default:
+            bind_channel = _vglyph_rgba_uint_data_render_get_channel(
+                (&color->red)[component - VGLYPH_COMPONENT_RED], capacity);
+            break;
+    }
+
+    return bind_channel;
+}
+
 #endif

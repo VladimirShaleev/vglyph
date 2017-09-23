@@ -66,6 +66,9 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint-data-render.h">
       <Filter>sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint32-data-render.h">
+      <Filter>sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\sources\vglyph.c">
@@ -102,6 +105,9 @@
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint-data-render.c">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint32-data-render.c">
       <Filter>sources</Filter>
     </ClCompile>
   </ItemGroup>
