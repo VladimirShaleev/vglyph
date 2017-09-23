@@ -59,12 +59,10 @@ _vglyph_rgba_uint_format_is_valid(vglyph_rgba_uint_format_t* format)
 static inline vglyph_uint32_t
 _vglyph_rgba_uint_format_get_capacity(vglyph_uint32_t bit_count)
 {
-    vglyph_uint32_t capacity = 0;
+    const vglyph_uint32_t capacity = ~0;
+    const vglyph_uint32_t shift = (sizeof(capacity) << 3) - bit_count;
 
-    for (vglyph_uint32_t i = 0; i < bit_count; ++i)
-        capacity |= 1 << i;
-
-    return capacity;
+    return capacity << shift >> shift;
 }
 
 #endif
