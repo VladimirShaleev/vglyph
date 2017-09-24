@@ -70,10 +70,8 @@ void show_object_type(vglyph_object_t* object)
     }
 }
 
-void test_rgba_uint_data_render(void)
+int test_rgba_uint_data_render(void)
 {
-    printf("begin test: test_rgba_uint_data_render()\n{\n");
-
     vglyph_rgba_components_t components;
     components.r = VGLYPH_COMPONENT_RED;
     components.g = VGLYPH_COMPONENT_GREEN;
@@ -88,20 +86,12 @@ void test_rgba_uint_data_render(void)
 
     vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
         vglyph_rgba_uint_format_create(&components, &bit_count));
-    show_object_type(vglyph_format_to_object(format));
-
-    printf("\tbits per pixel: %d\n\n", vglyph_format_get_bits_per_pixel(format));
 
     vglyph_uint32_t    width  = (vglyph_uint32_t)7;
     vglyph_uint32_t    height = (vglyph_uint32_t)1;
     vglyph_alignment_t align  = VGLYPH_ALIGNMENT_4;
 
     vglyph_surface_t* surface = vglyph_surface_create(format, width, height, align);
-    show_object_type(vglyph_surface_to_object(surface));
-
-    printf("\twidth:  %d\n", vglyph_surface_get_width(surface));
-    printf("\theight: %d\n", vglyph_surface_get_height(surface));
-    printf("\tpitch:  %d\n", vglyph_surface_get_pitch(surface));
 
     vglyph_uint8_t* data = vglyph_surface_lock(surface, 0, 0, width, height);
     memset(data, 0, 12);
@@ -119,23 +109,72 @@ void test_rgba_uint_data_render(void)
 
     data = vglyph_surface_lock(surface, 0, 0, width, height);
 
-    printf("\n\ttest data...\n");
-
-    if (memcmp(data, test_data, 12) == 0)
-        printf("\n\ttest success\n}\n\n");
-    else
-        printf("\n\ttest failed\n}\n\n");
+    int result = memcmp(data, test_data, 12);
 
     vglyph_surface_unlock(surface);
 
     vglyph_object_destroy(vglyph_surface_to_object(surface));
     vglyph_object_destroy(vglyph_format_to_object(format));
+
+    return result;
 }
 
-void test_rgba_uint32_data_render(void)
+int test_rgba_uint16_data_render(void)
 {
-    printf("begin test: test_rgba_uint32_data_render()\n{\n");
+    vglyph_rgba_components_t components;
+    components.r = VGLYPH_COMPONENT_RED;
+    components.g = VGLYPH_COMPONENT_GREEN;
+    components.b = VGLYPH_COMPONENT_ONE;
+    components.a = VGLYPH_COMPONENT_ALPHA;
 
+    vglyph_rgba_uint_bit_count_t bit_count;
+    bit_count.r = 5;
+    bit_count.g = 6;
+    bit_count.b = 5;
+    bit_count.a = 0;
+
+    vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
+        vglyph_rgba_uint_format_create(&components, &bit_count));
+
+    vglyph_uint32_t    width  = (vglyph_uint32_t)3;
+    vglyph_uint32_t    height = (vglyph_uint32_t)1;
+    vglyph_alignment_t align  = VGLYPH_ALIGNMENT_4;
+
+    vglyph_surface_t* surface = vglyph_surface_create(format, width, height, align);
+
+    vglyph_uint8_t* data = vglyph_surface_lock(surface, 0, 0, width, height);
+    memset(data, 0, 8);
+    vglyph_surface_unlock(surface);
+
+    for (vglyph_sint32_t i = 0; i < 3; ++i)
+    {
+        vglyph_float64_t chanel = 1.0 / 2.0 * i;
+        vglyph_color_t color = { chanel, chanel, chanel, chanel };
+
+        vglyph_surface_set_pixel(surface, (vglyph_float32_t)i, 0.0f, &color);
+    }
+
+    vglyph_uint8_t test_data[8] = {
+        0x00, 0x1F,
+        0x84, 0x1F,
+        0xFF, 0xFF,
+        0x00, 0x00
+    };
+
+    data = vglyph_surface_lock(surface, 0, 0, width, height);
+
+    int result = memcmp(data, test_data, 8);
+
+    vglyph_surface_unlock(surface);
+
+    vglyph_object_destroy(vglyph_surface_to_object(surface));
+    vglyph_object_destroy(vglyph_format_to_object(format));
+
+    return result;
+}
+
+int test_rgba_uint32_data_render(void)
+{
     vglyph_rgba_components_t components;
     components.r = VGLYPH_COMPONENT_BLUE;
     components.g = VGLYPH_COMPONENT_GREEN;
@@ -150,20 +189,12 @@ void test_rgba_uint32_data_render(void)
 
     vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
         vglyph_rgba_uint_format_create(&components, &bit_count));
-    show_object_type(vglyph_format_to_object(format));
-
-    printf("\tbits per pixel: %d\n\n", vglyph_format_get_bits_per_pixel(format));
 
     vglyph_uint32_t    width  = (vglyph_uint32_t)7;
     vglyph_uint32_t    height = (vglyph_uint32_t)1;
     vglyph_alignment_t align  = VGLYPH_ALIGNMENT_4;
 
     vglyph_surface_t* surface = vglyph_surface_create(format, width, height, align);
-    show_object_type(vglyph_surface_to_object(surface));
-
-    printf("\twidth:  %d\n", vglyph_surface_get_width(surface));
-    printf("\theight: %d\n", vglyph_surface_get_height(surface));
-    printf("\tpitch:  %d\n", vglyph_surface_get_pitch(surface));
 
     vglyph_uint8_t* data = vglyph_surface_lock(surface, 0, 0, width, height);
     memset(data, 0, 28);
@@ -188,25 +219,46 @@ void test_rgba_uint32_data_render(void)
 
     data = vglyph_surface_lock(surface, 0, 0, width, height);
 
-    printf("\n\ttest data...\n");
-
-    if (memcmp(data, test_data, 28) == 0)
-        printf("\n\ttest success\n}\n\n");
-    else
-        printf("\n\ttest failed\n}\n\n");
+    int result = memcmp(data, test_data, 28);
 
     vglyph_surface_unlock(surface);
 
     vglyph_object_destroy(vglyph_surface_to_object(surface));
     vglyph_object_destroy(vglyph_format_to_object(format));
+
+    return result;
+}
+
+#define BEGIN_TESTS()                                                      \
+{                                                                          \
+    struct                                                                 \
+    {                                                                      \
+        int (*func)(void);                                                 \
+        char* name;                                                        \
+    } tests[] = { 
+#define ADD_TEST(func)                                                     \
+        { func, #func },
+#define END_TESTS(result)                                                  \
+    };                                                                     \
+    for (int i = 0; i < sizeof(tests) / sizeof(tests[0]); ++i)             \
+    {                                                                      \
+        int failed = tests[i].func() != 0;                                 \
+        result |= failed;                                                  \
+        printf("%s : %s\n", tests[i].name, failed ? "FAILED" : "SUCCESS"); \
+    }                                                                      \
 }
 
 int main(void)
 {
     show_glyph_info();
 
-    test_rgba_uint_data_render();
-    test_rgba_uint32_data_render();
+    int result = 0;
+
+    BEGIN_TESTS()
+    ADD_TEST(test_rgba_uint_data_render)
+    ADD_TEST(test_rgba_uint16_data_render)
+    ADD_TEST(test_rgba_uint32_data_render)
+    END_TESTS(result)
 
     //vglyph_point_t point1;
     //point1.x = 0.5f;
@@ -230,5 +282,5 @@ int main(void)
     //vglyph_object_destroy(vglyph_type_to_object(type));
     //vglyph_object_destroy(vglyph_figure_to_object(figure));
 
-    return EXIT_SUCCESS;
+    return result == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }
