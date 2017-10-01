@@ -60,7 +60,7 @@ _vglyph_figure_is_cast(vglyph_type_t* type)
 }
 
 static void
-_vglyph_figure_destroy(vglyph_object_t* object)
+_vglyph_figure_destroy_callback(vglyph_object_t* object)
 {
     vglyph_figure_t* figure = (vglyph_figure_t*)object;
     _vglyph_figure_dtor(figure);
@@ -71,7 +71,7 @@ _vglyph_figure_destroy(vglyph_object_t* object)
 static const vglyph_object_backend_t vglyph_figure_object_backend = {
     vglyph_get_figure_type,
     _vglyph_figure_is_cast,
-    _vglyph_figure_destroy
+    _vglyph_figure_destroy_callback
 };
 
 vglyph_type_t*

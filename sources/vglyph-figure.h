@@ -25,6 +25,34 @@ struct _vglyph_figure
     vglyph_vector_t* segments;
 };
 
+static inline vglyph_figure_t*
+_vglyph_figure_reference(vglyph_figure_t* figure)
+{
+    assert(figure);
+    return (vglyph_figure_t*)_vglyph_object_reference(&figure->object);
+}
+
+static inline void
+_vglyph_figure_destroy(vglyph_figure_t* figure)
+{
+    assert(figure);
+    _vglyph_object_destroy(&figure->object);
+}
+
+static inline int
+_vglyph_figure_get_reference_count(vglyph_figure_t* figure)
+{
+    assert(figure);
+    return _vglyph_object_get_reference_count(&figure->object);
+}
+
+static inline vglyph_state_t
+_vglyph_figure_get_state(vglyph_figure_t* figure)
+{
+    assert(figure);
+    return _vglyph_object_get_state(&figure->object);
+}
+
 static inline void
 _vglyph_figure_set_state(vglyph_figure_t* figure,
                          vglyph_state_t state)

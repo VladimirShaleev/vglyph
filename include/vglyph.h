@@ -33,6 +33,7 @@ VGLYPH_BEGIN
 typedef struct _vglyph_object            vglyph_object_t;
 typedef struct _vglyph_type              vglyph_type_t;
 typedef struct _vglyph_figure            vglyph_figure_t;
+typedef struct _vglyph_glyph             vglyph_glyph_t;
 typedef struct _vglyph_format            vglyph_format_t;
 typedef struct _vglyph_rgba_uint_format  vglyph_rgba_uint_format_t;
 typedef struct _vglyph_rgba_float_format vglyph_rgba_float_format_t;
@@ -202,6 +203,9 @@ vglyph_public vglyph_type_t*
 vglyph_get_figure_type(void);
 
 vglyph_public vglyph_type_t*
+vglyph_get_glyph_type(void);
+
+vglyph_public vglyph_type_t*
 vglyph_get_format_type(void);
 
 vglyph_public vglyph_type_t*
@@ -237,6 +241,9 @@ vglyph_object_to_type(vglyph_object_t* object);
 
 vglyph_public vglyph_figure_t*
 vglyph_object_to_figure(vglyph_object_t* object);
+
+vglyph_public vglyph_glyph_t*
+vglyph_object_to_glyph(vglyph_object_t* object);
 
 vglyph_public vglyph_format_t*
 vglyph_object_to_format(vglyph_object_t* object);
@@ -312,6 +319,42 @@ vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
                                    vglyph_coordinate_t coordinate,
                                    vglyph_float32_t y,
                                    vglyph_hinting_t hinting);
+
+vglyph_public vglyph_glyph_t*
+vglyph_glyph_create(vglyph_figure_t* figure);
+
+vglyph_public vglyph_object_t*
+vglyph_glyph_to_object(vglyph_glyph_t* glyph);
+
+vglyph_public vglyph_figure_t*
+vglyph_glyph_get_figure(vglyph_glyph_t* glyph);
+
+vglyph_public vglyph_float32_t
+vglyph_glyph_get_width(vglyph_glyph_t* glyph);
+
+vglyph_public vglyph_float32_t
+vglyph_glyph_get_height(vglyph_glyph_t* glyph);
+
+vglyph_public vglyph_float32_t
+vglyph_glyph_get_bearing_x(vglyph_glyph_t* glyph);
+
+vglyph_public void
+vglyph_glyph_set_bearing_x(vglyph_glyph_t* glyph,
+                           vglyph_float32_t bearing_x);
+
+vglyph_public vglyph_float32_t
+vglyph_glyph_get_bearing_y(vglyph_glyph_t* glyph);
+
+vglyph_public void
+vglyph_glyph_set_bearing_y(vglyph_glyph_t* glyph,
+                           vglyph_float32_t bearing_y);
+
+vglyph_public vglyph_float32_t
+vglyph_glyph_get_advance(vglyph_glyph_t* glyph);
+
+vglyph_public void
+vglyph_glyph_set_advance(vglyph_glyph_t* glyph,
+                         vglyph_float32_t advance);
 
 //vglyph_public vglyph_format_t*
 //vglyph_format_create(const char* format);
@@ -398,6 +441,9 @@ vglyph_surface_set_pixel(vglyph_surface_t* surface,
                          vglyph_float32_t x,
                          vglyph_float32_t y,
                          const vglyph_color_t* color);
+
+//vglyph_public void
+//vglyph_surface_draw_glyph(vglyph_surface_t* surface);
 
 VGLYPH_END
 
