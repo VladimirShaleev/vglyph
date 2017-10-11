@@ -300,6 +300,33 @@ static int test_save_bitmap_x1r5g5b5(void)
     return result;
 }
 
+static int test_save_bitmap_r5g6b5(void)
+{
+    vglyph_packaging_bytes_t packaging_bytes;
+    packaging_bytes.byte_count = 2;
+    packaging_bytes.endianness = VGLYPH_ENDIANNESS_LITTLE;
+
+    vglyph_rgba_components_t components;
+    components.r = VGLYPH_COMPONENT_RED;
+    components.g = VGLYPH_COMPONENT_GREEN;
+    components.b = VGLYPH_COMPONENT_BLUE;
+    components.a = VGLYPH_COMPONENT_ZERO;
+
+    vglyph_rgba_uint_bit_count_t bit_count;
+    bit_count.r = 5;
+    bit_count.g = 6;
+    bit_count.b = 5;
+    bit_count.a = 0;
+
+    vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
+        vglyph_rgba_uint_format_create(&packaging_bytes, &components, &bit_count));
+
+    int result = save_bitmap("r5g6b5.bmp", format, 200, 100);
+    vglyph_object_destroy(vglyph_format_to_object(format));
+
+    return result;
+}
+
 static int test_save_bitmap_r8g8b8(void)
 {
     vglyph_packaging_bytes_t packaging_bytes;
@@ -364,6 +391,7 @@ int main(int argc, char* argv[])
         
     BEGIN_TESTS()
     ADD_TEST(test_save_bitmap_x1r5g5b5)
+    //ADD_TEST(test_save_bitmap_r5g6b5)
     ADD_TEST(test_save_bitmap_r8g8b8)
     END_TESTS(result)
 

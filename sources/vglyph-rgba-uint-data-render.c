@@ -135,7 +135,7 @@ static const vglyph_render_backend_t vglyph_rgba_uint_data_render_backend = {
 };
 
 vglyph_render_t*
-_vglyph_rgba_uint_data_render_create()
+_vglyph_rgba_uint_data_render_create(void)
 {
     vglyph_rgba_uint_data_render_t* render = 
         (vglyph_rgba_uint_data_render_t*)malloc(sizeof(vglyph_rgba_uint_data_render_t));

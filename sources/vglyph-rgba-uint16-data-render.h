@@ -12,12 +12,14 @@
 typedef struct _vglyph_rgba_uint16_data_render
 {
     vglyph_render_t base;
+    vglyph_bool_t   swap_bytes;
 } vglyph_rgba_uint16_data_render_t;
 
 void
 _vglyph_rgba_uint16_data_render_init(vglyph_rgba_uint16_data_render_t* render,
                                      const vglyph_object_backend_t* object_backend,
-                                     const vglyph_render_backend_t* render_backend);
+                                     const vglyph_render_backend_t* render_backend,
+                                     vglyph_rgba_uint_format_t* format);
 
 void
 _vglyph_rgba_uint16_data_render_ctor(vglyph_rgba_uint16_data_render_t* render);
@@ -32,7 +34,7 @@ vglyph_type_t*
 _vglyph_rgba_uint16_data_render_get_type(void);
 
 vglyph_render_t*
-_vglyph_rgba_uint16_data_render_create(void);
+_vglyph_rgba_uint16_data_render_create(vglyph_rgba_uint_format_t* format);
 
 static inline void
 _vglyph_rgba_uint16_data_render_set_state(vglyph_rgba_uint16_data_render_t* render,

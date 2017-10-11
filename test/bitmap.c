@@ -36,6 +36,19 @@ typedef struct _bitmap_header
     vglyph_uint32_t offset_bits;
 } bitmap_header_t;
 
+typedef struct _bitmap_ciexyz
+{
+    vglyph_sint32_t ciexyz_x;
+    vglyph_sint32_t ciexyz_y;
+    vglyph_sint32_t ciexyz_z;
+} bitmap_ciexyz_t;
+
+typedef struct _bitmap_ciexyztriple {
+    bitmap_ciexyz_t ciexyz_red;
+    bitmap_ciexyz_t ciexyz_green;
+    bitmap_ciexyz_t ciexyz_blue;
+} bitmap_ciexyztriple_t;
+
 typedef struct _bitmap_info_core
 {
     vglyph_uint32_t size;
@@ -45,7 +58,8 @@ typedef struct _bitmap_info_core
     vglyph_uint16_t bit_count;
 } bitmap_info_core_t;
 
-typedef struct _bitmap_info_3 {
+typedef struct _bitmap_info_3 
+{
     vglyph_uint32_t size;
     vglyph_sint32_t width;
     vglyph_sint32_t height;
@@ -58,6 +72,30 @@ typedef struct _bitmap_info_3 {
     vglyph_uint32_t clr_used;
     vglyph_uint32_t clr_important;
 } bitmap_info_3_t;
+
+typedef struct _bitmap_info_4 
+{
+    vglyph_uint32_t       size;
+    vglyph_sint32_t       width;
+    vglyph_sint32_t       height;
+    vglyph_uint16_t       planes;
+    vglyph_uint16_t       bit_count;
+    vglyph_uint32_t       compression;
+    vglyph_uint32_t       size_image;
+    vglyph_sint32_t       x_pels_per_meter;
+    vglyph_sint32_t       y_pels_per_meter;
+    vglyph_uint32_t       clr_used;
+    vglyph_uint32_t       clr_important;
+    vglyph_uint32_t       redMask;
+    vglyph_uint32_t       greenMask;
+    vglyph_uint32_t       blueMask;
+    vglyph_uint32_t       alphaMask;
+    vglyph_uint32_t       cs_type;
+    bitmap_ciexyztriple_t end_points;
+    vglyph_uint32_t       gamma_red;
+    vglyph_uint32_t       gamma_green;
+    vglyph_uint32_t       gamma_blue;
+} bitmap_info_4_t;
 
 vglyph_bool_t 
 bitmap_save(vglyph_surface_t* surface, 

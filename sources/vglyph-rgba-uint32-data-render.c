@@ -13,13 +13,24 @@
 void
 _vglyph_rgba_uint32_data_render_init(vglyph_rgba_uint32_data_render_t* render,
                                      const vglyph_object_backend_t* object_backend,
-                                     const vglyph_render_backend_t* render_backend)
+                                     const vglyph_render_backend_t* render_backend,
+                                     vglyph_rgba_uint_format_t* format)
 {
     assert(render);
     assert(object_backend);
     assert(render_backend);
+    assert(format);
 
     _vglyph_render_init(&render->base, object_backend, render_backend);
+    
+    const vglyph_bool_t machine_little_endian = _vglyph_is_little_endian();
+    const vglyph_bool_t format_little_endian = 
+        (format->packaging_bytes.endianness == VGLYPH_ENDIANNESS_HOST && machine_little_endian) ||
+        (format->packaging_bytes.endianness == VGLYPH_ENDIANNESS_LITTLE);
+
+    render->swap_bytes = 
+        ( format_little_endian && !machine_little_endian) || 
+        (!format_little_endian &&  machine_little_endian);
 }
 
 void
@@ -68,6 +79,7 @@ _vglyph_rgba_uint32_data_render_set_pixel(vglyph_render_t* render,
                                           vglyph_float32_t y,
                                           const vglyph_color_t* color)
 {
+    vglyph_rgba_uint32_data_render_t* uint32_data_render = (vglyph_rgba_uint32_data_render_t*)render;
     vglyph_uint8_t* data = ((vglyph_data_surface_t*)surface)->data;
     vglyph_rgba_uint_format_t* format = (vglyph_rgba_uint_format_t*)surface->format;
 
@@ -95,7 +107,7 @@ _vglyph_rgba_uint32_data_render_set_pixel(vglyph_render_t* render,
             (blue  << blue_shift ) | 
             (alpha << alpha_shift);
 
-        if (_vglyph_is_little_endian())
+        if (uint32_data_render->swap_bytes)
         {
             *data++ = (result >> 24) & 0xFF;
             *data++ = (result >> 16) & 0xFF;
@@ -120,7 +132,7 @@ static const vglyph_render_backend_t vglyph_rgba_uint32_data_render_backend = {
 };
 
 vglyph_render_t*
-_vglyph_rgba_uint32_data_render_create()
+_vglyph_rgba_uint32_data_render_create(vglyph_rgba_uint_format_t* format)
 {
     vglyph_rgba_uint32_data_render_t* render = 
         (vglyph_rgba_uint32_data_render_t*)malloc(sizeof(vglyph_rgba_uint32_data_render_t));
@@ -130,7 +142,8 @@ _vglyph_rgba_uint32_data_render_create()
 
     _vglyph_rgba_uint32_data_render_init(render, 
                                          &vglyph_rgba_uint32_data_render_object_backend,
-                                         &vglyph_rgba_uint32_data_render_backend);
+                                         &vglyph_rgba_uint32_data_render_backend,
+                                         format);
 
     _vglyph_rgba_uint32_data_render_ctor(render);
 
