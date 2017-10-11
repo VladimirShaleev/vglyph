@@ -4,6 +4,8 @@
  * Copyright (C) 2017 Shaleev Vladimir
  */
 
+#include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
 #include "bitmap.h"
@@ -68,9 +70,6 @@ bitmap_save(vglyph_surface_t* surface,
     const vglyph_uint32_t height = vglyph_surface_get_height(surface);
     const vglyph_uint32_t pitch  = vglyph_surface_get_pitch(surface);
 
-    if (pitch % 4 != 0)
-        return FALSE;
-
     vglyph_format_t* format = vglyph_surface_get_format(surface);
     const vglyph_uint32_t bpp = vglyph_format_get_bits_per_pixel(format);
     const vglyph_uint32_t data_size = vglyph_surface_get_data_size(format, width, height, VGLYPH_ALIGNMENT_4);
@@ -120,6 +119,14 @@ bitmap_save(vglyph_surface_t* surface,
     if (!file)
         return FALSE;
 
+    vglyph_uint32_t write_pitch = (width * bpp + 7) >> 3;
+    vglyph_uint32_t align = VGLYPH_ALIGNMENT_4 - 1;
+    write_pitch = (pitch + align) & ~align;
+
+    vglyph_uint32_t padding = write_pitch - pitch;
+    uint8_t* data_padding = (uint8_t*)malloc(padding);
+    memset(data_padding, 0, padding);
+
     vglyph_uint8_t* data = vglyph_surface_lock(surface, 0, 0, width, height);
     vglyph_bool_t result = TRUE;
 
@@ -140,12 +147,19 @@ bitmap_save(vglyph_surface_t* surface,
                 result = FALSE;
                 break;
             }
+
+            if (fwrite(data_padding, 1, padding, file) != padding)
+            {
+                result = FALSE;
+                break;
+            }
         }
 
     } while (FALSE);
 
-    fclose(file);
     vglyph_surface_unlock(surface);
+    free(data_padding);
+    fclose(file);
 
     return result;
 }

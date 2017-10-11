@@ -294,7 +294,7 @@ static int test_save_bitmap_x1r5g5b5(void)
     vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
         vglyph_rgba_uint_format_create(&packaging_bytes, &components, &bit_count));
 
-    int result = save_bitmap("r5g6b5.bmp", format, 200, 100);
+    int result = save_bitmap("x1r5g5b5.bmp", format, 200, 100);
     vglyph_object_destroy(vglyph_format_to_object(format));
 
     return result;
