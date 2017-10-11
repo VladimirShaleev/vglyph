@@ -296,8 +296,7 @@ vglyph_figure_draw_arc(vglyph_figure_t* figure,
 vglyph_bool_t
 vglyph_figure_draw_lineto_horizontal(vglyph_figure_t* figure,
                                      vglyph_coordinate_t coordinate,
-                                     vglyph_float32_t x,
-                                     vglyph_hinting_t hinting)
+                                     vglyph_float32_t x)
 {
     assert(figure);
     assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
@@ -314,8 +313,7 @@ vglyph_figure_draw_lineto_horizontal(vglyph_figure_t* figure,
         if (!result)
             return FALSE;
 
-        result->x       = x;
-        result->hinting = hinting;
+        result->x = x;
         return TRUE;
     }
 
@@ -325,8 +323,7 @@ vglyph_figure_draw_lineto_horizontal(vglyph_figure_t* figure,
 vglyph_bool_t
 vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
                                    vglyph_coordinate_t coordinate,
-                                   vglyph_float32_t y,
-                                   vglyph_hinting_t hinting)
+                                   vglyph_float32_t y)
 {
     assert(figure);
     assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
@@ -343,8 +340,7 @@ vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
         if (!result)
             return FALSE;
 
-        result->y       = y;
-        result->hinting = hinting;
+        result->y = y;
         return TRUE;
     }
 

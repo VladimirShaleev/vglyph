@@ -11,13 +11,15 @@ void
 _vglyph_rgba_uint_format_init(vglyph_rgba_uint_format_t* format,
                               const vglyph_object_backend_t* object_backend,
                               const vglyph_format_backend_t* format_backend,
+                              const vglyph_packaging_bytes_t* packaging_bytes,
                               const vglyph_rgba_components_t* components,
                               const vglyph_rgba_uint_bit_count_t* bit_count)
 {
     _vglyph_format_init(&format->base, object_backend, format_backend);
 
-    format->components = *components;
-    format->bit_count  = *bit_count;
+    format->packaging_bytes = *packaging_bytes;
+    format->components      = *components;
+    format->bit_count       = *bit_count;
 }
 
 void
@@ -109,11 +111,15 @@ vglyph_format_to_rgba_uint_format(vglyph_format_t* format)
 }
 
 vglyph_rgba_uint_format_t*
-vglyph_rgba_uint_format_create(const vglyph_rgba_components_t* components,
+vglyph_rgba_uint_format_create(const vglyph_packaging_bytes_t* packaging_bytes,
+                               const vglyph_rgba_components_t* components,
                                const vglyph_rgba_uint_bit_count_t* bit_count)
 {
+    assert(packaging_bytes);
     assert(components);
     assert(bit_count);
+    assert(packaging_bytes->byte_count >= 1);
+    assert(packaging_bytes->endianness >= VGLYPH_ENDIANNESS_HOST && packaging_bytes->endianness <= VGLYPH_ENDIANNESS_LITTLE);
     assert(components->r >= VGLYPH_COMPONENT_ZERO && components->r <= VGLYPH_COMPONENT_ALPHA);
     assert(components->g >= VGLYPH_COMPONENT_ZERO && components->g <= VGLYPH_COMPONENT_ALPHA);
     assert(components->b >= VGLYPH_COMPONENT_ZERO && components->b <= VGLYPH_COMPONENT_ALPHA);
@@ -127,6 +133,7 @@ vglyph_rgba_uint_format_create(const vglyph_rgba_components_t* components,
     _vglyph_rgba_uint_format_init(format, 
                                   &vglyph_rgba_uint_format_object_backend, 
                                   &vglyph_rgba_uint_format_backend, 
+                                  packaging_bytes,
                                   components, 
                                   bit_count);
 

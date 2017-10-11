@@ -5,12 +5,15 @@
  */
 
 #include "vglyph.h"
+#include "bitmap.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void show_glyph_info(void)
+static char app_dir[512] = { '\0' };
+
+static void show_glyph_info(void)
 {
 #ifdef VGLYPH_STATIC_BUILD
     printf("=================================================\n");
@@ -32,7 +35,7 @@ void show_glyph_info(void)
     }
 }
 
-void show_object_state(vglyph_object_t* object)
+static void show_object_state(vglyph_object_t* object)
 {
     const vglyph_state_t state = vglyph_object_get_state(object);
 
@@ -45,7 +48,7 @@ void show_object_state(vglyph_object_t* object)
     }
 }
 
-void show_object_type(vglyph_object_t* object)
+static void show_object_type(vglyph_object_t* object)
 {
     const vglyph_state_t state = vglyph_object_get_state(object);
 
@@ -70,8 +73,12 @@ void show_object_type(vglyph_object_t* object)
     }
 }
 
-int test_rgba_uint_data_render(void)
+static int test_rgba_uint_data_render(void)
 {
+    vglyph_packaging_bytes_t packaging_bytes;
+    packaging_bytes.byte_count = 1;
+    packaging_bytes.endianness = VGLYPH_ENDIANNESS_BIG;
+
     vglyph_rgba_components_t components;
     components.r = VGLYPH_COMPONENT_RED;
     components.g = VGLYPH_COMPONENT_GREEN;
@@ -85,7 +92,7 @@ int test_rgba_uint_data_render(void)
     bit_count.a = 1;
 
     vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
-        vglyph_rgba_uint_format_create(&components, &bit_count));
+        vglyph_rgba_uint_format_create(&packaging_bytes, &components, &bit_count));
 
     vglyph_uint32_t    width  = (vglyph_uint32_t)7;
     vglyph_uint32_t    height = (vglyph_uint32_t)1;
@@ -119,8 +126,12 @@ int test_rgba_uint_data_render(void)
     return result;
 }
 
-int test_rgba_uint16_data_render(void)
+static int test_rgba_uint16_data_render(void)
 {
+    vglyph_packaging_bytes_t packaging_bytes;
+    packaging_bytes.byte_count = 1;
+    packaging_bytes.endianness = VGLYPH_ENDIANNESS_BIG;
+
     vglyph_rgba_components_t components;
     components.r = VGLYPH_COMPONENT_RED;
     components.g = VGLYPH_COMPONENT_GREEN;
@@ -134,7 +145,7 @@ int test_rgba_uint16_data_render(void)
     bit_count.a = 0;
 
     vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
-        vglyph_rgba_uint_format_create(&components, &bit_count));
+        vglyph_rgba_uint_format_create(&packaging_bytes, &components, &bit_count));
 
     vglyph_uint32_t    width  = (vglyph_uint32_t)3;
     vglyph_uint32_t    height = (vglyph_uint32_t)1;
@@ -173,8 +184,12 @@ int test_rgba_uint16_data_render(void)
     return result;
 }
 
-int test_rgba_uint32_data_render(void)
+static int test_rgba_uint32_data_render(void)
 {
+    vglyph_packaging_bytes_t packaging_bytes;
+    packaging_bytes.byte_count = 1;
+    packaging_bytes.endianness = VGLYPH_ENDIANNESS_BIG;
+
     vglyph_rgba_components_t components;
     components.r = VGLYPH_COMPONENT_BLUE;
     components.g = VGLYPH_COMPONENT_GREEN;
@@ -188,7 +203,7 @@ int test_rgba_uint32_data_render(void)
     bit_count.a = 10;
 
     vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
-        vglyph_rgba_uint_format_create(&components, &bit_count));
+        vglyph_rgba_uint_format_create(&packaging_bytes, &components, &bit_count));
 
     vglyph_uint32_t    width  = (vglyph_uint32_t)7;
     vglyph_uint32_t    height = (vglyph_uint32_t)1;
@@ -229,6 +244,89 @@ int test_rgba_uint32_data_render(void)
     return result;
 }
 
+static int save_bitmap(const char* name,
+                       vglyph_format_t* format, 
+                       vglyph_uint32_t width, 
+                       vglyph_uint32_t height)
+{
+    static char path[512] = { '\0' };
+    strcpy(path, app_dir);
+    strcat(path, name);
+
+    vglyph_surface_t* surface = vglyph_surface_create(format, width, height, VGLYPH_ALIGNMENT_4);
+    vglyph_float64_t inv_width = 1.0 / (width - 1);
+    vglyph_float64_t inv_height = 1.0 / (height - 1);
+
+    for (vglyph_uint32_t y = 0; y < height; ++y)
+    {
+        for (vglyph_uint32_t x = 0; x < width; ++x)
+        {
+            vglyph_color_t color = { x * inv_width, y * inv_height, 1.0, 1.0 };
+            vglyph_surface_set_pixel(surface, (vglyph_float32_t)x, (vglyph_float32_t)y, &color);
+        }
+    }
+
+    vglyph_bool_t result = bitmap_save(surface, path);
+
+    vglyph_object_destroy(vglyph_surface_to_object(surface));
+
+    return result ? 0 : 1;
+}
+
+static int test_save_bitmap_x1r5g5b5(void)
+{
+    vglyph_packaging_bytes_t packaging_bytes;
+    packaging_bytes.byte_count = 2;
+    packaging_bytes.endianness = VGLYPH_ENDIANNESS_LITTLE;
+
+    vglyph_rgba_components_t components;
+    components.r = VGLYPH_COMPONENT_ZERO;
+    components.g = VGLYPH_COMPONENT_RED;
+    components.b = VGLYPH_COMPONENT_GREEN;
+    components.a = VGLYPH_COMPONENT_BLUE;
+
+    vglyph_rgba_uint_bit_count_t bit_count;
+    bit_count.r = 1;
+    bit_count.g = 5;
+    bit_count.b = 5;
+    bit_count.a = 5;
+
+    vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
+        vglyph_rgba_uint_format_create(&packaging_bytes, &components, &bit_count));
+
+    int result = save_bitmap("r5g6b5.bmp", format, 200, 100);
+    vglyph_object_destroy(vglyph_format_to_object(format));
+
+    return result;
+}
+
+static int test_save_bitmap_r8g8b8(void)
+{
+    vglyph_packaging_bytes_t packaging_bytes;
+    packaging_bytes.byte_count = 3;
+    packaging_bytes.endianness = VGLYPH_ENDIANNESS_LITTLE;
+
+    vglyph_rgba_components_t components;
+    components.r = VGLYPH_COMPONENT_ZERO;
+    components.g = VGLYPH_COMPONENT_RED;
+    components.b = VGLYPH_COMPONENT_GREEN;
+    components.a = VGLYPH_COMPONENT_BLUE;
+
+    vglyph_rgba_uint_bit_count_t bit_count;
+    bit_count.r = 0;
+    bit_count.g = 8;
+    bit_count.b = 8;
+    bit_count.a = 8;
+
+    vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
+        vglyph_rgba_uint_format_create(&packaging_bytes, &components, &bit_count));
+
+    int result = save_bitmap("r8g8b8.bmp", format, 200, 100);
+    vglyph_object_destroy(vglyph_format_to_object(format));
+
+    return result;
+}
+
 #define BEGIN_TESTS()                                                      \
 {                                                                          \
     struct                                                                 \
@@ -248,9 +346,13 @@ int test_rgba_uint32_data_render(void)
     }                                                                      \
 }
 
-int main(void)
+int main(int argc, char* argv[])
 {
     show_glyph_info();
+
+    char* app_name = argv[0];
+    char* last = strrchr(app_name, '\\');
+    strncpy(app_dir, app_name, last - app_name + 1);
 
     int result = 0;
 
@@ -259,6 +361,13 @@ int main(void)
     ADD_TEST(test_rgba_uint16_data_render)
     ADD_TEST(test_rgba_uint32_data_render)
     END_TESTS(result)
+        
+    BEGIN_TESTS()
+    ADD_TEST(test_save_bitmap_x1r5g5b5)
+    ADD_TEST(test_save_bitmap_r8g8b8)
+    END_TESTS(result)
+
+    return result;
 
     //vglyph_point_t point1;
     //point1.x = 0.5f;

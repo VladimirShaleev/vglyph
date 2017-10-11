@@ -7,6 +7,7 @@
 #include "vglyph-data-surface.h"
 #include "vglyph-rgba-uint-format.h"
 #include "vglyph-rgba-uint-data-render.h"
+#include "vglyph-rgba-little-uint-data-render.h"
 #include "vglyph-rgba-uint16-data-render.h"
 #include "vglyph-rgba-uint32-data-render.h"
 #include "vglyph-type.h"
@@ -128,17 +129,21 @@ _vglyph_data_surface_create_render(vglyph_format_t* format)
     {
         vglyph_rgba_uint_format_t* rgba_uint_format = (vglyph_rgba_uint_format_t*)format;
 
-        if (rgba_uint_format->bit_count.r +
-            rgba_uint_format->bit_count.g +
-            rgba_uint_format->bit_count.b +
-            rgba_uint_format->bit_count.a == 32)
-            return _vglyph_rgba_uint32_data_render_create();
+        //if (rgba_uint_format->bit_count.r +
+        //    rgba_uint_format->bit_count.g +
+        //    rgba_uint_format->bit_count.b +
+        //    rgba_uint_format->bit_count.a == 32)
+        //    return _vglyph_rgba_uint32_data_render_create();
 
-        if (rgba_uint_format->bit_count.r +
-            rgba_uint_format->bit_count.g +
-            rgba_uint_format->bit_count.b +
-            rgba_uint_format->bit_count.a == 16)
-            return _vglyph_rgba_uint16_data_render_create();
+        //if (rgba_uint_format->bit_count.r +
+        //    rgba_uint_format->bit_count.g +
+        //    rgba_uint_format->bit_count.b +
+        //    rgba_uint_format->bit_count.a == 16)
+        //    return _vglyph_rgba_uint16_data_render_create();
+
+        if ((rgba_uint_format->packaging_bytes.endianness == VGLYPH_ENDIANNESS_HOST && _vglyph_is_little_endian()) ||
+            rgba_uint_format->packaging_bytes.endianness == VGLYPH_ENDIANNESS_LITTLE)
+            return _vglyph_rgba_little_uint_data_render_create();
 
         return _vglyph_rgba_uint_data_render_create();
     }

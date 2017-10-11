@@ -69,13 +69,11 @@ typedef struct _vglyph_segment_arc
 typedef struct _vglyph_segment_lineto_horizontal
 {
     vglyph_float32_t x;
-    vglyph_hinting_t hinting;
 } vglyph_segment_lineto_horizontal_t;
 
 typedef struct _vglyph_segment_lineto_vertical
 {
     vglyph_float32_t y;
-    vglyph_hinting_t hinting;
 } vglyph_segment_lineto_vertical_t;
 
 #endif

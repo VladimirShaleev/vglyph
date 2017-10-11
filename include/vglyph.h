@@ -101,14 +101,6 @@ typedef enum _vglyph_state
     VGLYPH_STATE_INVALID_FORMAT = 3
 } vglyph_state_t;
 
-typedef enum _vglyph_hinting
-{
-    VGLYPH_HINTING_NONE       = 0x0,
-    VGLYPH_HINTING_HORIZONTAL = 0x1,
-    VGLYPH_HINTING_VERTICAL   = 0x2,
-    VGLYPH_HINTING_ALL        = VGLYPH_HINTING_HORIZONTAL | VGLYPH_HINTING_VERTICAL
-} vglyph_hinting_t;
-
 typedef enum _vglyph_coordinate
 {
     VGLYPH_COORDINATE_ABSOLUTE = 0,
@@ -123,6 +115,13 @@ typedef enum _vglyph_alignment
     VGLYPH_ALIGNMENT_4       = 4,
     VGLYPH_ALIGNMENT_8       = 8
 } vglyph_alignment_t;
+
+typedef enum _vglyph_endianness
+{
+    VGLYPH_ENDIANNESS_HOST   = 0,
+    VGLYPH_ENDIANNESS_BIG    = 1,
+    VGLYPH_ENDIANNESS_LITTLE = 2,
+} vglyph_endianness_t;
 
 typedef enum _vglyph_component
 {
@@ -146,7 +145,6 @@ typedef struct _vglyph_point
 {
     vglyph_float32_t x;
     vglyph_float32_t y;
-    vglyph_hinting_t hinting;
 } vglyph_point_t;
 
 typedef struct _vglyph_color
@@ -156,6 +154,12 @@ typedef struct _vglyph_color
     vglyph_float64_t blue;
     vglyph_float64_t alpha;
 } vglyph_color_t;
+
+typedef struct _vglyph_packaging_bytes
+{
+    vglyph_uint32_t     byte_count;
+    vglyph_endianness_t endianness;
+} vglyph_packaging_bytes_t;
 
 typedef struct _vglyph_rgba_components
 {
@@ -311,14 +315,12 @@ vglyph_figure_draw_arc(vglyph_figure_t* figure,
 vglyph_public vglyph_bool_t
 vglyph_figure_draw_lineto_horizontal(vglyph_figure_t* figure,
                                      vglyph_coordinate_t coordinate,
-                                     vglyph_float32_t x,
-                                     vglyph_hinting_t hinting);
+                                     vglyph_float32_t x);
 
 vglyph_public vglyph_bool_t
 vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
                                    vglyph_coordinate_t coordinate,
-                                   vglyph_float32_t y,
-                                   vglyph_hinting_t hinting);
+                                   vglyph_float32_t y);
 
 vglyph_public vglyph_glyph_t*
 vglyph_glyph_create(vglyph_figure_t* figure);
@@ -372,7 +374,8 @@ vglyph_public vglyph_uint32_t
 vglyph_format_get_bits_per_pixel(vglyph_format_t* format);
 
 vglyph_public vglyph_rgba_uint_format_t*
-vglyph_rgba_uint_format_create(const vglyph_rgba_components_t* components,
+vglyph_rgba_uint_format_create(const vglyph_packaging_bytes_t* packaging_bytes,
+                               const vglyph_rgba_components_t* components,
                                const vglyph_rgba_uint_bit_count_t* bit_count);
 
 vglyph_public vglyph_object_t*
@@ -442,8 +445,11 @@ vglyph_surface_set_pixel(vglyph_surface_t* surface,
                          vglyph_float32_t y,
                          const vglyph_color_t* color);
 
-//vglyph_public void
-//vglyph_surface_draw_glyph(vglyph_surface_t* surface);
+vglyph_public void
+vglyph_surface_draw_glyph(vglyph_surface_t* surface,
+                          vglyph_glyph_t* glyph,
+                          const vglyph_point_t* position,
+                          const vglyph_point_t* origin);
 
 VGLYPH_END
 

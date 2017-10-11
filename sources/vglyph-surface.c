@@ -181,3 +181,11 @@ vglyph_surface_set_pixel(vglyph_surface_t* surface,
         render->backend->set_pixel(render, surface, x, y, color);
     }
 }
+
+void
+vglyph_surface_draw_glyph(vglyph_surface_t* surface,
+                          vglyph_glyph_t* glyph,
+                          const vglyph_point_t* position,
+                          const vglyph_point_t* origin)
+{
+}
