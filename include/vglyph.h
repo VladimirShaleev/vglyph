@@ -373,6 +373,10 @@ vglyph_format_to_rgba_uint_format(vglyph_format_t* format);
 vglyph_public vglyph_uint32_t
 vglyph_format_get_bits_per_pixel(vglyph_format_t* format);
 
+vglyph_public void
+vglyph_format_get_packaging_bytes(vglyph_format_t* format,
+                                  vglyph_packaging_bytes_t* packaging_bytes);
+
 vglyph_public vglyph_rgba_uint_format_t*
 vglyph_rgba_uint_format_create(const vglyph_packaging_bytes_t* packaging_bytes,
                                const vglyph_rgba_components_t* components,
@@ -383,6 +387,14 @@ vglyph_rgba_uint_format_to_object(vglyph_rgba_uint_format_t* format);
 
 vglyph_public vglyph_format_t*
 vglyph_rgba_uint_format_to_format(vglyph_rgba_uint_format_t* format);
+
+vglyph_public void
+vglyph_rgba_uint_format_get_components(vglyph_rgba_uint_format_t* format,
+                                       vglyph_rgba_components_t* components);
+
+vglyph_public void
+vglyph_rgba_uint_format_get_bit_count(vglyph_rgba_uint_format_t* format,
+                                      vglyph_rgba_uint_bit_count_t* bit_count);
 
 //vglyph_public vglyph_rgba_float_format_t*
 //vglyph_rgba_float_format_create(const vglyph_rgba_components_t* components,

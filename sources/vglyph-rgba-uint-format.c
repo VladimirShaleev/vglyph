@@ -15,9 +15,8 @@ _vglyph_rgba_uint_format_init(vglyph_rgba_uint_format_t* format,
                               const vglyph_rgba_components_t* components,
                               const vglyph_rgba_uint_bit_count_t* bit_count)
 {
-    _vglyph_format_init(&format->base, object_backend, format_backend);
+    _vglyph_format_init(&format->base, object_backend, format_backend, packaging_bytes);
 
-    format->packaging_bytes = *packaging_bytes;
     format->components      = *components;
     format->bit_count       = *bit_count;
 }
@@ -154,4 +153,26 @@ vglyph_rgba_uint_format_to_format(vglyph_rgba_uint_format_t* format)
 {
     assert(format);
     return &format->base;
+}
+
+void
+vglyph_rgba_uint_format_get_components(vglyph_rgba_uint_format_t* format,
+                                       vglyph_rgba_components_t* components)
+{
+    assert(format);
+    assert(components);
+
+    if (_vglyph_rgba_uint_format_is_valid(format))
+        *components = format->components;
+}
+
+void
+vglyph_rgba_uint_format_get_bit_count(vglyph_rgba_uint_format_t* format,
+                                      vglyph_rgba_uint_bit_count_t* bit_count)
+{
+    assert(format);
+    assert(bit_count);
+
+    if (_vglyph_rgba_uint_format_is_valid(format))
+        *bit_count = format->bit_count;
 }

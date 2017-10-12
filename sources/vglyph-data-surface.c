@@ -141,8 +141,8 @@ _vglyph_data_surface_create_render(vglyph_format_t* format)
             rgba_uint_format->bit_count.a == 16)
             return _vglyph_rgba_uint16_data_render_create(rgba_uint_format);
 
-        if ((rgba_uint_format->packaging_bytes.endianness == VGLYPH_ENDIANNESS_HOST && _vglyph_is_little_endian()) ||
-            rgba_uint_format->packaging_bytes.endianness == VGLYPH_ENDIANNESS_LITTLE)
+        if ((rgba_uint_format->base.packaging_bytes.endianness == VGLYPH_ENDIANNESS_HOST && _vglyph_is_little_endian()) ||
+            rgba_uint_format->base.packaging_bytes.endianness == VGLYPH_ENDIANNESS_LITTLE)
             return _vglyph_rgba_little_uint_data_render_create();
 
         return _vglyph_rgba_uint_data_render_create();

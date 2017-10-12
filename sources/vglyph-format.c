@@ -10,11 +10,18 @@
 void
 _vglyph_format_init(vglyph_format_t* format,
                     const vglyph_object_backend_t* object_backend,
-                    const vglyph_format_backend_t* format_backend)
+                    const vglyph_format_backend_t* format_backend,
+                    const vglyph_packaging_bytes_t* packaging_bytes)
 {
+    assert(format_backend);
+    assert(packaging_bytes);
+    assert(packaging_bytes->byte_count >= 1);
+    assert(packaging_bytes->endianness >= VGLYPH_ENDIANNESS_HOST && packaging_bytes->endianness <= VGLYPH_ENDIANNESS_LITTLE);
+
     _vglyph_object_init(&format->object, object_backend);
 
     format->backend = format_backend;
+    format->packaging_bytes = *packaging_bytes;
 }
 
 void
@@ -78,4 +85,15 @@ vglyph_format_get_bits_per_pixel(vglyph_format_t* format)
         return (vglyph_uint32_t)format->backend->get_bits_per_pixel(format);
 
     return 0;
+}
+
+void
+vglyph_format_get_packaging_bytes(vglyph_format_t* format,
+                                  vglyph_packaging_bytes_t* packaging_bytes)
+{
+    assert(format);
+    assert(packaging_bytes);
+
+    if (_vglyph_format_is_valid(format))
+        *packaging_bytes = format->packaging_bytes;
 }

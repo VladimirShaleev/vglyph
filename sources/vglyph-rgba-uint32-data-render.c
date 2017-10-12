@@ -25,8 +25,8 @@ _vglyph_rgba_uint32_data_render_init(vglyph_rgba_uint32_data_render_t* render,
     
     const vglyph_bool_t machine_little_endian = _vglyph_is_little_endian();
     const vglyph_bool_t format_little_endian = 
-        (format->packaging_bytes.endianness == VGLYPH_ENDIANNESS_HOST && machine_little_endian) ||
-        (format->packaging_bytes.endianness == VGLYPH_ENDIANNESS_LITTLE);
+        (format->base.packaging_bytes.endianness == VGLYPH_ENDIANNESS_HOST && machine_little_endian) ||
+        (format->base.packaging_bytes.endianness == VGLYPH_ENDIANNESS_LITTLE);
 
     render->swap_bytes = 
         ( format_little_endian && !machine_little_endian) || 

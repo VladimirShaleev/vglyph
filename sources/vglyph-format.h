@@ -18,12 +18,14 @@ struct _vglyph_format
 {
     vglyph_object_t object;
     const vglyph_format_backend_t* backend;
+    vglyph_packaging_bytes_t packaging_bytes;
 };
 
 void
 _vglyph_format_init(vglyph_format_t* format,
                     const vglyph_object_backend_t* object_backend,
-                    const vglyph_format_backend_t* format_backend);
+                    const vglyph_format_backend_t* format_backend,
+                    const vglyph_packaging_bytes_t* packaging_bytes);
 
 void
 _vglyph_format_ctor(vglyph_format_t* format);

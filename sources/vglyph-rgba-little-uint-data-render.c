@@ -116,7 +116,7 @@ _vglyph_rgba_little_uint_data_render_set_pixel(vglyph_render_t* render,
     const vglyph_uint32_t height = surface->height;
 
     const vglyph_uint32_t bits_per_pixel  = vglyph_format_get_bits_per_pixel(surface->format);
-    const vglyph_sint_t   packaging_bytes = (vglyph_sint_t)format->packaging_bytes.byte_count;
+    const vglyph_sint_t   packaging_bytes = (vglyph_sint_t)format->base.packaging_bytes.byte_count;
 
     if (x >= 0 && x < widht && y >= 0 && y < height)
     {

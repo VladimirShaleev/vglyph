@@ -20,7 +20,6 @@ typedef struct _vglyph_rgba_uint_capacity
 struct _vglyph_rgba_uint_format
 {
     vglyph_format_t              base;
-    vglyph_packaging_bytes_t     packaging_bytes;
     vglyph_rgba_components_t     components;
     vglyph_rgba_uint_bit_count_t bit_count;
     vglyph_rgba_uint_capacity_t  capacity;
