@@ -60,6 +60,8 @@ static void show_object_type(vglyph_object_t* object)
             printf("object type: vglyph_rgba_uint_format_t\n");
         else if (vglyph_object_is_cast(object, vglyph_get_format_type()))
             printf("object type: vglyph_format_t\n");
+        else if (vglyph_object_is_cast(object, vglyph_get_glyph_type()))
+            printf("object type: vglyph_glyph_t\n");
         else if (vglyph_object_is_cast(object, vglyph_get_figure_type()))
             printf("object type: vglyph_figure_t\n");
         else if (vglyph_object_is_cast(object, vglyph_get_type_type()))
@@ -104,12 +106,12 @@ static int test_rgba_uint_data_render(void)
     memset(data, 0, 12);
     vglyph_surface_unlock(surface);
 
-    for (vglyph_sint32_t i = 0; i < 7; ++i)
+    for (vglyph_uint32_t i = 0; i < 7; ++i)
     {
         vglyph_float64_t chanel = 1.0 / 6.0 * i;
         vglyph_color_t color = { chanel, chanel, chanel, chanel };
 
-        vglyph_surface_set_pixel(surface, (vglyph_float32_t)i, 0.0f, &color);
+        vglyph_surface_set_pixel(surface, i, 0, &color);
     }
 
     vglyph_uint8_t test_data[12] = { 0x00, 0x04, 0xA9, 0x29, 0x48, 0x5B, 0x5B, 0xB5, 0xFF, 0xF8, 0x00, 0x00 };
@@ -157,12 +159,12 @@ static int test_rgba_uint16_data_render(void)
     memset(data, 0, 8);
     vglyph_surface_unlock(surface);
 
-    for (vglyph_sint32_t i = 0; i < 3; ++i)
+    for (vglyph_uint32_t i = 0; i < 3; ++i)
     {
         vglyph_float64_t chanel = 1.0 / 2.0 * i;
         vglyph_color_t color = { chanel, chanel, chanel, chanel };
 
-        vglyph_surface_set_pixel(surface, (vglyph_float32_t)i, 0.0f, &color);
+        vglyph_surface_set_pixel(surface, i, 0, &color);
     }
 
     vglyph_uint8_t test_data[8] = {
@@ -215,12 +217,12 @@ static int test_rgba_uint32_data_render(void)
     memset(data, 0, 28);
     vglyph_surface_unlock(surface);
 
-    for (vglyph_sint32_t i = 0; i < 7; ++i)
+    for (vglyph_uint32_t i = 0; i < 7; ++i)
     {
         vglyph_float64_t chanel = 1.0 / 6.0 * i;
         vglyph_color_t color = { chanel, chanel, 0.0, chanel };
 
-        vglyph_surface_set_pixel(surface, (vglyph_float32_t)i, 0.0f, &color);
+        vglyph_surface_set_pixel(surface, i, 0, &color);
     }
 
     vglyph_uint8_t test_data[28] = { 
@@ -262,7 +264,7 @@ static int save_bitmap(const char* name,
         for (vglyph_uint32_t x = 0; x < width; ++x)
         {
             vglyph_color_t color = { x * inv_width, y * inv_height, 1.0, 1.0 };
-            vglyph_surface_set_pixel(surface, (vglyph_float32_t)x, (vglyph_float32_t)y, &color);
+            vglyph_surface_set_pixel(surface, x, y, &color);
         }
     }
 
@@ -423,29 +425,65 @@ int main(int argc, char* argv[])
     ADD_TEST(test_save_bitmap_r8g8b8)
     END_TESTS(result)
 
-    return result;
+    vglyph_point_t point1;
+    point1.x = 0.1f;
+    point1.y = 0.1f;
 
-    //vglyph_point_t point1;
-    //point1.x = 0.5f;
-    //point1.y = 0.5f;
-    //point1.hinting = VGLYPH_HINTING_ALL;
+    vglyph_point_t point2;
+    point2.x = 0.8f;
+    point2.y = 0.4f;
 
-    //vglyph_point_t point2;
-    //point2.x = 0.3f;
-    //point2.y = 0.1f;
-    //point2.hinting = VGLYPH_HINTING_ALL;
+    vglyph_figure_t* figure = vglyph_figure_create();
+    show_object_type(vglyph_figure_to_object(figure));
 
-    //vglyph_figure_t* figure = vglyph_figure_create();
-    //show_object_type(vglyph_figure_to_object(figure));
+    vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
+    vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_RELATIVE, &point2);
 
-    //vglyph_type_t* type = vglyph_object_get_type(vglyph_figure_to_object(figure));
-    //show_object_type(vglyph_type_to_object(type));
+    vglyph_glyph_t* glyph = vglyph_glyph_create(figure);
+    vglyph_object_destroy(vglyph_figure_to_object(figure));
+    show_object_type(vglyph_glyph_to_object(glyph));
 
-    //vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
-    //vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_RELATIVE, &point2);
+    vglyph_glyph_set_advance(glyph, 0.8f);
+    vglyph_glyph_set_bearing_x(glyph, 0.0f);
+    vglyph_glyph_set_bearing_y(glyph, 0.4f);
 
-    //vglyph_object_destroy(vglyph_type_to_object(type));
-    //vglyph_object_destroy(vglyph_figure_to_object(figure));
+    vglyph_packaging_bytes_t packaging_bytes;
+    packaging_bytes.byte_count = 4;
+    packaging_bytes.endianness = VGLYPH_ENDIANNESS_LITTLE;
+
+    vglyph_rgba_components_t components;
+    components.r = VGLYPH_COMPONENT_ZERO;
+    components.g = VGLYPH_COMPONENT_RED;
+    components.b = VGLYPH_COMPONENT_GREEN;
+    components.a = VGLYPH_COMPONENT_BLUE;
+
+    vglyph_rgba_uint_bit_count_t bit_count;
+    bit_count.r = 8;
+    bit_count.g = 8;
+    bit_count.b = 8;
+    bit_count.a = 8;
+
+    vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
+        vglyph_rgba_uint_format_create(&packaging_bytes, &components, &bit_count));
+
+    static char path[512] = { '\0' };
+    strcpy(path, app_dir);
+    strcat(path, "glyph.bmp");
+
+    vglyph_surface_t* surface = vglyph_surface_create(format, 200, 200, VGLYPH_ALIGNMENT_4);
+    vglyph_color_t fill_color;
+    fill_color.red   = 1.0;
+    fill_color.green = 1.0;
+    fill_color.blue  = 1.0;
+    fill_color.alpha = 1.0;
+    vglyph_surface_fill(surface, 0, 0, 200, 200, &fill_color);
+    vglyph_surface_draw_glyph(surface, glyph, NULL, NULL);
+  
+    bitmap_save(surface, path);
+
+    vglyph_object_destroy(vglyph_surface_to_object(surface));
+    vglyph_object_destroy(vglyph_format_to_object(format));
+    vglyph_object_destroy(vglyph_glyph_to_object(glyph));
 
     return result == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }

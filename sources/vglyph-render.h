@@ -13,10 +13,17 @@ typedef struct _vglyph_render vglyph_render_t;
 
 typedef struct _vglyph_render_backend
 {
+    void (*fill)(vglyph_render_t* render,
+                 vglyph_surface_t* surface,
+                 vglyph_uint32_t x,
+                 vglyph_uint32_t y,
+                 vglyph_uint32_t width,
+                 vglyph_uint32_t height,
+                 const vglyph_color_t* color);
     void (*set_pixel)(vglyph_render_t* render,
                       vglyph_surface_t* surface,
-                      vglyph_float32_t x,
-                      vglyph_float32_t y,
+                      vglyph_uint32_t x,
+                      vglyph_uint32_t y,
                       const vglyph_color_t* color);
 } vglyph_render_backend_t;
 

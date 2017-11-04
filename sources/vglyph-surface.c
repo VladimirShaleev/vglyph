@@ -167,9 +167,27 @@ vglyph_surface_unlock(vglyph_surface_t* surface)
 }
 
 void
+vglyph_surface_fill(vglyph_surface_t* surface,
+                    vglyph_uint32_t x,
+                    vglyph_uint32_t y,
+                    vglyph_uint32_t width,
+                    vglyph_uint32_t height,
+                    const vglyph_color_t* color)
+{
+    assert(surface);
+    assert(color);
+
+    if (_vglyph_surface_is_valid(surface))
+    {
+        vglyph_render_t* render = surface->render;
+        render->backend->fill(render, surface, x, y, width, height, color);
+    }
+}
+
+void
 vglyph_surface_set_pixel(vglyph_surface_t* surface,
-                         vglyph_float32_t x,
-                         vglyph_float32_t y,
+                         vglyph_uint32_t x,
+                         vglyph_uint32_t y,
                          const vglyph_color_t* color)
 {
     assert(surface);

@@ -75,8 +75,8 @@ _vglyph_rgba_uint16_data_render_destroy(vglyph_object_t* object)
 static void
 _vglyph_rgba_uint16_data_render_set_pixel(vglyph_render_t* render,
                                           vglyph_surface_t* surface,
-                                          vglyph_float32_t x,
-                                          vglyph_float32_t y,
+                                          vglyph_uint32_t x,
+                                          vglyph_uint32_t y,
                                           const vglyph_color_t* color)
 {
     vglyph_rgba_uint16_data_render_t* uint16_data_render = (vglyph_rgba_uint16_data_render_t*)render;
@@ -89,7 +89,7 @@ _vglyph_rgba_uint16_data_render_set_pixel(vglyph_render_t* render,
 
     if (x >= 0 && x < widht && y >= 0 && y < height)
     {
-        data += (vglyph_uint32_t)y * pitch + ((vglyph_uint32_t)x << 1);
+        data += y * pitch + (x << 1);
 
         vglyph_uint32_t red   = _vglyph_rgba_uint_data_render_bind_channel(color, format->components.r, format->capacity.r);
         vglyph_uint32_t green = _vglyph_rgba_uint_data_render_bind_channel(color, format->components.g, format->capacity.g);
@@ -119,6 +119,29 @@ _vglyph_rgba_uint16_data_render_set_pixel(vglyph_render_t* render,
     }
 }
 
+static void
+_vglyph_rgba_uint16_data_render_fill(vglyph_render_t* render,
+                                     vglyph_surface_t* surface,
+                                     vglyph_uint32_t x,
+                                     vglyph_uint32_t y,
+                                     vglyph_uint32_t width,
+                                     vglyph_uint32_t height,
+                                     const vglyph_color_t* color)
+{
+    vglyph_uint32_t x_start = x;
+    vglyph_uint32_t y_start = y;
+    vglyph_uint32_t x_end = y + height > surface->height ? surface->height : height + y;
+    vglyph_uint32_t y_end = x + width  > surface->width  ? surface->width  : width  + x;
+
+    for (y = y_start; y < y_end; ++y)
+    {
+        for (x = x_start; x < x_end; ++x)
+        {
+            _vglyph_rgba_uint16_data_render_set_pixel(render, surface, x, y, color);
+        }
+    }
+}
+
 static const vglyph_object_backend_t vglyph_rgba_uint16_data_render_object_backend = {
     _vglyph_rgba_uint16_data_render_get_type,
     _vglyph_rgba_uint16_data_render_is_cast,
@@ -126,6 +149,7 @@ static const vglyph_object_backend_t vglyph_rgba_uint16_data_render_object_backe
 };
 
 static const vglyph_render_backend_t vglyph_rgba_uint16_data_render_backend = {
+    _vglyph_rgba_uint16_data_render_fill,
     _vglyph_rgba_uint16_data_render_set_pixel
 };
 

@@ -452,9 +452,17 @@ vglyph_public void
 vglyph_surface_unlock(vglyph_surface_t* surface);
 
 vglyph_public void
+vglyph_surface_fill(vglyph_surface_t* surface,
+                    vglyph_uint32_t x,
+                    vglyph_uint32_t y,
+                    vglyph_uint32_t width,
+                    vglyph_uint32_t height,
+                    const vglyph_color_t* color);
+
+vglyph_public void
 vglyph_surface_set_pixel(vglyph_surface_t* surface,
-                         vglyph_float32_t x,
-                         vglyph_float32_t y,
+                         vglyph_uint32_t x,
+                         vglyph_uint32_t y,
                          const vglyph_color_t* color);
 
 vglyph_public void
