@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-glyph.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-heap-data-surface.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-object.h" />
+    <ClInclude Include="..\..\..\..\sources\vglyph-point.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-render.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-rgba-little-uint-data-render.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint-data-render.h" />
