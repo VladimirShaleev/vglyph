@@ -46,6 +46,8 @@ typedef _vglyph_sint16  vglyph_sint16_t;
 typedef _vglyph_uint16  vglyph_uint16_t;
 typedef _vglyph_sint32  vglyph_sint32_t;
 typedef _vglyph_uint32  vglyph_uint32_t;
+typedef _vglyph_sint64  vglyph_sint64_t;
+typedef _vglyph_uint64  vglyph_uint64_t;
 typedef _vglyph_float32 vglyph_float32_t;
 typedef _vglyph_float64 vglyph_float64_t;
 

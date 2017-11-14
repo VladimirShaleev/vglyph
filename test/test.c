@@ -431,7 +431,7 @@ int main(int argc, char* argv[])
 
     vglyph_point_t point2;
     point2.x = 0.8f;
-    point2.y = 0.4f;
+    point2.y = 0.2f;
 
     vglyph_figure_t* figure = vglyph_figure_create();
     show_object_type(vglyph_figure_to_object(figure));

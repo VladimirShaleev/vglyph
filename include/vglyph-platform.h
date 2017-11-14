@@ -31,6 +31,8 @@
    typedef unsigned __int16 uint16_t;
    typedef signed   __int32 int32_t;
    typedef unsigned __int32 uint32_t;
+   typedef signed   __int64 int64_t;
+   typedef unsigned __int64 uint64_t;
 # else
 #  include <stdint.h>
 # endif
@@ -43,6 +45,8 @@ typedef int16_t  _vglyph_sint16;
 typedef uint16_t _vglyph_uint16;
 typedef int32_t  _vglyph_sint32;
 typedef uint32_t _vglyph_uint32;
+typedef int64_t  _vglyph_sint64;
+typedef uint64_t _vglyph_uint64;
 typedef float    _vglyph_float32;
 typedef double   _vglyph_float64;
 

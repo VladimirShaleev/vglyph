@@ -78,6 +78,9 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-rgba-little-uint-data-render.h">
       <Filter>sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\sources\vglyph-fixed.h">
+      <Filter>sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\sources\vglyph.c">

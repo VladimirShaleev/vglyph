@@ -25,6 +25,7 @@
     <ClInclude Include="..\..\..\..\sources\vglyph-api.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-data-surface.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-figure.h" />
+    <ClInclude Include="..\..\..\..\sources\vglyph-fixed.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-format.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-glyph.h" />
     <ClInclude Include="..\..\..\..\sources\vglyph-heap-data-surface.h" />
