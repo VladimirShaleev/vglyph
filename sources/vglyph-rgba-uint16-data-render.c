@@ -146,6 +146,28 @@ _vglyph_rgba_uint16_data_render_set_pixel(vglyph_render_t* render,
     }
 }
 
+static void
+_vglyph_rgba_uint16_data_render_alpha_blend(vglyph_render_t* render,
+                                            vglyph_surface_t* surface,
+                                            vglyph_sint32_t x,
+                                            vglyph_sint32_t y,
+                                            const vglyph_color_t* color)
+{
+    const vglyph_float64_t alpha     = color->alpha;
+    const vglyph_float64_t inv_alpha = 1.0 - alpha;
+
+    vglyph_color_t dest_color;
+    _vglyph_rgba_uint16_data_render_get_pixel(render, surface, x, y, &dest_color);
+
+    vglyph_color_t result;
+    result.red   = dest_color.red   * inv_alpha + color->red   * alpha;
+    result.green = dest_color.green * inv_alpha + color->green * alpha;
+    result.blue  = dest_color.blue  * inv_alpha + color->blue  * alpha;
+    result.alpha = dest_color.alpha;
+
+    _vglyph_rgba_uint16_data_render_set_pixel(render, surface, x, y, &result);
+}
+
 static const vglyph_object_backend_t vglyph_rgba_uint16_data_render_object_backend = {
     _vglyph_rgba_uint16_data_render_get_type,
     _vglyph_rgba_uint16_data_render_is_cast,
@@ -155,7 +177,8 @@ static const vglyph_object_backend_t vglyph_rgba_uint16_data_render_object_backe
 static const vglyph_render_backend_t vglyph_rgba_uint16_data_render_backend = {
     _vglyph_rgba_uint16_data_render_fill,
     _vglyph_rgba_uint16_data_render_get_pixel,
-    _vglyph_rgba_uint16_data_render_set_pixel
+    _vglyph_rgba_uint16_data_render_set_pixel,
+    _vglyph_rgba_uint16_data_render_alpha_blend
 };
 
 vglyph_render_t*

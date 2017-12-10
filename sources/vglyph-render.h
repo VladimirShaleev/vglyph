@@ -30,6 +30,11 @@ typedef struct _vglyph_render_backend
                       vglyph_sint32_t x,
                       vglyph_sint32_t y,
                       const vglyph_color_t* color);
+    void (*alpha_blend)(vglyph_render_t* render,
+                        vglyph_surface_t* surface,
+                        vglyph_sint32_t x,
+                        vglyph_sint32_t y,
+                        const vglyph_color_t* color);
 } vglyph_render_backend_t;
 
 struct _vglyph_render
