@@ -17,12 +17,21 @@ typedef struct _vglyph_rgba_uint_capacity
     vglyph_uint32_t a;
 } vglyph_rgba_uint_capacity_t;
 
+typedef struct _vglyph_rgba_uint_inv_capacity
+{
+    vglyph_float64_t r;
+    vglyph_float64_t g;
+    vglyph_float64_t b;
+    vglyph_float64_t a;
+} vglyph_rgba_uint_inv_capacity_t;
+
 struct _vglyph_rgba_uint_format
 {
-    vglyph_format_t              base;
-    vglyph_rgba_components_t     components;
-    vglyph_rgba_uint_bit_count_t bit_count;
-    vglyph_rgba_uint_capacity_t  capacity;
+    vglyph_format_t                 base;
+    vglyph_rgba_components_t        components;
+    vglyph_rgba_uint_bit_count_t    bit_count;
+    vglyph_rgba_uint_capacity_t     capacity;
+    vglyph_rgba_uint_inv_capacity_t inv_capacity;
 };
 
 void
@@ -67,6 +76,15 @@ _vglyph_rgba_uint_format_get_capacity(vglyph_uint32_t bit_count)
     const vglyph_uint32_t shift = (sizeof(capacity) << 3) - bit_count;
 
     return capacity << shift >> shift;
+}
+
+static inline vglyph_float64_t
+_vglyph_rgba_uint_format_get_inv_capacity(vglyph_uint32_t capacity)
+{
+    if (capacity == 0)
+        return 0.0;
+
+    return 1.0 / capacity;
 }
 
 #endif

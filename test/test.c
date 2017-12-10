@@ -473,8 +473,8 @@ int main(int argc, char* argv[])
     vglyph_surface_t* surface = vglyph_surface_create(format, 200, 200, VGLYPH_ALIGNMENT_4);
     vglyph_color_t fill_color;
     fill_color.red   = 1.0;
-    fill_color.green = 1.0;
-    fill_color.blue  = 1.0;
+    fill_color.green = 0.0;
+    fill_color.blue  = 0.0;
     fill_color.alpha = 1.0;
     vglyph_surface_fill(surface, 0, 0, 200, 200, &fill_color);
     vglyph_surface_draw_glyph(surface, glyph, NULL, NULL);

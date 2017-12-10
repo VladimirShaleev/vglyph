@@ -41,6 +41,11 @@ _vglyph_rgba_uint_format_ctor(vglyph_rgba_uint_format_t* format)
         format->capacity.g = _vglyph_rgba_uint_format_get_capacity(format->bit_count.g);
         format->capacity.b = _vglyph_rgba_uint_format_get_capacity(format->bit_count.b);
         format->capacity.a = _vglyph_rgba_uint_format_get_capacity(format->bit_count.a);
+
+        format->inv_capacity.r = _vglyph_rgba_uint_format_get_inv_capacity(format->capacity.r);
+        format->inv_capacity.g = _vglyph_rgba_uint_format_get_inv_capacity(format->capacity.g);
+        format->inv_capacity.b = _vglyph_rgba_uint_format_get_inv_capacity(format->capacity.b);
+        format->inv_capacity.a = _vglyph_rgba_uint_format_get_inv_capacity(format->capacity.a);
     }
 }
 

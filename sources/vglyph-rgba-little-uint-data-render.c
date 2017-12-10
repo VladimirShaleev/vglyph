@@ -10,6 +10,48 @@
 #include "vglyph-rgba-little-uint-data-render.h"
 #include "vglyph-type.h"
 
+static vglyph_uint32_t
+_vglyph_rgba_little_uint_data_render_get_pixel_channel(vglyph_uint8_t* start,
+                                                       vglyph_uint8_t** p_data,
+                                                       vglyph_uint32_t* p_offset,
+                                                       vglyph_uint32_t bit_count,
+                                                       vglyph_sint_t packaging_bytes)
+{
+    vglyph_uint32_t channel = 0;
+
+    vglyph_uint8_t* data   = *p_data;
+    vglyph_uint32_t offset = *p_offset;
+
+    vglyph_sint_t byte_number = (data - start) % packaging_bytes;
+    vglyph_sint_t byte_offset = (packaging_bytes - 1) - (byte_number << 1);
+
+    vglyph_uint8_t* byte = data + byte_offset;
+
+    for (vglyph_uint32_t i = bit_count - 1; i < UINT32_MAX; --i)
+    {
+        vglyph_uint32_t shift = 8 - offset - 1;
+        vglyph_uint32_t bit   = (*byte >> shift) & 1;
+
+        channel |= (bit << i);
+
+        if (++offset == 8)
+        {
+            ++data;
+            offset = 0;
+
+            byte_number = (data - start) % packaging_bytes;
+            byte_offset = (packaging_bytes - 1) - (byte_number << 1);
+
+            byte = data + byte_offset;
+        }
+    }
+
+    *p_data   = data;
+    *p_offset = offset;
+
+    return channel;
+}
+
 static void
 _vglyph_rgba_little_uint_data_render_set_pixel_channel(vglyph_uint8_t* start,
                                                        vglyph_uint8_t** p_data,
@@ -102,10 +144,53 @@ _vglyph_rgba_little_uint_data_render_destroy(vglyph_object_t* object)
 }
 
 static void
+_vglyph_rgba_little_uint_data_render_get_pixel(vglyph_render_t* render,
+                                               vglyph_surface_t* surface,
+                                               vglyph_sint32_t x,
+                                               vglyph_sint32_t y,
+                                               vglyph_color_t* color)
+{
+    vglyph_uint8_t* data = ((vglyph_data_surface_t*)surface)->data;
+    vglyph_rgba_uint_format_t* format = (vglyph_rgba_uint_format_t*)surface->format;
+
+    const vglyph_uint32_t pitch  = surface->pitch;
+    const vglyph_uint32_t widht  = surface->width;
+    const vglyph_uint32_t height = surface->height;
+
+    const vglyph_uint32_t bits_per_pixel  = vglyph_format_get_bits_per_pixel(surface->format);
+    const vglyph_sint_t   packaging_bytes = (vglyph_sint_t)format->base.packaging_bytes.byte_count;
+
+    if (x >= 0 && (vglyph_uint32_t)x < widht && y >= 0 && (vglyph_uint32_t)y < height)
+    {
+        vglyph_uint32_t pos_per_bits = (vglyph_uint32_t)x * bits_per_pixel;
+        vglyph_uint32_t pos = pos_per_bits >> 3;
+        vglyph_uint32_t offset = pos_per_bits - (pos << 3);
+        vglyph_uint8_t* start = data + y * pitch;
+
+        data = start + pos;
+
+        vglyph_uint32_t red   = _vglyph_rgba_little_uint_data_render_get_pixel_channel(start, &data, &offset, format->bit_count.r, packaging_bytes);
+        vglyph_uint32_t green = _vglyph_rgba_little_uint_data_render_get_pixel_channel(start, &data, &offset, format->bit_count.g, packaging_bytes);
+        vglyph_uint32_t blue  = _vglyph_rgba_little_uint_data_render_get_pixel_channel(start, &data, &offset, format->bit_count.b, packaging_bytes);
+        vglyph_uint32_t alpha = _vglyph_rgba_little_uint_data_render_get_pixel_channel(start, &data, &offset, format->bit_count.a, packaging_bytes);
+
+        color->red   = 0.0;
+        color->green = 0.0;
+        color->blue  = 0.0;
+        color->alpha = 0.0;
+
+        _vglyph_rgba_uint_data_render_unbind_channel(red,   format->components.r, format->inv_capacity.r, color);
+        _vglyph_rgba_uint_data_render_unbind_channel(green, format->components.g, format->inv_capacity.g, color);
+        _vglyph_rgba_uint_data_render_unbind_channel(blue,  format->components.b, format->inv_capacity.b, color);
+        _vglyph_rgba_uint_data_render_unbind_channel(alpha, format->components.a, format->inv_capacity.a, color);
+    }
+}
+
+static void
 _vglyph_rgba_little_uint_data_render_set_pixel(vglyph_render_t* render,
                                                vglyph_surface_t* surface,
-                                               vglyph_uint32_t x,
-                                               vglyph_uint32_t y,
+                                               vglyph_sint32_t x,
+                                               vglyph_sint32_t y,
                                                const vglyph_color_t* color)
 {
     vglyph_uint8_t* data = ((vglyph_data_surface_t*)surface)->data;
@@ -118,9 +203,9 @@ _vglyph_rgba_little_uint_data_render_set_pixel(vglyph_render_t* render,
     const vglyph_uint32_t bits_per_pixel  = vglyph_format_get_bits_per_pixel(surface->format);
     const vglyph_sint_t   packaging_bytes = (vglyph_sint_t)format->base.packaging_bytes.byte_count;
 
-    if (x >= 0 && x < widht && y >= 0 && y < height)
+    if (x >= 0 && (vglyph_uint32_t)x < widht && y >= 0 && (vglyph_uint32_t)y < height)
     {
-        vglyph_uint32_t pos_per_bits = x * bits_per_pixel;
+        vglyph_uint32_t pos_per_bits = (vglyph_uint32_t)x * bits_per_pixel;
         vglyph_uint32_t pos = pos_per_bits >> 3;
         vglyph_uint32_t offset = pos_per_bits - (pos << 3);
         vglyph_uint8_t* start = data + y * pitch;
@@ -142,16 +227,16 @@ _vglyph_rgba_little_uint_data_render_set_pixel(vglyph_render_t* render,
 static void
 _vglyph_rgba_little_uint_data_render_fill(vglyph_render_t* render,
                                           vglyph_surface_t* surface,
-                                          vglyph_uint32_t x,
-                                          vglyph_uint32_t y,
+                                          vglyph_sint32_t x,
+                                          vglyph_sint32_t y,
                                           vglyph_uint32_t width,
                                           vglyph_uint32_t height,
                                           const vglyph_color_t* color)
 {
-    vglyph_uint32_t x_start = x;
-    vglyph_uint32_t y_start = y;
-    vglyph_uint32_t x_end = y + height > surface->height ? surface->height : height + y;
-    vglyph_uint32_t y_end = x + width  > surface->width  ? surface->width  : width  + x;
+    vglyph_sint32_t x_start = x < 0 ? 0 : x;
+    vglyph_sint32_t y_start = y < 0 ? 0 : y;
+    vglyph_sint32_t x_end = (vglyph_sint32_t)(y + height > surface->height ? surface->height : height + y);
+    vglyph_sint32_t y_end = (vglyph_sint32_t)(x + width  > surface->width  ? surface->width  : width  + x);
 
     for (y = y_start; y < y_end; ++y)
     {
@@ -170,6 +255,7 @@ static const vglyph_object_backend_t vglyph_rgba_uint_data_render_object_backend
 
 static const vglyph_render_backend_t vglyph_rgba_uint_data_render_backend = {
     _vglyph_rgba_little_uint_data_render_fill,
+    _vglyph_rgba_little_uint_data_render_get_pixel,
     _vglyph_rgba_little_uint_data_render_set_pixel
 };
 

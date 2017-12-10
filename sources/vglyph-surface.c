@@ -185,9 +185,25 @@ vglyph_surface_fill(vglyph_surface_t* surface,
 }
 
 void
+vglyph_surface_get_pixel(vglyph_surface_t* surface,
+                         vglyph_sint32_t x,
+                         vglyph_sint32_t y,
+                         vglyph_color_t* color)
+{
+    assert(surface);
+    assert(color);
+
+    if (_vglyph_surface_is_valid(surface))
+    {
+        vglyph_render_t* render = surface->render;
+        render->backend->get_pixel(render, surface, x, y, color);
+    }
+}
+
+void
 vglyph_surface_set_pixel(vglyph_surface_t* surface,
-                         vglyph_uint32_t x,
-                         vglyph_uint32_t y,
+                         vglyph_sint32_t x,
+                         vglyph_sint32_t y,
                          const vglyph_color_t* color)
 {
     assert(surface);
@@ -206,4 +222,6 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                           const vglyph_point_t* position,
                           const vglyph_point_t* origin)
 {
+    assert(surface);
+    assert(glyph);
 }
