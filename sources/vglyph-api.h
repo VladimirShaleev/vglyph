@@ -34,4 +34,19 @@ _vglyph_is_little_endian(void)
     return *((vglyph_uint8_t*)&i) == 1;
 }
 
+static inline vglyph_uint16_t
+_vglyph_swap_uint16(vglyph_uint16_t value)
+{
+    return (value << 8) | (value >> 8);
+}
+
+static inline vglyph_uint32_t
+_vglyph_swap_uint32(vglyph_uint32_t value)
+{
+    value = ((value << 8) & 0xFF00FF00) | ((value >> 8) & 0x00FF00FF);
+    value = (value << 16) | (value >> 16);
+
+    return value;
+}
+
 #endif

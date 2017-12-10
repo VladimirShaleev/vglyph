@@ -73,6 +73,37 @@ _vglyph_rgba_uint32_data_render_destroy(vglyph_object_t* object)
 }
 
 static void
+_vglyph_rgba_uint32_data_render_fill(vglyph_render_t* render,
+                                     vglyph_surface_t* surface,
+                                     vglyph_sint32_t x,
+                                     vglyph_sint32_t y,
+                                     vglyph_uint32_t width,
+                                     vglyph_uint32_t height,
+                                     const vglyph_color_t* color)
+{
+    vglyph_uint32_t* data = (vglyph_uint32_t*)((vglyph_data_surface_t*)surface)->data;
+    vglyph_rgba_uint_format_t* format = (vglyph_rgba_uint_format_t*)surface->format;
+
+    const vglyph_uint32_t pitch  = surface->pitch >> 2;
+    const vglyph_uint32_t result = _vglyph_rgba_uint32_data_render_color_to_uint32(render, format, color);
+
+    vglyph_sint32_t x_start = x < 0 ? 0 : x;
+    vglyph_sint32_t y_start = y < 0 ? 0 : y;
+    vglyph_sint32_t x_end = (vglyph_sint32_t)(y + height > surface->height ? surface->height : height + y);
+    vglyph_sint32_t y_end = (vglyph_sint32_t)(x + width  > surface->width  ? surface->width  : width  + x);
+
+    data += y_start * pitch;
+
+    for (y = y_start; y < y_end; ++y)
+    {
+        for (x = x_start; x < x_end; ++x)
+            *(data + x) = result;
+
+        data += pitch;
+    }
+}
+
+static void
 _vglyph_rgba_uint32_data_render_get_pixel(vglyph_render_t* render,
                                           vglyph_surface_t* surface,
                                           vglyph_sint32_t x,
@@ -89,35 +120,8 @@ _vglyph_rgba_uint32_data_render_get_pixel(vglyph_render_t* render,
 
     if (x >= 0 && (vglyph_uint32_t)x < widht && y >= 0 && (vglyph_uint32_t)y < height)
     {
-        data += y * pitch + (x << 2);
-
-        vglyph_uint32_t result = *((vglyph_uint32_t*)data);
-        
-        if (uint32_data_render->swap_bytes)
-        {
-            result = ((result << 8) & 0xFF00FF00) | ((result >> 8) & 0x00FF00FF);
-            result = (result << 16) | (result >> 16);
-        }
-
-        const vglyph_uint_t alpha_shift = 0;
-        const vglyph_uint_t blue_shift  = format->bit_count.a;
-        const vglyph_uint_t green_shift = format->bit_count.b + blue_shift;
-        const vglyph_uint_t red_shift   = format->bit_count.g + green_shift;
-
-        vglyph_uint32_t red   = (result >> red_shift  ) & format->capacity.r;
-        vglyph_uint32_t green = (result >> green_shift) & format->capacity.g;
-        vglyph_uint32_t blue  = (result >> blue_shift ) & format->capacity.b;
-        vglyph_uint32_t alpha = (result >> alpha_shift) & format->capacity.a;
-
-        color->red   = 0.0;
-        color->green = 0.0;
-        color->blue  = 0.0;
-        color->alpha = 0.0;
-
-        _vglyph_rgba_uint_data_render_unbind_channel(red,   format->components.r, format->inv_capacity.r, color);
-        _vglyph_rgba_uint_data_render_unbind_channel(green, format->components.g, format->inv_capacity.g, color);
-        _vglyph_rgba_uint_data_render_unbind_channel(blue,  format->components.b, format->inv_capacity.b, color);
-        _vglyph_rgba_uint_data_render_unbind_channel(alpha, format->components.a, format->inv_capacity.a, color);
+        _vglyph_rgba_uint32_data_render_uint32_to_color(
+            render, format, *((vglyph_uint32_t*)(data + y * pitch) + x), color);
     }
 }
 
@@ -128,7 +132,6 @@ _vglyph_rgba_uint32_data_render_set_pixel(vglyph_render_t* render,
                                           vglyph_sint32_t y,
                                           const vglyph_color_t* color)
 {
-    vglyph_rgba_uint32_data_render_t* uint32_data_render = (vglyph_rgba_uint32_data_render_t*)render;
     vglyph_uint8_t* data = ((vglyph_data_surface_t*)surface)->data;
     vglyph_rgba_uint_format_t* format = (vglyph_rgba_uint_format_t*)surface->format;
 
@@ -138,58 +141,8 @@ _vglyph_rgba_uint32_data_render_set_pixel(vglyph_render_t* render,
 
     if (x >= 0 && (vglyph_uint32_t)x < widht && y >= 0 && (vglyph_uint32_t)y < height)
     {
-        data += y * pitch + (x << 2);
-
-        vglyph_uint32_t red   = _vglyph_rgba_uint_data_render_bind_channel(color, format->components.r, format->capacity.r);
-        vglyph_uint32_t green = _vglyph_rgba_uint_data_render_bind_channel(color, format->components.g, format->capacity.g);
-        vglyph_uint32_t blue  = _vglyph_rgba_uint_data_render_bind_channel(color, format->components.b, format->capacity.b);
-        vglyph_uint32_t alpha = _vglyph_rgba_uint_data_render_bind_channel(color, format->components.a, format->capacity.a);
-
-        const vglyph_uint_t alpha_shift = 0;
-        const vglyph_uint_t blue_shift  = format->bit_count.a;
-        const vglyph_uint_t green_shift = format->bit_count.b + blue_shift;
-        const vglyph_uint_t red_shift   = format->bit_count.g + green_shift;
-
-        const vglyph_uint32_t result = 
-            (red   << red_shift  ) |
-            (green << green_shift) | 
-            (blue  << blue_shift ) | 
-            (alpha << alpha_shift);
-
-        if (uint32_data_render->swap_bytes)
-        {
-            *data++ = (result >> 24) & 0xFF;
-            *data++ = (result >> 16) & 0xFF;
-            *data++ = (result >> 8 ) & 0xFF;
-            *data++ = (result >> 0 ) & 0xFF;
-        }
-        else
-        {
-            *((vglyph_uint32_t*)data) = result;
-        }
-    }
-}
-
-static void
-_vglyph_rgba_uint32_data_render_fill(vglyph_render_t* render,
-                                     vglyph_surface_t* surface,
-                                     vglyph_sint32_t x,
-                                     vglyph_sint32_t y,
-                                     vglyph_uint32_t width,
-                                     vglyph_uint32_t height,
-                                     const vglyph_color_t* color)
-{
-    vglyph_sint32_t x_start = x < 0 ? 0 : x;
-    vglyph_sint32_t y_start = y < 0 ? 0 : y;
-    vglyph_sint32_t x_end = (vglyph_sint32_t)(y + height > surface->height ? surface->height : height + y);
-    vglyph_sint32_t y_end = (vglyph_sint32_t)(x + width  > surface->width  ? surface->width  : width  + x);
-
-    for (y = y_start; y < y_end; ++y)
-    {
-        for (x = x_start; x < x_end; ++x)
-        {
-            _vglyph_rgba_uint32_data_render_set_pixel(render, surface, x, y, color);
-        }
+        *((vglyph_uint32_t*)(data + y * pitch) + x) = 
+            _vglyph_rgba_uint32_data_render_color_to_uint32(render, format, color);
     }
 }
 
