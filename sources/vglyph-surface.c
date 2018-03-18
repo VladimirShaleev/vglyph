@@ -7,6 +7,7 @@
 #include "vglyph-surface.h"
 #include "vglyph-fixed.h"
 #include "vglyph-point.h"
+#include "vglyph-matrix.h"
 #include "vglyph-type.h"
 #include "vglyph-glyph.h"
 #include "vglyph-figure.h"
