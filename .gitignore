@@ -5,6 +5,7 @@
 *.opendb
 *.aps
 *.ipch
+*.vcxproj.user
 /.vs
 /build/Windows/vs14/.vs
 /build/Windows/vs14/Debug

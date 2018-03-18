@@ -23,31 +23,32 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>vglyph</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -208,47 +209,13 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\include\vglyph-config.h" />
-    <ClInclude Include="..\..\..\..\include\vglyph-platform.h" />
-    <ClInclude Include="..\..\..\..\include\vglyph.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-api.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-data-surface.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-figure.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-fixed.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-format.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-glyph.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-heap-data-surface.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-point.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-object.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-render.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-little-uint-data-render.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint-data-render.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint-format.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint16-data-render.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint32-data-render.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-segment-types.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-surface.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-type.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-types.h" />
-    <ClInclude Include="..\..\..\..\sources\vglyph-vector.h" />
+    <ClInclude Include="..\..\..\..\include\*.h" />
+    <ClInclude Include="..\..\..\..\sources\*.h" />
+    <ClInclude Include="..\..\..\..\sources\win32\*.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\sources\vglyph-data-surface.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-figure.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-format.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-glyph.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-heap-data-surface.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-object.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-render.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-little-uint-data-render.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint-data-render.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint-format.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint16-data-render.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint32-data-render.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-surface.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-type.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph-vector.c" />
-    <ClCompile Include="..\..\..\..\sources\vglyph.c" />
+    <ClCompile Include="..\..\..\..\sources\*.c" />
+    <ClCompile Include="..\..\..\..\sources\win32\*.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\..\..\sources\win32\vglyph.rc" />

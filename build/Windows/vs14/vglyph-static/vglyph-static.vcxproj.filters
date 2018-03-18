@@ -15,124 +15,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\include\vglyph.h">
+    <ClInclude Include="..\..\..\..\include\*.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\vglyph-config.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-api.h">
+    <ClInclude Include="..\..\..\..\sources\*.h">
       <Filter>sources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-types.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-object.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-figure.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-segment-types.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-vector.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-surface.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-data-surface.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-format.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint-format.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-type.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\vglyph-platform.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-heap-data-surface.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-render.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint-data-render.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint32-data-render.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-uint16-data-render.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-glyph.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-rgba-little-uint-data-render.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-fixed.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\sources\vglyph-point.h">
-      <Filter>sources</Filter>
+    <ClInclude Include="..\..\..\..\sources\win32\*.h">
+      <Filter>sources\win32</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\sources\vglyph.c">
+    <ClCompile Include="..\..\..\..\sources\*.c">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-object.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-figure.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-surface.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-vector.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-data-surface.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-format.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint-format.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-type.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-heap-data-surface.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-render.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint-data-render.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint32-data-render.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-uint16-data-render.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-glyph.c">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\sources\vglyph-rgba-little-uint-data-render.c">
-      <Filter>sources</Filter>
+    <ClCompile Include="..\..\..\..\sources\win32\*.c">
+      <Filter>sources\win32</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
