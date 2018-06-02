@@ -13,6 +13,34 @@
 #include "vglyph-figure.h"
 #include "vglyph-segment-types.h"
 
+static void
+set_pixel(vglyph_surface_t* surface,
+          vglyph_render_t* render,
+          vglyph_sint32_t x,
+          vglyph_sint32_t y,
+          const vglyph_color_t* color)
+{
+    if (color->alpha == 1.0)
+    {
+        render->backend->set_pixel(render, surface, x, y, color);
+    }
+    else
+    {
+        vglyph_float64_t inv_alpha = 1.0 - color->alpha;
+
+        vglyph_color_t prev_color;
+        render->backend->get_pixel(render, surface, x, y, &prev_color);
+
+        vglyph_color_t result;
+        result.red   = prev_color.red   * inv_alpha + color->red   * color->alpha;
+        result.green = prev_color.green * inv_alpha + color->green * color->alpha;
+        result.blue  = prev_color.blue  * inv_alpha + color->blue  * color->alpha;
+        result.alpha = prev_color.alpha;
+
+        render->backend->set_pixel(render, surface, x, y, &result);
+    }
+}
+
 static void 
 _vglyph_surface_moveto(vglyph_surface_t* surface,
                        const vglyph_segment_moveto_t* segment,
@@ -30,39 +58,17 @@ _vglyph_surface_moveto(vglyph_surface_t* surface,
     }
 }
 
-static void
-set_pixel(vglyph_surface_t* surface,
-		  vglyph_render_t* render,
-		  vglyph_sint32_t x,
-		  vglyph_sint32_t y,
-		  vglyph_float64_t alpha)
-{
-    vglyph_float64_t inv_alpha = 1.0 - alpha;
-
-    vglyph_color_t prev_color;
-    render->backend->get_pixel(render, surface, x, y, &prev_color);
-
-    vglyph_color_t color;
-    color.red = 0;
-    color.green = 0;
-    color.blue = 0;
-    color.alpha = 0;
-
-    vglyph_color_t result;
-    result.red = prev_color.red * inv_alpha + color.red * alpha;
-    result.green = prev_color.green * inv_alpha + color.green * alpha;
-    result.blue = prev_color.blue * inv_alpha + color.blue * alpha;
-    result.alpha = prev_color.alpha;
-
-    render->backend->set_pixel(render, surface, x, y, &result);
-}
-
 static void 
 _vglyph_surface_lineto(vglyph_surface_t* surface,
                        const vglyph_segment_lineto_t* segment,
                        vglyph_bool_t relative,
                        vglyph_point_t* prev_point)
 {
+    const vglyph_fixed_t   fixed_1_0   = VGLYPH_FIXED_ONE;
+    const vglyph_fixed_t   fixed_1_5   = VGLYPH_FIXED_ONE + (VGLYPH_FIXED_ONE >> 1); 
+    const vglyph_fixed_t   fixed_2_0   = VGLYPH_FIXED_ONE << 1; 
+    const vglyph_float64_t shift_fract = 1.0 / (VGLYPH_FIXED_ONE * VGLYPH_FIXED_ONE);
+
     vglyph_point_t start = *prev_point;
 
     if (relative)
@@ -105,15 +111,15 @@ _vglyph_surface_lineto(vglyph_surface_t* surface,
 		vglyph_sint32_t ix1 = _vglyph_fixed_to_sint32_floor(p_x);
 		vglyph_sint32_t iy1 = _vglyph_fixed_to_sint32_floor(p_y);
 
-		vglyph_fixed_t dx = _vglyph_fixed_from_float32(1.5f) - p_x_frac;
-		vglyph_fixed_t dy = _vglyph_fixed_from_float32(1.5f) - p_y_frac;
+		vglyph_fixed_t dx = fixed_1_5 - p_x_frac;
+		vglyph_fixed_t dy = fixed_1_5 - p_y_frac;
 
 		vglyph_sint32_t ix2;
 		vglyph_sint32_t iy2;
 
-		if (dx > 256)
+		if (dx > fixed_1_0)
 		{
-			dx = (VGLYPH_FIXED_ONE << 1) - dx;
+			dx  = fixed_2_0 - dx;
 			ix2 = ix1 - 1;
 		}
 		else
@@ -121,9 +127,9 @@ _vglyph_surface_lineto(vglyph_surface_t* surface,
 			ix2 = ix1 + 1;
 		}
 
-		if (dy > 256)
+		if (dy > fixed_1_0)
 		{
-			dy = (VGLYPH_FIXED_ONE << 1) - dy;
+			dy  = fixed_2_0 - dy;
 			iy2 = iy1 - 1;
 		}
 		else
@@ -131,26 +137,41 @@ _vglyph_surface_lineto(vglyph_surface_t* surface,
 			iy2 = iy1 + 1;
 		}
 
-		vglyph_fixed_t xx = VGLYPH_FIXED_ONE - dx;
-		vglyph_fixed_t yy = VGLYPH_FIXED_ONE - dy;
+		vglyph_fixed_t xx = fixed_1_0 - dx;
+		vglyph_fixed_t yy = fixed_1_0 - dy;
 
-		vglyph_float64_t Sc = dx * dy / 256.0 / 256.0;
-		vglyph_float64_t Slr = xx * dy / 256.0 / 256.0;
-		vglyph_float64_t Stb = yy * dx / 256.0 / 256.0;
-		vglyph_float64_t Sd = xx * yy / 256.0 / 256.0;
+		vglyph_float64_t Sc  = dx * dy * shift_fract;
+		vglyph_float64_t Slr = xx * dy * shift_fract;
+		vglyph_float64_t Stb = yy * dx * shift_fract;
+		vglyph_float64_t Sd  = xx * yy * shift_fract;
 
-		set_pixel(surface, render, ix1, iy1, Sc);
+        vglyph_color_t color;
+        color.red   = 0.0;
+        color.green = 0.0;
+        color.blue  = 0.0;
+        color.alpha = Sc;
+
+        set_pixel(surface, render, ix1, iy1, &color);
 
 		if (Sc != 1.0f)
 		{
-			if (Slr > 0.0f)
-				set_pixel(surface, render, ix2, iy1, Slr);
+            if (Slr > 0.0f)
+            {
+                color.alpha = Slr;
+                set_pixel(surface, render, ix2, iy1, &color);
+            }
 
 			if (Stb > 0.0f)
-				set_pixel(surface, render, ix1, iy2, Stb);
+            {
+                color.alpha = Stb;
+				set_pixel(surface, render, ix1, iy2, &color);
+            }
 
 			if (Sd > 0.0f)
-				set_pixel(surface, render, ix2, iy2, Sd);
+            {
+                color.alpha = Sd;
+				set_pixel(surface, render, ix2, iy2, &color);
+            }
 		}
 	}
 }
@@ -368,10 +389,23 @@ void
 vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                           vglyph_glyph_t* glyph,
                           const vglyph_point_t* position,
-                          const vglyph_point_t* origin)
+                          const vglyph_point_t* origin,
+                          vglyph_float32_t radians)
 {
     assert(surface);
     assert(glyph);
+
+    //vglyph_matrix_t mat;
+    //_vglyph_matrix_identity(&mat);
+
+    //if (origin)
+    //    _vglyph_matrix_translate(&mat, &mat, origin->x, origin->y);
+
+    //if (radians != 0.0f)
+    //    _vglyph_matrix_rotate(&mat, &mat, radians);
+
+    //if (position)
+    //    _vglyph_matrix_translate(&mat, &mat, position->x, position->y);
 
     const vglyph_segment_type_t* segment_type;
     const void* segment;

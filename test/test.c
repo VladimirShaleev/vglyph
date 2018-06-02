@@ -430,14 +430,21 @@ int main(int argc, char* argv[])
     point1.y = 0.1f;
 
     vglyph_point_t point2;
-    point2.x = 0.8f;
-    point2.y = 0.2f;
+    point2.x = 0.7f;
+    point2.y = 0.7f;
+
+    vglyph_point_t point3;
+    point3.x = 0.1f;
+    point3.y = -0.5f;
 
     vglyph_figure_t* figure = vglyph_figure_create();
     show_object_type(vglyph_figure_to_object(figure));
 
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
     vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_RELATIVE, &point2);
+    vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_RELATIVE, &point3);
+    vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
+    vglyph_figure_draw_closepath(figure);
 
     vglyph_glyph_t* glyph = vglyph_glyph_create(figure);
     vglyph_object_destroy(vglyph_figure_to_object(figure));
@@ -477,7 +484,7 @@ int main(int argc, char* argv[])
     fill_color.blue  = 0.0;
     fill_color.alpha = 1.0;
     vglyph_surface_fill(surface, 0, 0, 200, 200, &fill_color);
-    vglyph_surface_draw_glyph(surface, glyph, NULL, NULL);
+    vglyph_surface_draw_glyph(surface, glyph, NULL, NULL, 0.0f);
   
     bitmap_save(surface, path);
 

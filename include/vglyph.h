@@ -477,7 +477,8 @@ vglyph_public void
 vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                           vglyph_glyph_t* glyph,
                           const vglyph_point_t* position,
-                          const vglyph_point_t* origin);
+                          const vglyph_point_t* origin,
+                          vglyph_float32_t radians);
 
 VGLYPH_END
 
