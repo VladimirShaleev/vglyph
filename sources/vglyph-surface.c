@@ -11,69 +11,62 @@
 #include "vglyph-figure.h"
 #include "vglyph-segment-types.h"
 
+static vglyph_point_t* 
+_vglyph_surface_offset_point(vglyph_point_t* result,
+                             vglyph_surface_t* surface,
+                             vglyph_bool_t relative,
+                             const vglyph_point_t* offset)
+{
+    const vglyph_float32_t x = offset->x * surface->width;
+    const vglyph_float32_t y = offset->y * surface->height;
+
+    if (relative)
+    {
+        result->x += x;
+        result->y += y;
+    }
+    else
+    {
+        result->x = x;
+        result->y = y;
+    }
+
+    return result;
+}
+
 static void 
 _vglyph_surface_moveto(vglyph_surface_t* surface,
                        const vglyph_segment_moveto_t* segment,
                        vglyph_bool_t relative,
                        vglyph_point_t* prev_point)
 {
-    if (relative)
-    {
-        prev_point->x += segment->point.x;
-        prev_point->y += segment->point.y;
-    }
-    else
-    {
-        *prev_point = segment->point;
-    }
+    _vglyph_surface_offset_point(prev_point, surface, relative, &segment->point);
 }
 
 static void 
 _vglyph_surface_lineto(vglyph_surface_t* surface,
                        const vglyph_segment_lineto_t* segment,
+                       const vglyph_color_t* color,
                        vglyph_bool_t relative,
                        vglyph_point_t* prev_point)
 {
-    vglyph_point_t start = *prev_point;
-
-    if (relative)
-    {
-        prev_point->x += segment->point.x;
-        prev_point->y += segment->point.y;
-    }
-    else
-    {
-        *prev_point = segment->point;
-    }
-
     vglyph_render_t* render = surface->render;
-    vglyph_uint32_t  width  = surface->width;
-    vglyph_uint32_t  height = surface->height;
 
-    vglyph_point_t end = *prev_point;
-
-    start.x *= width;
-    start.y *= height;
-    end.x   *= width;
-    end.y   *= height;
+    vglyph_point_t  point = *prev_point;
+    vglyph_point_t* end   = _vglyph_surface_offset_point(prev_point, surface, relative, &segment->point);
 
     vglyph_point_t v;
-    vglyph_point_t p;
-    _vglyph_point_sub(&v, &end, &start);
+    _vglyph_point_sub(&v, end, &point);
 
-    vglyph_float32_t d = 1.0f / _vglyph_point_length(&v);
+    const vglyph_float32_t d = 1.0f / _vglyph_point_length(&v);
+
+    vglyph_point_t n;
+    _vglyph_point_mul(&n, &v, d);
 
 	for (vglyph_float32_t t = 0.0f; t <= 1.0f; t += d)
 	{
-		_vglyph_point_add(&p, _vglyph_point_mul(&p, &v, t), &start);
-
-        vglyph_color_t color;
-        color.red   = 0.0;
-        color.green = 0.0;
-        color.blue  = 0.0;
-        color.alpha = 1.0;
-
-        _vglyph_surface_set_pixel_pos_fractional(surface, &p, &color);
+		_vglyph_point_add(&point, &point, &n);
+        _vglyph_surface_set_pixel_pos_fractional(surface, &point, color);
 	}
 }
 
@@ -289,6 +282,7 @@ vglyph_surface_set_pixel(vglyph_surface_t* surface,
 void
 vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                           vglyph_glyph_t* glyph,
+                          const vglyph_color_t* color,
                           const vglyph_point_t* position,
                           const vglyph_point_t* origin,
                           vglyph_float32_t radians)
@@ -333,7 +327,7 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
             case VGLYPH_SEGMENT_MOVETO_ABS:
             case VGLYPH_SEGMENT_MOVETO_REL:
                 _vglyph_surface_moveto(surface,
-                                       (vglyph_segment_moveto_t*)segment, 
+                                       (vglyph_segment_moveto_t*)segment,
                                        segment_type->segment - VGLYPH_SEGMENT_MOVETO_ABS, 
                                        &prev_point);
                 break;
@@ -342,6 +336,7 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
             case VGLYPH_SEGMENT_LINETO_REL:
                 _vglyph_surface_lineto(surface,
                                        (vglyph_segment_lineto_t*)segment, 
+                                       color,
                                        segment_type->segment - VGLYPH_SEGMENT_LINETO_ABS, 
                                        &prev_point);
                 break;

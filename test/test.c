@@ -483,8 +483,13 @@ int main(int argc, char* argv[])
     fill_color.green = 0.0;
     fill_color.blue  = 0.0;
     fill_color.alpha = 1.0;
+    vglyph_color_t glyph_color;
+    glyph_color.red   = 0.0;
+    glyph_color.green = 0.0;
+    glyph_color.blue  = 0.0;
+    glyph_color.alpha = 1.0;
     vglyph_surface_fill(surface, 0, 0, 200, 200, &fill_color);
-    vglyph_surface_draw_glyph(surface, glyph, NULL, NULL, 0.0f);
+    vglyph_surface_draw_glyph(surface, glyph, &glyph_color, NULL, NULL, 0.0f);
   
     bitmap_save(surface, path);
 
