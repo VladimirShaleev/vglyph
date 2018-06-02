@@ -5,41 +5,11 @@
  */
 
 #include "vglyph-surface.h"
-#include "vglyph-fixed.h"
-#include "vglyph-point.h"
 #include "vglyph-matrix.h"
 #include "vglyph-type.h"
 #include "vglyph-glyph.h"
 #include "vglyph-figure.h"
 #include "vglyph-segment-types.h"
-
-static void
-set_pixel(vglyph_surface_t* surface,
-          vglyph_render_t* render,
-          vglyph_sint32_t x,
-          vglyph_sint32_t y,
-          const vglyph_color_t* color)
-{
-    if (color->alpha == 1.0)
-    {
-        render->backend->set_pixel(render, surface, x, y, color);
-    }
-    else
-    {
-        vglyph_float64_t inv_alpha = 1.0 - color->alpha;
-
-        vglyph_color_t prev_color;
-        render->backend->get_pixel(render, surface, x, y, &prev_color);
-
-        vglyph_color_t result;
-        result.red   = prev_color.red   * inv_alpha + color->red   * color->alpha;
-        result.green = prev_color.green * inv_alpha + color->green * color->alpha;
-        result.blue  = prev_color.blue  * inv_alpha + color->blue  * color->alpha;
-        result.alpha = prev_color.alpha;
-
-        render->backend->set_pixel(render, surface, x, y, &result);
-    }
-}
 
 static void 
 _vglyph_surface_moveto(vglyph_surface_t* surface,
@@ -64,11 +34,6 @@ _vglyph_surface_lineto(vglyph_surface_t* surface,
                        vglyph_bool_t relative,
                        vglyph_point_t* prev_point)
 {
-    const vglyph_fixed_t   fixed_1_0   = VGLYPH_FIXED_ONE;
-    const vglyph_fixed_t   fixed_1_5   = VGLYPH_FIXED_ONE + (VGLYPH_FIXED_ONE >> 1); 
-    const vglyph_fixed_t   fixed_2_0   = VGLYPH_FIXED_ONE << 1; 
-    const vglyph_float64_t shift_fract = 1.0 / (VGLYPH_FIXED_ONE * VGLYPH_FIXED_ONE);
-
     vglyph_point_t start = *prev_point;
 
     if (relative)
@@ -102,77 +67,13 @@ _vglyph_surface_lineto(vglyph_surface_t* surface,
 	{
 		_vglyph_point_add(&p, _vglyph_point_mul(&p, &v, t), &start);
 
-		vglyph_fixed_t p_x = _vglyph_fixed_from_float32(p.x);
-		vglyph_fixed_t p_y = _vglyph_fixed_from_float32(p.y);
-
-		vglyph_fixed_t p_x_frac = _vglyph_fixed_fractional_part(p_x);
-		vglyph_fixed_t p_y_frac = _vglyph_fixed_fractional_part(p_y);
-
-		vglyph_sint32_t ix1 = _vglyph_fixed_to_sint32_floor(p_x);
-		vglyph_sint32_t iy1 = _vglyph_fixed_to_sint32_floor(p_y);
-
-		vglyph_fixed_t dx = fixed_1_5 - p_x_frac;
-		vglyph_fixed_t dy = fixed_1_5 - p_y_frac;
-
-		vglyph_sint32_t ix2;
-		vglyph_sint32_t iy2;
-
-		if (dx > fixed_1_0)
-		{
-			dx  = fixed_2_0 - dx;
-			ix2 = ix1 - 1;
-		}
-		else
-		{
-			ix2 = ix1 + 1;
-		}
-
-		if (dy > fixed_1_0)
-		{
-			dy  = fixed_2_0 - dy;
-			iy2 = iy1 - 1;
-		}
-		else
-		{
-			iy2 = iy1 + 1;
-		}
-
-		vglyph_fixed_t xx = fixed_1_0 - dx;
-		vglyph_fixed_t yy = fixed_1_0 - dy;
-
-		vglyph_float64_t Sc  = dx * dy * shift_fract;
-		vglyph_float64_t Slr = xx * dy * shift_fract;
-		vglyph_float64_t Stb = yy * dx * shift_fract;
-		vglyph_float64_t Sd  = xx * yy * shift_fract;
-
         vglyph_color_t color;
         color.red   = 0.0;
         color.green = 0.0;
         color.blue  = 0.0;
-        color.alpha = Sc;
+        color.alpha = 1.0;
 
-        set_pixel(surface, render, ix1, iy1, &color);
-
-		if (Sc != 1.0f)
-		{
-            if (Slr > 0.0f)
-            {
-                color.alpha = Slr;
-                set_pixel(surface, render, ix2, iy1, &color);
-            }
-
-			if (Stb > 0.0f)
-            {
-                color.alpha = Stb;
-				set_pixel(surface, render, ix1, iy2, &color);
-            }
-
-			if (Sd > 0.0f)
-            {
-                color.alpha = Sd;
-				set_pixel(surface, render, ix2, iy2, &color);
-            }
-		}
+        _vglyph_surface_set_pixel_pos_fractional(surface, &p, &color);
 	}
 }
 
