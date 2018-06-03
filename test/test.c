@@ -438,7 +438,7 @@ int main(int argc, char* argv[])
     point3.y = -0.1f;
 
     vglyph_point_t point4;
-    point4.x = -0.2f;
+    point4.x = -0.5f;
     point4.y = -0.3f;
 
     vglyph_point_t point5;
@@ -488,8 +488,8 @@ int main(int argc, char* argv[])
     vglyph_surface_t* surface = vglyph_surface_create(format, 200, 200, VGLYPH_ALIGNMENT_4);
     vglyph_color_t fill_color;
     fill_color.red   = 1.0;
-    fill_color.green = 0.0;
-    fill_color.blue  = 0.0;
+    fill_color.green = 1.0;
+    fill_color.blue  = 1.0;
     fill_color.alpha = 1.0;
     vglyph_color_t glyph_color;
     glyph_color.red   = 0.0;

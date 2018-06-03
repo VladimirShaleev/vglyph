@@ -34,6 +34,39 @@ _vglyph_surface_offset_point(vglyph_point_t* result,
     return result;
 }
 
+static vglyph_point_t* 
+_vglyph_surface_cubic_bezier(vglyph_point_t* result,
+                             const vglyph_point_t* point0,
+                             const vglyph_point_t* point1,
+                             const vglyph_point_t* point2,
+                             const vglyph_point_t* point3,
+                             vglyph_float32_t t)
+{
+    vglyph_float32_t t_pow_1 = t;
+    vglyph_float32_t t_pow_2 = t_pow_1 * t_pow_1;
+    vglyph_float32_t t_pow_3 = t_pow_2 * t_pow_1;
+
+    vglyph_float32_t inv_t_pow_1 = 1.0f - t;
+    vglyph_float32_t inv_t_pow_2 = inv_t_pow_1 * inv_t_pow_1;
+    vglyph_float32_t inv_t_pow_3 = inv_t_pow_2 * inv_t_pow_1;
+
+    vglyph_point_t p0;
+    vglyph_point_t p1;
+    vglyph_point_t p2;
+    vglyph_point_t p3;
+
+    _vglyph_point_mul(&p0, point0,                  inv_t_pow_3);
+    _vglyph_point_mul(&p1, point1, 3.0f * t_pow_1 * inv_t_pow_2);
+    _vglyph_point_mul(&p2, point2, 3.0f * t_pow_2 * inv_t_pow_1);
+    _vglyph_point_mul(&p3, point3,         t_pow_3);
+
+    _vglyph_point_add(result, &p0,    &p1);
+    _vglyph_point_add(result, result, &p2);
+    _vglyph_point_add(result, result, &p3);
+
+    return result;
+}
+
 static void 
 _vglyph_surface_moveto(vglyph_surface_t* surface,
                        const vglyph_segment_moveto_t* segment,
@@ -86,6 +119,61 @@ _vglyph_surface_curveto_cubic(vglyph_surface_t* surface,
 
     _vglyph_surface_offset_point(&point1, surface, relative, &segment->point1);
     _vglyph_surface_offset_point(&point2, surface, relative, &segment->point2);
+
+    vglyph_point_t v01;
+    vglyph_point_t v12;
+    vglyph_point_t v23;
+    vglyph_point_t v03;
+
+    vglyph_float32_t length01 = _vglyph_point_length(_vglyph_point_sub(&v01, &point1, &start));
+    vglyph_float32_t length12 = _vglyph_point_length(_vglyph_point_sub(&v12, &point2, &point1));
+    vglyph_float32_t length23 = _vglyph_point_length(_vglyph_point_sub(&v23, end, &point2));
+    vglyph_float32_t length03 = _vglyph_point_length(_vglyph_point_sub(&v03, end, &start));
+    vglyph_float32_t length   = (length01 + length12 + length23 + length03) * 0.5f;
+
+    const vglyph_float32_t dt = 1.0f / length * 4.0f;
+
+    vglyph_point_t old_point = start;
+    vglyph_point_t new_point;
+
+    vglyph_bool_t b_end = FALSE;
+
+    for (vglyph_float32_t t = 0.0f;; t += dt)
+    {
+        if (t >= 1.0f)
+        {
+            t = 1.0f;
+            b_end = TRUE;
+        }
+
+        _vglyph_surface_cubic_bezier(&new_point, &start, &point1, &point2, end, t);
+
+        vglyph_point_t v;
+        _vglyph_point_sub(&v, &new_point, &old_point);
+
+        const vglyph_float32_t line_length = _vglyph_point_length(&v);
+
+        if (!b_end && line_length < 2.0f)
+            continue;
+
+        const vglyph_float32_t dt2 = 1.0f / line_length;
+
+        vglyph_point_t n;
+        _vglyph_point_mul(&n, &v, dt2);
+
+        vglyph_point_t point = old_point;
+
+        for (vglyph_float32_t t2 = 0.0f; t2 <= 1.0f; t2 += dt2)
+        {
+            _vglyph_point_add(&point, &point, &n);
+            _vglyph_surface_set_pixel_pos_fractional(surface, &point, color);
+        }
+
+        old_point = new_point;
+
+        if (b_end)
+            break;
+    }
 }
 
 void
