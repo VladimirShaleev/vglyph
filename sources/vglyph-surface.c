@@ -70,6 +70,24 @@ _vglyph_surface_lineto(vglyph_surface_t* surface,
 	}
 }
 
+static void
+_vglyph_surface_curveto_cubic(vglyph_surface_t* surface,
+                              const vglyph_segment_curveto_cubic_t* segment,
+                              const vglyph_color_t* color,
+                              vglyph_bool_t relative,
+                              vglyph_point_t* prev_point)
+{
+    vglyph_render_t* render = surface->render;
+
+    vglyph_point_t  start  = *prev_point;
+    vglyph_point_t  point1 = start;
+    vglyph_point_t  point2 = start;
+    vglyph_point_t* end    = _vglyph_surface_offset_point(prev_point, surface, relative, &segment->point);
+
+    _vglyph_surface_offset_point(&point1, surface, relative, &segment->point1);
+    _vglyph_surface_offset_point(&point2, surface, relative, &segment->point2);
+}
+
 void
 _vglyph_surface_init(vglyph_surface_t* surface,
                      const vglyph_object_backend_t* object_backend,
@@ -339,6 +357,15 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                                        color,
                                        segment_type->segment - VGLYPH_SEGMENT_LINETO_ABS, 
                                        &prev_point);
+                break;
+
+            case VGLYPH_SEGMENT_CURVETO_CUBIC_ABS:
+            case VGLYPH_SEGMENT_CURVETO_CUBIC_REL:
+                _vglyph_surface_curveto_cubic(surface,
+                                              (vglyph_segment_curveto_cubic_t*)segment,
+                                              color,
+                                              segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS,
+                                              &prev_point);
                 break;
         }
 
