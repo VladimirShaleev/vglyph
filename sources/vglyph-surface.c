@@ -153,7 +153,7 @@ _vglyph_surface_curveto_cubic(vglyph_surface_t* surface,
 
         const vglyph_float32_t line_length = _vglyph_point_length(&v);
 
-        if (!b_end && line_length < 2.0f)
+        if (!b_end && line_length < 1.0f)
             continue;
 
         const vglyph_float32_t dt2 = 1.0f / line_length;
@@ -174,6 +174,32 @@ _vglyph_surface_curveto_cubic(vglyph_surface_t* surface,
         if (b_end)
             break;
     }
+}
+
+static void 
+_vglyph_surface_lineto_horizontal(vglyph_surface_t* surface,
+                                  const vglyph_segment_lineto_horizontal_t* segment,
+                                  const vglyph_color_t* color,
+                                  vglyph_bool_t relative,
+                                  vglyph_point_t* prev_point)
+{
+    vglyph_segment_lineto_t line_segment;
+    _vglyph_point_from_coord(&line_segment.point, segment->x, relative ? 0.0f : prev_point->y);
+
+    _vglyph_surface_lineto(surface, &line_segment, color, relative, prev_point);
+}
+
+static void 
+_vglyph_surface_lineto_vertical(vglyph_surface_t* surface,
+                                const vglyph_segment_lineto_vertical_t* segment,
+                                const vglyph_color_t* color,
+                                vglyph_bool_t relative,
+                                vglyph_point_t* prev_point)
+{
+    vglyph_segment_lineto_t line_segment;
+    _vglyph_point_from_coord(&line_segment.point, relative ? 0.0f : prev_point->x, segment->y);
+
+    _vglyph_surface_lineto(surface, &line_segment, color, relative, prev_point);
 }
 
 void
@@ -454,6 +480,40 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                                               color,
                                               segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS,
                                               &prev_point);
+                break;
+
+            case VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS:
+            case VGLYPH_SEGMENT_CURVETO_QUADRATIC_REL:
+                break;
+
+            case VGLYPH_SEGMENT_ARC_ABS:
+            case VGLYPH_SEGMENT_ARC_REL:
+                break;
+
+            case VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS:
+            case VGLYPH_SEGMENT_LINETO_HORIZONTAL_REL:
+                _vglyph_surface_lineto_horizontal(surface,
+                                                  (vglyph_segment_lineto_horizontal_t*)segment, 
+                                                  color,
+                                                  segment_type->segment - VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS, 
+                                                  &prev_point);
+                break;
+
+            case VGLYPH_SEGMENT_LINETO_VERTICAL_ABS:
+            case VGLYPH_SEGMENT_LINETO_VERTICAL_REL:
+                _vglyph_surface_lineto_vertical(surface,
+                                                (vglyph_segment_lineto_vertical_t*)segment, 
+                                                color,
+                                                segment_type->segment - VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS, 
+                                                &prev_point);
+                break;
+
+            case VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS:
+            case VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_REL:
+                break;
+
+            case VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_ABS:
+            case VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_REL:
                 break;
         }
 

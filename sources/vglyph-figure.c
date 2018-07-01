@@ -335,7 +335,7 @@ vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
 
         VGLYPH_RESULT_TYPE* result;
         _vglyph_figure_add_segment(
-            figure, (vglyph_segment_t)(VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS + coordinate), result);
+            figure, (vglyph_segment_t)(VGLYPH_SEGMENT_LINETO_VERTICAL_ABS + coordinate), result);
 
         if (!result)
             return FALSE;

@@ -451,6 +451,8 @@ int main(int argc, char* argv[])
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
     vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_RELATIVE, &point2);
     vglyph_figure_draw_curveto_cubic(figure, VGLYPH_COORDINATE_RELATIVE, &point5, &point3, &point4);
+    vglyph_figure_draw_lineto_horizontal(figure, VGLYPH_COORDINATE_RELATIVE, 0.1f);
+    vglyph_figure_draw_lineto_vertical(figure, VGLYPH_COORDINATE_RELATIVE, -0.1f);
     vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
     vglyph_figure_draw_closepath(figure);
 
