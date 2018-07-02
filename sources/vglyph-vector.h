@@ -179,4 +179,13 @@ _vglyph_vector_clear(vglyph_vector_t* vector)
     _vglyph_vector_ctor(vector, vector->reserved_bytes);
 }
 
+static inline vglyph_uint_t
+_vglyph_vector_size_in_bytes(vglyph_vector_t* vector)
+{
+    assert(vector);
+    assert(_vglyph_vector_is_valid(vector));
+
+    return vector->count_bytes;
+}
+
 #endif

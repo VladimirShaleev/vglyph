@@ -10,6 +10,7 @@
 #include "vglyph-object.h"
 #include "vglyph-format.h"
 #include "vglyph-render.h"
+#include "vglyph-vector.h"
 #include "vglyph-fixed.h"
 #include "vglyph-point.h"
 
@@ -185,6 +186,41 @@ _vglyph_surface_set_pixel_pos_fractional(vglyph_surface_t* surface,
             _vglyph_surface_set_pixel_pos_integer(surface, ix2, iy2, &result_color);
         }
     }
+}
+
+static inline vglyph_bool_t
+_vglyph_surface_add_point(vglyph_vector_t* points, 
+                          const vglyph_point_t* point)
+{
+    assert(points);
+    assert(point);
+
+    vglyph_uint_t offset = _vglyph_vector_push(points, sizeof(vglyph_point_t));
+
+    if (!_vglyph_vector_is_valid(points))
+        return FALSE;
+
+    vglyph_point_t* new_point = (vglyph_point_t*)_vglyph_vector_at(points, offset);
+    *new_point = *point;
+
+    return TRUE;
+}
+
+static inline vglyph_point_t* 
+_vglyph_surface_at_prev_point(vglyph_vector_t* points)
+{
+    assert(points);
+
+    vglyph_uint_t offset = _vglyph_vector_size_in_bytes(points) - sizeof(vglyph_point_t);
+    return (vglyph_point_t*)_vglyph_vector_at(points, offset);
+}
+
+static inline vglyph_uint_t
+_vglyph_surface_count_points(vglyph_vector_t* points)
+{
+    assert(points);
+    return _vglyph_vector_size_in_bytes(points) >> 3;
+
 }
 
 #endif

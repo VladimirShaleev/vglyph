@@ -9,6 +9,7 @@
 
 #include "vglyph-object.h"
 #include "vglyph-vector.h"
+#include "vglyph-rectangle.h"
 #include "vglyph-segment-types.h"
 
 typedef struct _vglyph_segment_type
@@ -24,6 +25,21 @@ struct _vglyph_figure
     vglyph_vector_t* segment_types;
     vglyph_vector_t* segments;
 };
+
+vglyph_point_t*
+_vglyph_figure_cubic_bezier(vglyph_point_t* result,
+                            const vglyph_point_t* point0,
+                            const vglyph_point_t* point1,
+                            const vglyph_point_t* point2,
+                            const vglyph_point_t* point3,
+                            vglyph_float32_t t);
+
+vglyph_rectangle_t*
+_vglyph_figure_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
+                                      const vglyph_point_t* point0,
+                                      const vglyph_point_t* point1,
+                                      const vglyph_point_t* point2,
+                                      const vglyph_point_t* point3);
 
 static inline vglyph_figure_t*
 _vglyph_figure_reference(vglyph_figure_t* figure)

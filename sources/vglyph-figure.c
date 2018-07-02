@@ -5,6 +5,7 @@
  */
 
 #include "vglyph-figure.h"
+#include "vglyph-point.h"
 #include "vglyph-type.h"
 
 static void
@@ -66,6 +67,128 @@ _vglyph_figure_destroy_callback(vglyph_object_t* object)
     _vglyph_figure_dtor(figure);
 
     free(figure);
+}
+
+static vglyph_bool_t
+_vglyph_figure_cubic_bezier_min_max_t(vglyph_float32_t* t1,
+                                      vglyph_float32_t* t2,
+                                      vglyph_float32_t x0,
+                                      vglyph_float32_t x1,
+                                      vglyph_float32_t x2,
+                                      vglyph_float32_t x3)
+{
+    vglyph_float32_t a = 3.0f * (x3 - x0 + 3.0f * (x1 - x2));
+    vglyph_float32_t b = 6.0f * (x0 - 2.0f * x1 + x2);
+    vglyph_float32_t c = 3.0f * (x1 - x0);
+
+    vglyph_float32_t D = b * b - 4.0f * a * c;
+
+    if (D >= 0.0f)
+    {
+        vglyph_float32_t sqrtD = sqrtf(D);
+        vglyph_float32_t invDiv = 1.0f / (2.0f * a);
+
+        *t1 = (-b + sqrtD) * invDiv;
+        *t2 = (-b - sqrtD) * invDiv;
+
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+vglyph_point_t*
+_vglyph_figure_cubic_bezier(vglyph_point_t* result,
+                            const vglyph_point_t* point0,
+                            const vglyph_point_t* point1,
+                            const vglyph_point_t* point2,
+                            const vglyph_point_t* point3,
+                            vglyph_float32_t t)
+{
+    assert(result);
+    assert(point0);
+    assert(point1);
+    assert(point2);
+    assert(point3);
+
+    vglyph_float32_t t_pow_1 = t;
+    vglyph_float32_t t_pow_2 = t_pow_1 * t_pow_1;
+    vglyph_float32_t t_pow_3 = t_pow_2 * t_pow_1;
+
+    vglyph_float32_t inv_t_pow_1 = 1.0f - t;
+    vglyph_float32_t inv_t_pow_2 = inv_t_pow_1 * inv_t_pow_1;
+    vglyph_float32_t inv_t_pow_3 = inv_t_pow_2 * inv_t_pow_1;
+
+    vglyph_point_t p0;
+    vglyph_point_t p1;
+    vglyph_point_t p2;
+    vglyph_point_t p3;
+
+    _vglyph_point_mul(&p0, point0,                  inv_t_pow_3);
+    _vglyph_point_mul(&p1, point1, 3.0f * t_pow_1 * inv_t_pow_2);
+    _vglyph_point_mul(&p2, point2, 3.0f * t_pow_2 * inv_t_pow_1);
+    _vglyph_point_mul(&p3, point3,         t_pow_3);
+
+    _vglyph_point_add(result, &p0,    &p1);
+    _vglyph_point_add(result, result, &p2);
+    _vglyph_point_add(result, result, &p3);
+
+    return result;
+}
+
+vglyph_rectangle_t*
+_vglyph_figure_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
+                                      const vglyph_point_t* point0,
+                                      const vglyph_point_t* point1,
+                                      const vglyph_point_t* point2,
+                                      const vglyph_point_t* point3)
+{
+    assert(rectangle);
+    assert(point0);
+    assert(point1);
+    assert(point2);
+    assert(point3);
+
+    vglyph_float32_t t1;
+    vglyph_float32_t t2;
+
+    _vglyph_rectangle_init_from_points(rectangle, point0, point3);
+
+    if (_vglyph_figure_cubic_bezier_min_max_t(&t1, &t2, point0->x, point1->x, point2->x, point3->x))
+    {
+        vglyph_point_t point;
+
+        if (t1 >= 0.0f && t1 <= 1.0f)
+        {
+            _vglyph_figure_cubic_bezier(&point, point0, point1, point2, point3, t1);
+            _vglyph_rectangle_add_point(rectangle, rectangle, &point);
+        }
+
+        if (t2 >= 0.0f && t2 <= 1.0f)
+        {
+            _vglyph_figure_cubic_bezier(&point, point0, point1, point2, point3, t2);
+            _vglyph_rectangle_add_point(rectangle, rectangle, &point);
+        }
+    }
+
+    if (_vglyph_figure_cubic_bezier_min_max_t(&t1, &t2, point0->y, point1->y, point2->y, point3->y))
+    {
+        vglyph_point_t point;
+
+        if (t1 >= 0.0f && t1 <= 1.0f)
+        {
+            _vglyph_figure_cubic_bezier(&point, point0, point1, point2, point3, t1);
+            _vglyph_rectangle_add_point(rectangle, rectangle, &point);
+        }
+
+        if (t2 >= 0.0f && t2 <= 1.0f)
+        {
+            _vglyph_figure_cubic_bezier(&point, point0, point1, point2, point3, t2);
+            _vglyph_rectangle_add_point(rectangle, rectangle, &point);
+        }
+    }
+
+    return rectangle;
 }
 
 static const vglyph_object_backend_t vglyph_figure_object_backend = {
