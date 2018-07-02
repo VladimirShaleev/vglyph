@@ -136,12 +136,25 @@ _vglyph_figure_cubic_bezier(vglyph_point_t* result,
     return result;
 }
 
+
 vglyph_rectangle_t*
-_vglyph_figure_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
-                                      const vglyph_point_t* point0,
-                                      const vglyph_point_t* point1,
-                                      const vglyph_point_t* point2,
-                                      const vglyph_point_t* point3)
+_vglyph_figure_get_line_rectangle(vglyph_rectangle_t* rectangle,
+                                  const vglyph_point_t* point0,
+                                  const vglyph_point_t* point1)
+{
+    assert(rectangle);
+    assert(point0);
+    assert(point1);
+
+    return _vglyph_rectangle_init_from_points(rectangle, point0, point1);
+}
+
+vglyph_rectangle_t*
+_vglyph_figure_get_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
+                                          const vglyph_point_t* point0,
+                                          const vglyph_point_t* point1,
+                                          const vglyph_point_t* point2,
+                                          const vglyph_point_t* point3)
 {
     assert(rectangle);
     assert(point0);

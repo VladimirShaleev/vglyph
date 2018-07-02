@@ -78,6 +78,9 @@ _vglyph_rectangle_add_point(vglyph_rectangle_t* result,
     assert(rectangle);
     assert(point);
 
+    assert(rectangle->right >= rectangle->left);
+    assert(rectangle->bottom >= rectangle->top);
+
     if (point->x < rectangle->left)
     {
         result->left  = point->x;
@@ -99,6 +102,29 @@ _vglyph_rectangle_add_point(vglyph_rectangle_t* result,
         result->top    = rectangle->top;
         result->bottom = point->y;
     }
+
+    return result;
+}
+
+static inline vglyph_rectangle_t*
+_vglyph_rectangle_union(vglyph_rectangle_t* result,
+                        const vglyph_rectangle_t* rect1,
+                        const vglyph_rectangle_t* rect2)
+{
+    assert(result);
+    assert(rect1);
+    assert(rect2);
+
+    assert(rect1->right >= rect1->left);
+    assert(rect1->bottom >= rect1->top);
+
+    assert(rect2->right >= rect2->left);
+    assert(rect2->bottom >= rect2->top);
+
+    result->left   = rect1->left   < rect2->left   ? rect1->left   : rect2->left;
+    result->right  = rect1->right  > rect2->right  ? rect1->right  : rect2->right;
+    result->top    = rect1->top    < rect2->top    ? rect1->top    : rect2->top;
+    result->bottom = rect1->bottom > rect2->bottom ? rect1->bottom : rect2->bottom;
 
     return result;
 }

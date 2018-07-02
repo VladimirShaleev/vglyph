@@ -35,11 +35,16 @@ _vglyph_figure_cubic_bezier(vglyph_point_t* result,
                             vglyph_float32_t t);
 
 vglyph_rectangle_t*
-_vglyph_figure_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
-                                      const vglyph_point_t* point0,
-                                      const vglyph_point_t* point1,
-                                      const vglyph_point_t* point2,
-                                      const vglyph_point_t* point3);
+_vglyph_figure_get_line_rectangle(vglyph_rectangle_t* rectangle,
+                                  const vglyph_point_t* point0,
+                                  const vglyph_point_t* point1);
+
+vglyph_rectangle_t*
+_vglyph_figure_get_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
+                                          const vglyph_point_t* point0,
+                                          const vglyph_point_t* point1,
+                                          const vglyph_point_t* point2,
+                                          const vglyph_point_t* point3);
 
 static inline vglyph_figure_t*
 _vglyph_figure_reference(vglyph_figure_t* figure)
