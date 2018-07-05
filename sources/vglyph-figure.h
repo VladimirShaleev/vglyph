@@ -20,10 +20,12 @@ typedef struct _vglyph_segment_type
 
 struct _vglyph_figure
 {
-    vglyph_object_t  object;
-    vglyph_uint_t    segment_count;
-    vglyph_vector_t* segment_types;
-    vglyph_vector_t* segments;
+    vglyph_object_t    object;
+    vglyph_uint_t      segment_count;
+    vglyph_vector_t*   segment_types;
+    vglyph_vector_t*   segments;
+    vglyph_uint_t      compute_bound_offset;
+    vglyph_rectangle_t bound;
 };
 
 vglyph_point_t*
@@ -45,6 +47,10 @@ _vglyph_figure_get_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
                                           const vglyph_point_t* point1,
                                           const vglyph_point_t* point2,
                                           const vglyph_point_t* point3);
+
+vglyph_rectangle_t*
+_vglyph_figure_get_bound(vglyph_figure_t* figure,
+                         vglyph_rectangle_t* result);
 
 static inline vglyph_figure_t*
 _vglyph_figure_reference(vglyph_figure_t* figure)

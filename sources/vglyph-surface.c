@@ -118,8 +118,6 @@ _vglyph_surface_lineto_horizontal(vglyph_surface_t* surface,
                                   vglyph_bool_t relative,
                                   vglyph_vector_t* points)
 {
-    
-
     vglyph_segment_lineto_t line_segment;
 
     _vglyph_point_from_coord(&line_segment.point, 

@@ -14,9 +14,10 @@ _vglyph_figure_init(vglyph_figure_t* figure,
 {
     _vglyph_object_init(&figure->object, object_backend);
 
-    figure->segment_count = 0;
-    figure->segment_types = NULL;
-    figure->segments      = NULL;
+    figure->segment_count        = 0;
+    figure->segment_types        = NULL;
+    figure->segments             = NULL;
+    figure->compute_bound_offset = 0;
 }
 
 static void
@@ -67,6 +68,43 @@ _vglyph_figure_destroy_callback(vglyph_object_t* object)
     _vglyph_figure_dtor(figure);
 
     free(figure);
+}
+
+static vglyph_point_t*
+_vglyph_figure_offset_point(vglyph_point_t* result,
+                            const vglyph_point_t* prev_point,
+                            const vglyph_point_t* point,
+                            vglyph_bool_t relative)
+{
+    assert(result);
+    assert(prev_point);
+    assert(point);
+    
+    *result = *point;
+
+    if (relative)
+    {
+        result->x += prev_point->x;
+        result->y += prev_point->y;
+    }
+
+    return result;
+}
+
+static void
+_vglyph_figure_bound_union(vglyph_figure_t* figure,
+                           const vglyph_rectangle_t* bound)
+{
+    assert(figure);
+    assert(bound);
+
+    if (figure->bound.left   != 0.0f ||
+        figure->bound.top    != 0.0f ||
+        figure->bound.right  != 0.0f ||
+        figure->bound.bottom != 0.0f)
+        _vglyph_rectangle_union(&figure->bound, &figure->bound, bound);
+    else
+        figure->bound = *bound;
 }
 
 static vglyph_bool_t
@@ -136,7 +174,6 @@ _vglyph_figure_cubic_bezier(vglyph_point_t* result,
     return result;
 }
 
-
 vglyph_rectangle_t*
 _vglyph_figure_get_line_rectangle(vglyph_rectangle_t* rectangle,
                                   const vglyph_point_t* point0,
@@ -202,6 +239,146 @@ _vglyph_figure_get_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
     }
 
     return rectangle;
+}
+
+vglyph_rectangle_t*
+_vglyph_figure_get_bound(vglyph_figure_t* figure,
+                         vglyph_rectangle_t* result)
+{
+    assert(figure);
+    assert(result);
+
+    const vglyph_uint_t size = _vglyph_vector_size_in_bytes(figure->segment_types);
+
+    if (figure->compute_bound_offset == size)
+    {
+        *result = figure->bound;
+        return result;
+    }
+
+    const vglyph_segment_type_t* segment_type;
+    const void* segment;
+
+    vglyph_bool_t path_closed = TRUE;
+
+    vglyph_rectangle_t bound;
+    vglyph_point_t prev_point;
+    vglyph_point_t point;
+    vglyph_point_t point1;
+    vglyph_point_t point2;
+
+    prev_point.x = 0.0f;
+    prev_point.y = 0.0f;
+
+    figure->compute_bound_offset = 0;
+    _vglyph_rectangle_init(&figure->bound, 0.0f, 0.0f, 0.0f, 0.0f);
+
+    while (figure->compute_bound_offset < size)
+    {
+        segment_type = (vglyph_segment_type_t*)
+            _vglyph_vector_at(figure->segment_types, figure->compute_bound_offset);
+
+        segment = _vglyph_vector_at(figure->segments, segment_type->offset);   
+
+        switch (segment_type->segment)
+        {
+            case VGLYPH_SEGMENT_CLOSEPATH:
+                path_closed = TRUE;
+                goto FIGURE_GET_BOUND_NEXT_SEGMENT;
+
+            case VGLYPH_SEGMENT_MOVETO_ABS:
+            case VGLYPH_SEGMENT_MOVETO_REL:
+                _vglyph_figure_offset_point(&point,
+                                            &prev_point, 
+                                            &((vglyph_segment_moveto_t*)segment)->point, 
+                                            segment_type->segment - VGLYPH_SEGMENT_MOVETO_ABS);
+
+                if (path_closed)
+                {
+                    path_closed = FALSE;
+                    goto FIGURE_GET_BOUND_NEXT_SEGMENT;
+                }
+                else
+                {
+                    _vglyph_rectangle_init_from_points(&bound, &prev_point, &point);
+                }
+                break;
+
+            case VGLYPH_SEGMENT_LINETO_ABS:
+            case VGLYPH_SEGMENT_LINETO_REL:
+                _vglyph_figure_offset_point(&point,
+                                            &prev_point, 
+                                            &((vglyph_segment_lineto_t*)segment)->point, 
+                                            segment_type->segment - VGLYPH_SEGMENT_LINETO_ABS);
+                _vglyph_rectangle_init_from_points(&bound, &prev_point, &point);
+                break;
+
+            case VGLYPH_SEGMENT_CURVETO_CUBIC_ABS:
+            case VGLYPH_SEGMENT_CURVETO_CUBIC_REL:
+                _vglyph_figure_offset_point(&point,
+                                            &prev_point, 
+                                            &((vglyph_segment_curveto_cubic_t*)segment)->point, 
+                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS);
+                _vglyph_figure_offset_point(&point1,
+                                            &prev_point, 
+                                            &((vglyph_segment_curveto_cubic_t*)segment)->point1, 
+                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS);
+                _vglyph_figure_offset_point(&point2,
+                                            &prev_point, 
+                                            &((vglyph_segment_curveto_cubic_t*)segment)->point2, 
+                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS);
+
+                _vglyph_rectangle_init_from_points(&bound, &prev_point, &point);
+                _vglyph_rectangle_add_point(&bound, &bound, &point1);
+                _vglyph_rectangle_add_point(&bound, &bound, &point2);
+                break;
+
+            case VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS:
+            case VGLYPH_SEGMENT_CURVETO_QUADRATIC_REL:
+                break;
+
+            case VGLYPH_SEGMENT_ARC_ABS:
+            case VGLYPH_SEGMENT_ARC_REL:
+                break;
+
+            case VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS:
+            case VGLYPH_SEGMENT_LINETO_HORIZONTAL_REL:
+                point.x = segment_type->segment - VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS ?
+                    ((vglyph_segment_lineto_horizontal_t*)segment)->x + prev_point.x :
+                    ((vglyph_segment_lineto_horizontal_t*)segment)->x;
+                point.y = prev_point.y;
+
+                _vglyph_rectangle_init_from_points(&bound, &prev_point, &point);
+                break;
+
+            case VGLYPH_SEGMENT_LINETO_VERTICAL_ABS:
+            case VGLYPH_SEGMENT_LINETO_VERTICAL_REL:
+                point.x = prev_point.x;
+                point.y = segment_type->segment - VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS ?
+                    ((vglyph_segment_lineto_vertical_t*)segment)->y + prev_point.y :
+                    ((vglyph_segment_lineto_vertical_t*)segment)->y;
+
+                _vglyph_rectangle_init_from_points(&bound, &prev_point, &point);
+                break;
+
+            case VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS:
+            case VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_REL:
+                break;
+
+            case VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_ABS:
+            case VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_REL:
+                break;
+        }
+
+        _vglyph_figure_bound_union(figure, &bound);
+
+    FIGURE_GET_BOUND_NEXT_SEGMENT:
+        prev_point = point;
+        figure->compute_bound_offset += sizeof(vglyph_segment_type_t);
+    }
+
+    *result = figure->bound;
+    return result;
 }
 
 static const vglyph_object_backend_t vglyph_figure_object_backend = {

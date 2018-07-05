@@ -103,12 +103,22 @@ vglyph_float32_t
 vglyph_glyph_get_width(vglyph_glyph_t* glyph)
 {
     assert(glyph);
+
+    vglyph_rectangle_t bound;
+    _vglyph_figure_get_bound(glyph->figure, &bound);
+
+    return bound.right - bound.left;
 }
 
 vglyph_float32_t
 vglyph_glyph_get_height(vglyph_glyph_t* glyph)
 {
     assert(glyph);
+
+    vglyph_rectangle_t bound;
+    _vglyph_figure_get_bound(glyph->figure, &bound);
+
+    return bound.bottom - bound.top;
 }
 
 vglyph_float32_t
