@@ -328,9 +328,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
                                             &((vglyph_segment_curveto_cubic_t*)segment)->point2, 
                                             segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS);
 
-                _vglyph_rectangle_init_from_points(&bound, &prev_point, &point);
-                _vglyph_rectangle_add_point(&bound, &bound, &point1);
-                _vglyph_rectangle_add_point(&bound, &bound, &point2);
+                _vglyph_figure_get_cubic_bezier_rectangle(&bound, &prev_point, &point1, &point2, &point);
                 break;
 
             case VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS:
