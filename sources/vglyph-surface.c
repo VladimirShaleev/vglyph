@@ -198,16 +198,19 @@ _vglyph_surface_glyph_to_lines(vglyph_surface_t* surface,
         switch (segment_type->segment)
         {
             case VGLYPH_SEGMENT_CLOSEPATH:
-                path_closed = TRUE;
-
-                if (prev_point.x != start_point.x ||
-                    prev_point.y != start_point.y)
+                if (!path_closed)
                 {
-                    _vglyph_surface_add_point(result, &start_point);
-                    prev_point = start_point;
-                }
+                    path_closed = TRUE;
 
-                _vglyph_surface_add_point(result, &start_marker);
+                    if (prev_point.x != start_point.x ||
+                        prev_point.y != start_point.y)
+                    {
+                        _vglyph_surface_add_point(result, &start_point);
+                        prev_point = start_point;
+                    }
+
+                    _vglyph_surface_add_point(result, &start_marker);
+                }
                 break;
 
             case VGLYPH_SEGMENT_MOVETO_ABS:
