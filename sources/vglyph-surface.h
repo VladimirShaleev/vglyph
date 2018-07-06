@@ -206,15 +206,6 @@ _vglyph_surface_add_point(vglyph_vector_t* points,
     return TRUE;
 }
 
-static inline vglyph_point_t* 
-_vglyph_surface_at_prev_point(vglyph_vector_t* points)
-{
-    assert(points);
-
-    vglyph_uint_t offset = _vglyph_vector_size_in_bytes(points) - sizeof(vglyph_point_t);
-    return (vglyph_point_t*)_vglyph_vector_at(points, offset);
-}
-
 static inline vglyph_uint_t
 _vglyph_surface_count_points(vglyph_vector_t* points)
 {

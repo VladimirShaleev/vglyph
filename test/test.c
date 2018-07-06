@@ -445,6 +445,10 @@ int main(int argc, char* argv[])
     point5.x = -0.1f;
     point5.y = -0.5f;
 
+    vglyph_point_t point6;
+    point6.x = 0.05f;
+    point6.y = 0.7f;
+
     vglyph_figure_t* figure = vglyph_figure_create();
     show_object_type(vglyph_figure_to_object(figure));
 
@@ -453,7 +457,10 @@ int main(int argc, char* argv[])
     vglyph_figure_draw_curveto_cubic(figure, VGLYPH_COORDINATE_RELATIVE, &point5, &point3, &point4);
     vglyph_figure_draw_lineto_horizontal(figure, VGLYPH_COORDINATE_RELATIVE, 0.1f);
     vglyph_figure_draw_lineto_vertical(figure, VGLYPH_COORDINATE_RELATIVE, -0.1f);
-    vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
+    vglyph_figure_draw_closepath(figure);
+    vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point6);
+    vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_RELATIVE, &point3);
+    vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_RELATIVE, &point1);
     vglyph_figure_draw_closepath(figure);
 
     vglyph_glyph_t* glyph = vglyph_glyph_create(figure);
