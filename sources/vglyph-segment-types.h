@@ -34,6 +34,11 @@ typedef enum _vglyph_segment
     VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_REL = 19
 } vglyph_segment_t;
 
+typedef struct _vglyph_segment_closepath
+{
+    vglyph_uint_t unused;
+} vglyph_segment_closepath_t;
+
 typedef struct _vglyph_segment_moveto
 {
     vglyph_point_t point;
