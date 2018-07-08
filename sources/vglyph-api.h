@@ -28,6 +28,9 @@
 
 #include "vglyph.h"
 
+#define VGLYPH_MAX(a, b) (((a) > (b)) ? (a) : (b))
+#define VGLYPH_MIN(a, b) (((a) < (b)) ? (a) : (b))
+
 static inline vglyph_bool_t
 _vglyph_is_little_endian(void)
 {

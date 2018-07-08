@@ -133,8 +133,8 @@ _vglyph_point_min(vglyph_point_t* result,
     assert(a);
     assert(b);
 
-    result->x = min(a->x, b->x);
-    result->y = min(a->y, b->y);
+    result->x = VGLYPH_MIN(a->x, b->x);
+    result->y = VGLYPH_MIN(a->y, b->y);
 
     return result;
 }
@@ -148,8 +148,8 @@ _vglyph_point_max(vglyph_point_t* result,
     assert(a);
     assert(b);
 
-    result->x = max(a->x, b->x);
-    result->y = max(a->y, b->y);
+    result->x = VGLYPH_MAX(a->x, b->x);
+    result->y = VGLYPH_MAX(a->y, b->y);
 
     return result;
 }
