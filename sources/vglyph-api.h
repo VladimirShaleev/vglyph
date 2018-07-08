@@ -9,6 +9,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #if defined (_MSC_VER) && !defined (VGLYPH_STATIC_BUILD)
