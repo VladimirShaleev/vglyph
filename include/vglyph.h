@@ -235,6 +235,9 @@ vglyph_object_get_reference_count(vglyph_object_t* object);
 vglyph_public vglyph_state_t
 vglyph_object_get_state(vglyph_object_t* object);
 
+vglyph_public void
+vglyph_object_reset_state(vglyph_object_t* object);
+
 vglyph_public vglyph_type_t*
 vglyph_object_get_type(vglyph_object_t* object);
 

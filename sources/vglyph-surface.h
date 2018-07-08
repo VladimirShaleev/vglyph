@@ -188,7 +188,7 @@ _vglyph_surface_set_pixel_pos_fractional(vglyph_surface_t* surface,
     }
 }
 
-static inline vglyph_bool_t
+static inline vglyph_state_t
 _vglyph_surface_add_point(vglyph_vector_t* points, 
                           const vglyph_point_t* point)
 {
@@ -198,20 +198,12 @@ _vglyph_surface_add_point(vglyph_vector_t* points,
     vglyph_uint_t offset = _vglyph_vector_push(points, sizeof(vglyph_point_t));
 
     if (!_vglyph_vector_is_valid(points))
-        return FALSE;
+        return _vglyph_vector_get_state(points);
 
     vglyph_point_t* new_point = (vglyph_point_t*)_vglyph_vector_at(points, offset);
     *new_point = *point;
 
-    return TRUE;
-}
-
-static inline vglyph_uint_t
-_vglyph_surface_count_points(vglyph_vector_t* points)
-{
-    assert(points);
-    return _vglyph_vector_size_in_bytes(points) >> 3;
-
+    return VGLYPH_STATE_SUCCESS;
 }
 
 #endif

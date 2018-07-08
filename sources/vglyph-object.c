@@ -85,6 +85,13 @@ vglyph_object_get_state(vglyph_object_t* object)
     return _vglyph_object_get_state(object);
 }
 
+void
+vglyph_object_reset_state(vglyph_object_t* object)
+{
+    assert(object);
+    _vglyph_object_set_state(object, VGLYPH_STATE_SUCCESS);
+}
+
 vglyph_type_t*
 vglyph_object_get_type(vglyph_object_t* object)
 {
