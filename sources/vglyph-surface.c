@@ -210,16 +210,14 @@ _vglyph_surface_arc(vglyph_surface_t* surface,
     const vglyph_float32_t c_x = cos_fi * p_c_x - sin_fi * p_c_y + v.x;
     const vglyph_float32_t c_y = sin_fi * p_c_x + cos_fi * p_c_y + v.y;
 
-    vglyph_point_t theta_0_v;
-    theta_0_v.x = (p_x - p_c_x) / radius_x;
-    theta_0_v.y = (p_y - p_c_y) / radius_y;
-
-    vglyph_point_t theta_d_v;
-    theta_d_v.x = -(p_x + p_c_x) / radius_x;
-    theta_d_v.y = -(p_y + p_c_y) / radius_y;
-
-    vglyph_float32_t theta_0 = atan2f(1.0f, 0.0f) - atan2f(theta_0_v.x, theta_0_v.y);
-    vglyph_float32_t theta_d = atan2f(theta_0_v.x, theta_0_v.y) - atan2f(theta_d_v.x, theta_d_v.y);
+    const vglyph_float32_t theta_0_x = (p_x - p_c_x) / radius_x;
+    const vglyph_float32_t theta_0_y = (p_y - p_c_y) / radius_y;
+    
+    const vglyph_float32_t theta_d_x = -(p_x + p_c_x) / radius_x;
+    const vglyph_float32_t theta_d_y = -(p_y + p_c_y) / radius_y;
+    
+    vglyph_float32_t theta_0 = atan2f(1.0f, 0.0f) - atan2f(theta_0_x, theta_0_y);
+    vglyph_float32_t theta_d = atan2f(theta_0_x, theta_0_y) - atan2f(theta_d_x, theta_d_y);
 
     if (!f_s && theta_d > 0.0f)
         theta_d -= pi * 2.0f;
