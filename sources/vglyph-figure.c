@@ -250,6 +250,9 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
 
     const vglyph_uint_t size = _vglyph_vector_size_in_bytes(figure->segment_types);
 
+    if (!size)
+        return _vglyph_rectangle_init(result, 0.0f, 0.0f, 0.0f, 0.0f);
+
     if (figure->compute_bound_offset == size)
     {
         *result = figure->bound;
@@ -434,7 +437,8 @@ vglyph_figure_draw_clear(vglyph_figure_t* figure)
         _vglyph_vector_clear(figure->segment_types);
         _vglyph_vector_clear(figure->segments);
 
-        figure->segment_count = 0;
+        figure->segment_count        = 0;
+        figure->compute_bound_offset = 0;
 
         return _vglyph_vector_is_valid(figure->segment_types) &&
                _vglyph_vector_is_valid(figure->segments);
