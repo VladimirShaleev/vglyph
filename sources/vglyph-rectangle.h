@@ -19,13 +19,16 @@ typedef struct _vglyph_rectangle
 } vglyph_rectangle_t;
 
 static inline vglyph_rectangle_t*
-_vglyph_rectangle_init(vglyph_rectangle_t* result,
-                       vglyph_float32_t left,
-                       vglyph_float32_t top,
-                       vglyph_float32_t right,
-                       vglyph_float32_t bottom)
+_vglyph_rectangle_from_coord(vglyph_rectangle_t* result,
+                             vglyph_float32_t left,
+                             vglyph_float32_t top,
+                             vglyph_float32_t right,
+                             vglyph_float32_t bottom)
 {
     assert(result);
+
+    assert(right >= left);
+    assert(bottom >= top);
 
     result->left   = left;
     result->top    = top;
@@ -36,9 +39,9 @@ _vglyph_rectangle_init(vglyph_rectangle_t* result,
 }
 
 static inline vglyph_rectangle_t*
-_vglyph_rectangle_init_from_points(vglyph_rectangle_t* result,
-                                   const vglyph_point_t* point1,
-                                   const vglyph_point_t* point2)
+_vglyph_rectangle_from_points(vglyph_rectangle_t* result,
+                              const vglyph_point_t* point1,
+                              const vglyph_point_t* point2)
 {
     assert(result);
     assert(point1);

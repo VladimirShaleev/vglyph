@@ -183,7 +183,7 @@ _vglyph_figure_get_line_rectangle(vglyph_rectangle_t* rectangle,
     assert(point0);
     assert(point1);
 
-    return _vglyph_rectangle_init_from_points(rectangle, point0, point1);
+    return _vglyph_rectangle_from_points(rectangle, point0, point1);
 }
 
 vglyph_rectangle_t*
@@ -202,7 +202,7 @@ _vglyph_figure_get_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
     vglyph_float32_t t1;
     vglyph_float32_t t2;
 
-    _vglyph_rectangle_init_from_points(rectangle, point0, point3);
+    _vglyph_rectangle_from_points(rectangle, point0, point3);
 
     if (_vglyph_figure_cubic_bezier_min_max_t(&t1, &t2, point0->x, point1->x, point2->x, point3->x))
     {
@@ -251,7 +251,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
     const vglyph_uint_t size = _vglyph_vector_size_in_bytes(figure->segment_types);
 
     if (!size)
-        return _vglyph_rectangle_init(result, 0.0f, 0.0f, 0.0f, 0.0f);
+        return _vglyph_rectangle_from_coord(result, 0.0f, 0.0f, 0.0f, 0.0f);
 
     if (figure->compute_bound_offset == size)
     {
@@ -275,7 +275,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
     prev_point.y = 0.0f;
 
     figure->compute_bound_offset = 0;
-    _vglyph_rectangle_init(&figure->bound, 0.0f, 0.0f, 0.0f, 0.0f);
+    _vglyph_rectangle_from_coord(&figure->bound, 0.0f, 0.0f, 0.0f, 0.0f);
 
     while (figure->compute_bound_offset < size)
     {
@@ -307,7 +307,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
                 }
                 else
                 {
-                    _vglyph_rectangle_init_from_points(&bound, &prev_point, &point);
+                    _vglyph_rectangle_from_points(&bound, &prev_point, &point);
                 }
                 break;
 
@@ -317,7 +317,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
                                             &prev_point, 
                                             &((vglyph_segment_lineto_t*)segment)->point, 
                                             segment_type->segment - VGLYPH_SEGMENT_LINETO_ABS);
-                _vglyph_rectangle_init_from_points(&bound, &prev_point, &point);
+                _vglyph_rectangle_from_points(&bound, &prev_point, &point);
                 break;
 
             case VGLYPH_SEGMENT_CURVETO_CUBIC_ABS:
@@ -353,7 +353,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
                     ((vglyph_segment_lineto_horizontal_t*)segment)->x;
                 point.y = prev_point.y;
 
-                _vglyph_rectangle_init_from_points(&bound, &prev_point, &point);
+                _vglyph_rectangle_from_points(&bound, &prev_point, &point);
                 break;
 
             case VGLYPH_SEGMENT_LINETO_VERTICAL_ABS:
@@ -363,7 +363,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
                     ((vglyph_segment_lineto_vertical_t*)segment)->y + prev_point.y :
                     ((vglyph_segment_lineto_vertical_t*)segment)->y;
 
-                _vglyph_rectangle_init_from_points(&bound, &prev_point, &point);
+                _vglyph_rectangle_from_points(&bound, &prev_point, &point);
                 break;
 
             case VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS:
