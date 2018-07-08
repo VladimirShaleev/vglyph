@@ -462,6 +462,9 @@ int main(int argc, char* argv[])
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_RELATIVE, &point3);
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_RELATIVE, &point1);
     vglyph_figure_draw_closepath(figure);
+    //vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point1);
+    //vglyph_figure_draw_arc(figure, VGLYPH_COORDINATE_RELATIVE, , , 30.0f, 0, 0);
+    //vglyph_figure_draw_closepath(figure);
 
     vglyph_glyph_t* glyph = vglyph_glyph_create(figure);
     vglyph_object_destroy(vglyph_figure_to_object(figure));

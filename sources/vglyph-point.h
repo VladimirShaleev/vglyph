@@ -90,7 +90,7 @@ _vglyph_point_dot(const vglyph_point_t* a,
     assert(a);
     assert(b);
 
-    return a->x * b->x + a->y + b->y;
+    return a->x * b->x + a->y * b->y;
 }
 
 static inline vglyph_float32_t
