@@ -11,6 +11,36 @@
 #include "vglyph-figure.h"
 #include "vglyph-segment-types.h"
 
+
+ static void 
+ _vglyph_surface_draw_line(vglyph_surface_t* surface,
+                           const vglyph_color_t* color,
+                           const vglyph_point_t* start,
+                           const vglyph_point_t* end)
+ {
+     vglyph_render_t* render = surface->render;
+ 
+     vglyph_point_t point = *start;
+     vglyph_point_t v;
+     vglyph_point_t n;
+ 
+     _vglyph_point_sub(&v, end, start);
+     const vglyph_float32_t d = 1.0f / _vglyph_point_length(&v);
+ 
+     _vglyph_point_mul(&n, &v, d);
+ 
+     for (vglyph_float32_t t = 0.0f; t < 1.0f - d / 2; t += d)
+     {
+         _vglyph_point_add(&point, &point, &n);
+         _vglyph_surface_set_pixel_pos_fractional(surface, &point, color);
+     }
+ }
+
+
+
+
+
+
 static vglyph_point_t* 
 _vglyph_surface_offset_point(vglyph_point_t* result,
                              vglyph_surface_t* surface,
@@ -142,102 +172,154 @@ _vglyph_surface_arc(vglyph_surface_t* surface,
         return _vglyph_surface_lineto(surface, &line_segment, relative, points, prev_point);
     }
 
+    vglyph_point_t   radius;
+    vglyph_point_t   center;
+    vglyph_float32_t cos_fi;
+    vglyph_float32_t sin_fi;
+    vglyph_float32_t theta_0;
+    vglyph_float32_t theta_d;
+
     const vglyph_float32_t pi = 3.14159265358979323846f;
     const vglyph_float32_t degree_to_radians = pi / 180.0f;
 
-    vglyph_point_t   start    = *prev_point;
-    vglyph_point_t   end      = segment->point;
-    vglyph_float32_t radius_x = segment->radius.x * surface->width;
-    vglyph_float32_t radius_y = segment->radius.y * surface->height;
-    vglyph_float32_t fi       = segment->angle * degree_to_radians;
-    vglyph_bool_t    f_a      = segment->large_arc_flag ? 1 : 0;
-    vglyph_bool_t    f_s      = segment->sweep_flag ? 1 : 0;
+    vglyph_point_t start = *prev_point;
+    vglyph_point_t end   = segment->point;
 
     _vglyph_surface_offset_point(&end, surface, relative, prev_point);
     *prev_point = end;
 
-    if (radius_x < 0.0f)
-        radius_x = -radius_x;
+    radius.x = segment->radius.x * surface->width;
+    radius.y = segment->radius.y * surface->height;
 
-    if (radius_y < 0.0f)
-        radius_y = -radius_y;
+    _vglyph_figure_get_arc_params(&radius, 
+                                  &center, 
+                                  &cos_fi, 
+                                  &sin_fi, 
+                                  &theta_0, 
+                                  &theta_d,
+                                  &start, 
+                                  &end, 
+                                  &radius, 
+                                  segment->angle * degree_to_radians, 
+                                  segment->large_arc_flag,
+                                  segment->sweep_flag);
 
-    vglyph_float32_t radius_x_pow_2 = radius_x * radius_x;
-    vglyph_float32_t radius_y_pow_2 = radius_y * radius_y;
+    vglyph_rectangle_t bound;
+    _vglyph_figure_get_arc_rectangle(&bound, 
+                                     &radius,
+                                     &center,
+                                     cos_fi,
+                                     sin_fi,
+                                     theta_0,
+                                     theta_d);
 
-    const vglyph_float32_t cos_fi = cosf(fi);
-    const vglyph_float32_t sin_fi = sinf(fi);
-
-    vglyph_point_t v;
-    _vglyph_point_sub(&v, &start, &end);
-    _vglyph_point_mul(&v, &v, 0.5f);
-
-    const vglyph_float32_t p_x = cos_fi * v.x + sin_fi * v.y;
-    const vglyph_float32_t p_y = cos_fi * v.y - sin_fi * v.x;
-
-    const vglyph_float32_t p_x_pow_2 = p_x * p_x;
-    const vglyph_float32_t p_y_pow_2 = p_y * p_y;
-
-    const vglyph_float32_t lambda = 
-        p_x_pow_2 / radius_x_pow_2 + 
-        p_y_pow_2 / radius_y_pow_2;
-
-    if (lambda > 1.0f)
+    for (int i = 0; i < 1000; ++i)
     {
-        const vglyph_float32_t lambda_sqrt = sqrtf(lambda);
-        radius_x *= lambda_sqrt;
-        radius_y *= lambda_sqrt;
+        vglyph_float32_t theta = theta_0 + (theta_d / 1000.0f) * i;
 
-        radius_x_pow_2 = radius_x * radius_x;
-        radius_y_pow_2 = radius_y * radius_y;
+        const vglyph_float32_t radius_x_cos_theta = radius.x * cosf(theta);
+        const vglyph_float32_t radius_y_sin_theta = radius.y * sinf(theta);
+    
+        vglyph_float32_t x = cos_fi * radius_x_cos_theta - sin_fi * radius_y_sin_theta + center.x;
+        vglyph_float32_t y = sin_fi * radius_x_cos_theta + cos_fi * radius_y_sin_theta + center.y;
+    
+        vglyph_color_t c = { 0.0f };
+        c.alpha = 1.0f;
+    
+        surface->render->backend->set_pixel(surface->render, surface, (vglyph_sint32_t)x, (vglyph_sint32_t)y, &c);
     }
 
-    const vglyph_float32_t rxpy = radius_x_pow_2 * p_y_pow_2;
-    const vglyph_float32_t rypx = radius_y_pow_2 * p_x_pow_2;
+    vglyph_point_t p0 = { bound.left, bound.top };
+    vglyph_point_t p1 = { bound.right, bound.top };
+    vglyph_point_t p2 = { bound.right, bound.bottom };
+    vglyph_point_t p3 = { bound.left, bound.bottom };
 
-    vglyph_float32_t k =
-        sqrtf((radius_x_pow_2 * radius_y_pow_2 - rxpy - rypx) / (rxpy + rypx));
+    vglyph_color_t c = { 1, 0, 0, 1 };
 
-    if (f_a == f_s)
-        k = -k;
-
-    vglyph_float32_t p_c_x =  k * radius_x * p_y / radius_y;
-    vglyph_float32_t p_c_y = -k * radius_y * p_x / radius_x;
-
-    _vglyph_point_add(&v, &start, &end);
-    _vglyph_point_mul(&v, &v, 0.5f);
-
-    const vglyph_float32_t c_x = cos_fi * p_c_x - sin_fi * p_c_y + v.x;
-    const vglyph_float32_t c_y = sin_fi * p_c_x + cos_fi * p_c_y + v.y;
-
-    const vglyph_float32_t theta_0_x = (p_x - p_c_x) / radius_x;
-    const vglyph_float32_t theta_0_y = (p_y - p_c_y) / radius_y;
+    //_vglyph_surface_draw_line(surface, &c, &p0, &p1);
+    //_vglyph_surface_draw_line(surface, &c, &p1, &p2);
+    //_vglyph_surface_draw_line(surface, &c, &p2, &p3);
+    //_vglyph_surface_draw_line(surface, &c, &p3, &p0);
     
-    const vglyph_float32_t theta_d_x = -(p_x + p_c_x) / radius_x;
-    const vglyph_float32_t theta_d_y = -(p_y + p_c_y) / radius_y;
-    
-    vglyph_float32_t theta_0 = atan2f(1.0f, 0.0f) - atan2f(theta_0_x, theta_0_y);
-    vglyph_float32_t theta_d = atan2f(theta_0_x, theta_0_y) - atan2f(theta_d_x, theta_d_y);
+    ////////////////////////////////////////////////
 
-    if (!f_s && theta_d > 0.0f)
-        theta_d -= pi * 2.0f;
-    else if (f_s && theta_d < 0.0f)
-        theta_d += pi * 2.0f;
+    int cp = 8;
+    const vglyph_float32_t ddd = theta_d / cp;
 
-    //int i = 1000;
-    //for (vglyph_float32_t theta = theta_0; i != 0; theta += theta_d / 1000.0f, i--)
-    //{
-    //    const vglyph_float32_t radius_x_cos_theta = radius_x * cosf(theta);
-    //    const vglyph_float32_t radius_y_sin_theta = radius_y * sinf(theta);
-    //
-    //    vglyph_float32_t x = cos_fi * radius_x_cos_theta - sin_fi * radius_y_sin_theta + c_x;
-    //    vglyph_float32_t y = sin_fi * radius_x_cos_theta + cos_fi * radius_y_sin_theta + c_y;
-    //
-    //    vglyph_color_t c = { 0.0f };
-    //    c.alpha = 1.0f;
-    //
-    //    surface->render->backend->set_pixel(surface->render, surface, x, y, &c);
-    //}
+    for (int p = 0; p < cp; ++p)
+    {
+        const vglyph_float32_t st = theta_0 + ddd * p;
+        const vglyph_float32_t et = ddd;
+
+
+        const vglyph_float32_t t0 = st;
+        const vglyph_float32_t t1 = st + et / 3.0f;
+        const vglyph_float32_t t2 = st + et / 3.0f * 2.0f;
+        const vglyph_float32_t t3 = st + et;
+
+        vglyph_point_t b0;
+        vglyph_point_t b1;
+        vglyph_point_t b2;
+        vglyph_point_t b3;
+        _vglyph_figure_arc(&b0, &radius, &center, cos_fi, sin_fi, t0);
+        _vglyph_figure_arc(&b1, &radius, &center, cos_fi, sin_fi, t1);
+        _vglyph_figure_arc(&b2, &radius, &center, cos_fi, sin_fi, t2);
+        _vglyph_figure_arc(&b3, &radius, &center, cos_fi, sin_fi, t3);
+
+        _vglyph_figure_arc_point_to_bezier(&b1, &b2, &b0, &b1, &b2, &b3);
+
+        vglyph_point_t v01;
+        vglyph_point_t v12;
+        vglyph_point_t v23;
+        vglyph_point_t v03;
+
+        vglyph_float32_t length01 = _vglyph_point_length(_vglyph_point_sub(&v01, &b1, &b0));
+        vglyph_float32_t length12 = _vglyph_point_length(_vglyph_point_sub(&v12, &b2, &b1));
+        vglyph_float32_t length23 = _vglyph_point_length(_vglyph_point_sub(&v23, &b3, &b2));
+        vglyph_float32_t length03 = _vglyph_point_length(_vglyph_point_sub(&v03, &b3, &b0));
+        vglyph_float32_t length   = (length01 + length12 + length23 + length03) * 0.5f;
+
+        const vglyph_float32_t dt = 1.0f / length * 4.0f;
+
+        vglyph_point_t old_point = start;
+        vglyph_point_t new_point;
+
+        vglyph_bool_t b_end = FALSE;
+
+        for (vglyph_float32_t t = 0;; t += dt)
+        {
+            if (t >= 1.0f)
+            {
+                t = 1.0f;
+                b_end = TRUE;
+            }
+
+            _vglyph_figure_cubic_bezier(&new_point, &b0, &b1, &b2, &b3, t);
+
+            vglyph_point_t v;
+            _vglyph_point_sub(&v, &new_point, &old_point);
+
+            const vglyph_float32_t line_length = _vglyph_point_length(&v);
+
+            if (!b_end && line_length < 0.0f)
+                continue;
+
+            vglyph_color_t c2;
+
+            surface->render->backend->get_pixel(surface->render, surface, new_point.x, new_point.y, &c2);
+
+            if (c2.red >= 1.0)
+                c2.blue = 0.0;
+            else
+                c2.blue = 1.0;
+
+            surface->render->backend->set_pixel(surface->render, surface, new_point.x, new_point.y, &c2);
+            old_point = new_point;
+
+            if (b_end)
+                break;
+        }
+    }
 
     return VGLYPH_STATE_SUCCESS;
 }
@@ -451,30 +533,6 @@ _vglyph_surface_figure_to_lines(vglyph_surface_t* surface,
 
     return result;
 }
-
-//static void 
-//_vglyph_surface_draw_line(vglyph_surface_t* surface,
-//                          const vglyph_color_t* color,
-//                          const vglyph_point_t* start,
-//                          const vglyph_point_t* end)
-//{
-//    vglyph_render_t* render = surface->render;
-//
-//    vglyph_point_t point = *start;
-//    vglyph_point_t v;
-//    vglyph_point_t n;
-//
-//    _vglyph_point_sub(&v, end, start);
-//    const vglyph_float32_t d = 1.0f / _vglyph_point_length(&v);
-//
-//    _vglyph_point_mul(&n, &v, d);
-//
-//    for (vglyph_float32_t t = 0.0f; t <= 1.0f; t += d)
-//    {
-//        _vglyph_point_add(&point, &point, &n);
-//        _vglyph_surface_set_pixel_pos_fractional(surface, &point, color);
-//    }
-//}
 
 static void 
 _vglyph_surface_draw_polygon(vglyph_surface_t* surface,

@@ -36,6 +36,36 @@ _vglyph_figure_cubic_bezier(vglyph_point_t* result,
                             const vglyph_point_t* point3,
                             vglyph_float32_t t);
 
+vglyph_bool_t
+_vglyph_figure_get_arc_params(vglyph_point_t* result_radius,
+                              vglyph_point_t* result_center,
+                              vglyph_float32_t* result_cos_fi,
+                              vglyph_float32_t* result_sin_fi,
+                              vglyph_float32_t* result_theta_0,
+                              vglyph_float32_t* result_theta_d,
+                              const vglyph_point_t* point0,
+                              const vglyph_point_t* point1,
+                              const vglyph_point_t* radius,
+                              vglyph_float32_t fi,
+                              vglyph_bool_t f_a,
+                              vglyph_bool_t f_s);
+
+vglyph_point_t*
+_vglyph_figure_arc(vglyph_point_t* result,
+                   const vglyph_point_t* radius,
+                   const vglyph_point_t* center,
+                   vglyph_float32_t cos_fi,
+                   vglyph_float32_t sin_fi,
+                   vglyph_float32_t theta);
+
+void
+_vglyph_figure_arc_point_to_bezier(vglyph_point_t* result_point1,
+                                   vglyph_point_t* result_point2,
+                                   const vglyph_point_t* point0,
+                                   const vglyph_point_t* point1,
+                                   const vglyph_point_t* point2,
+                                   const vglyph_point_t* point3);
+
 vglyph_rectangle_t*
 _vglyph_figure_get_line_rectangle(vglyph_rectangle_t* rectangle,
                                   const vglyph_point_t* point0,
@@ -47,6 +77,15 @@ _vglyph_figure_get_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
                                           const vglyph_point_t* point1,
                                           const vglyph_point_t* point2,
                                           const vglyph_point_t* point3);
+
+vglyph_rectangle_t*
+_vglyph_figure_get_arc_rectangle(vglyph_rectangle_t* rectangle,
+                                 const vglyph_point_t* radius,
+                                 const vglyph_point_t* center,
+                                 vglyph_float32_t cos_fi,
+                                 vglyph_float32_t sin_fi,
+                                 vglyph_float32_t theta_0,
+                                 vglyph_float32_t theta_d);
 
 vglyph_rectangle_t*
 _vglyph_figure_get_bound(vglyph_figure_t* figure,
