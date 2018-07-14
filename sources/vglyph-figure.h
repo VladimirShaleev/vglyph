@@ -58,14 +58,6 @@ _vglyph_figure_arc(vglyph_point_t* result,
                    vglyph_float32_t sin_fi,
                    vglyph_float32_t theta);
 
-void
-_vglyph_figure_arc_point_to_bezier(vglyph_point_t* result_point1,
-                                   vglyph_point_t* result_point2,
-                                   const vglyph_point_t* point0,
-                                   const vglyph_point_t* point1,
-                                   const vglyph_point_t* point2,
-                                   const vglyph_point_t* point3);
-
 vglyph_rectangle_t*
 _vglyph_figure_get_line_rectangle(vglyph_rectangle_t* rectangle,
                                   const vglyph_point_t* point0,

@@ -107,6 +107,33 @@ _vglyph_figure_bound_union(vglyph_figure_t* figure,
         figure->bound = *bound;
 }
 
+static void
+_vglyph_figure_arc_point_to_bezier(vglyph_point_t* result_point1,
+                                   vglyph_point_t* result_point2,
+                                   const vglyph_point_t* point0,
+                                   const vglyph_point_t* point1,
+                                   const vglyph_point_t* point2,
+                                   const vglyph_point_t* point3)
+{
+    assert(result_point1);
+    assert(result_point2);
+    assert(point0);
+    assert(point1);
+    assert(point2);
+    assert(point3);
+
+    vglyph_point_t result1;
+    vglyph_point_t result2;
+
+    result1.x = (-5.0f * point0->x + 18.0f * point1->x -  9.0f * point2->x + 2.0f * point3->x) / 6.0f;
+    result1.y = (-5.0f * point0->y + 18.0f * point1->y -  9.0f * point2->y + 2.0f * point3->y) / 6.0f;
+    result2.x = ( 2.0f * point0->x -  9.0f * point1->x + 18.0f * point2->x - 5.0f * point3->x) / 6.0f;
+    result2.y = ( 2.0f * point0->y -  9.0f * point1->y + 18.0f * point2->y - 5.0f * point3->y) / 6.0f;
+
+    *result_point1 = result1;
+    *result_point2 = result2;
+}
+
 static vglyph_bool_t
 _vglyph_figure_cubic_bezier_min_max_t(vglyph_float32_t* t1,
                                       vglyph_float32_t* t2,
@@ -319,33 +346,6 @@ _vglyph_figure_arc(vglyph_point_t* result,
     return result;
 }
 
-void
-_vglyph_figure_arc_point_to_bezier(vglyph_point_t* result_point1,
-                                   vglyph_point_t* result_point2,
-                                   const vglyph_point_t* point0,
-                                   const vglyph_point_t* point1,
-                                   const vglyph_point_t* point2,
-                                   const vglyph_point_t* point3)
-{
-    assert(result_point1);
-    assert(result_point2);
-    assert(point0);
-    assert(point1);
-    assert(point2);
-    assert(point3);
-
-    vglyph_point_t result1;
-    vglyph_point_t result2;
-
-    result1.x = (-5.0f * point0->x + 18.0f * point1->x -  9.0f * point2->x + 2.0f * point3->x) / 6.0f;
-    result1.y = (-5.0f * point0->y + 18.0f * point1->y -  9.0f * point2->y + 2.0f * point3->y) / 6.0f;
-    result2.x = ( 2.0f * point0->x -  9.0f * point1->x + 18.0f * point2->x - 5.0f * point3->x) / 6.0f;
-    result2.y = ( 2.0f * point0->y -  9.0f * point1->y + 18.0f * point2->y - 5.0f * point3->y) / 6.0f;
-
-    *result_point1 = result1;
-    *result_point2 = result2;
-}
-
 vglyph_rectangle_t*
 _vglyph_figure_get_line_rectangle(vglyph_rectangle_t* rectangle,
                                   const vglyph_point_t* point0,
@@ -428,48 +428,50 @@ _vglyph_figure_get_arc_rectangle(vglyph_rectangle_t* rectangle,
     assert(radius->x != 0.0f);
     assert(radius->y != 0.0f);
 
+    const vglyph_sint_t part_count = 8;
+
+    const vglyph_float32_t d             = theta_d / part_count;
+    const vglyph_float32_t d_div_3       = d / 3.0f;
+    const vglyph_float32_t d_div_3_mul_2 = d_div_3 * 2.0f;
+
+    vglyph_float32_t theta0;
+    vglyph_float32_t theta1;
+    vglyph_float32_t theta2;
+    vglyph_float32_t theta3;
+
     vglyph_point_t point0;
     vglyph_point_t point1;
+    vglyph_point_t point2;
+    vglyph_point_t point3;
 
-    _vglyph_figure_arc(&point0, radius, center, cos_fi, sin_fi, theta_0);
-    _vglyph_figure_arc(&point1, radius, center, cos_fi, sin_fi, theta_0 + theta_d);
+    vglyph_rectangle_t bound;
 
-    _vglyph_rectangle_from_points(rectangle, &point0, &point1);
+    for (vglyph_sint_t part = 0; part < part_count; ++part)
+    {
+        theta0 = theta_0 + d * (vglyph_float32_t)part;
+        theta1 = theta0 + d_div_3;
+        theta2 = theta0 + d_div_3_mul_2;
+        theta3 = theta0 + d;
 
-    const vglyph_float32_t rx = radius->x;
-    const vglyph_float32_t ry = radius->y;
+        _vglyph_figure_arc(&point0, radius, center, cos_fi, sin_fi, theta0);
+        _vglyph_figure_arc(&point1, radius, center, cos_fi, sin_fi, theta1);
+        _vglyph_figure_arc(&point2, radius, center, cos_fi, sin_fi, theta2);
+        _vglyph_figure_arc(&point3, radius, center, cos_fi, sin_fi, theta3);
 
-    const vglyph_float32_t x = sqrtf(rx * rx * cos_fi * cos_fi + ry * ry * sin_fi * sin_fi);
-    const vglyph_float32_t y = sqrtf(rx * rx * sin_fi * sin_fi + ry * ry * cos_fi * cos_fi);
+        _vglyph_figure_arc_point_to_bezier(&point1, 
+                                           &point2, 
+                                           &point0, 
+                                           &point1, 
+                                           &point2, 
+                                           &point3);
 
-    const vglyph_float32_t left   = center->x - x;
-    const vglyph_float32_t top    = center->y - y;
-    const vglyph_float32_t right  = center->x + x;
-    const vglyph_float32_t bottom = center->y + y;
+        _vglyph_figure_get_cubic_bezier_rectangle(&bound, &point0, &point1, &point2, &point3);
 
-    //float a = acosf(cos_fi);
-    //
-    //const vglyph_float32_t pi = 3.14159265358979323846f;
-    //
-    //_vglyph_figure_arc(&point0, radius, center, cos_fi, sin_fi, 0 + a);
-    //_vglyph_figure_arc(&point1, radius, center, cos_fi, sin_fi, pi / 2 + a);
-    //
-    //_vglyph_rectangle_from_points(rectangle, &point0, &point1);
-
-    //const vglyph_float32_t rx = radius->x;
-    //const vglyph_float32_t ry = radius->y;
-    //
-    //const vglyph_float32_t x = sqrtf(rx * rx * cos_fi * cos_fi + ry * ry * sin_fi * sin_fi);
-    //const vglyph_float32_t y = sqrtf(rx * rx * sin_fi * sin_fi + ry * ry * cos_fi * cos_fi);
-    //
-    //const vglyph_float32_t theta_1 = atan2f(y, x);
-
-    //_vglyph_figure_arc
-
-    //rectangle->left = floorf(center->x - x) - 0.5f;
-    //rectangle->top = floorf(center->y - y) - 0.5f;
-    //rectangle->right = floorf(center->x + x) + 0.5f;
-    //rectangle->bottom = floorf(center->y + y) + 0.5f;
+        if (part == 0)
+            *rectangle = bound;
+        else
+            _vglyph_rectangle_union(rectangle, rectangle, &bound);
+    }
 
     return rectangle;
 }
