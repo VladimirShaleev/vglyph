@@ -434,7 +434,7 @@ _vglyph_figure_get_arc_rectangle(vglyph_rectangle_t* rectangle,
     const vglyph_float32_t d_div_3       = d / 3.0f;
     const vglyph_float32_t d_div_3_mul_2 = d_div_3 * 2.0f;
 
-    vglyph_float32_t theta0;
+    vglyph_float32_t theta_start;
     vglyph_float32_t theta1;
     vglyph_float32_t theta2;
     vglyph_float32_t theta3;
@@ -446,14 +446,16 @@ _vglyph_figure_get_arc_rectangle(vglyph_rectangle_t* rectangle,
 
     vglyph_rectangle_t bound;
 
+    _vglyph_figure_arc(&point0, radius, center, cos_fi, sin_fi, theta_0);
+
     for (vglyph_sint_t part = 0; part < part_count; ++part)
     {
-        theta0 = theta_0 + d * (vglyph_float32_t)part;
-        theta1 = theta0 + d_div_3;
-        theta2 = theta0 + d_div_3_mul_2;
-        theta3 = theta0 + d;
+        theta_start = theta_0 + d * (vglyph_float32_t)part;
 
-        _vglyph_figure_arc(&point0, radius, center, cos_fi, sin_fi, theta0);
+        theta1 = theta_start + d_div_3;
+        theta2 = theta_start + d_div_3_mul_2;
+        theta3 = theta_start + d;
+
         _vglyph_figure_arc(&point1, radius, center, cos_fi, sin_fi, theta1);
         _vglyph_figure_arc(&point2, radius, center, cos_fi, sin_fi, theta2);
         _vglyph_figure_arc(&point3, radius, center, cos_fi, sin_fi, theta3);
@@ -471,6 +473,8 @@ _vglyph_figure_get_arc_rectangle(vglyph_rectangle_t* rectangle,
             *rectangle = bound;
         else
             _vglyph_rectangle_union(rectangle, rectangle, &bound);
+
+        point0 = point3;
     }
 
     return rectangle;
