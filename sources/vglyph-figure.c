@@ -538,7 +538,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
             case VGLYPH_SEGMENT_CLOSEPATH:
                 path_closed = TRUE;
                 point = start_point;
-                goto FIGURE_GET_BOUND_NEXT_SEGMENT;
+                goto NEXT_SEGMENT;
 
             case VGLYPH_SEGMENT_MOVETO_ABS:
             case VGLYPH_SEGMENT_MOVETO_REL:
@@ -552,7 +552,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
                     path_closed = FALSE;
                     start_point = point;
 
-                    goto FIGURE_GET_BOUND_NEXT_SEGMENT;
+                    goto NEXT_SEGMENT;
                 }
                 else
                 {
@@ -645,7 +645,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
 
         _vglyph_figure_bound_union(figure, &bound);
 
-    FIGURE_GET_BOUND_NEXT_SEGMENT:
+    NEXT_SEGMENT:
         prev_point = point;
         figure->compute_bound_offset += sizeof(vglyph_segment_type_t);
     }
@@ -722,8 +722,8 @@ vglyph_figure_draw_closepath(vglyph_figure_t* figure)
 
     if (_vglyph_figure_is_valid(figure))
     {
-#undef  VGLYPH_RESULT_TYPE
-#define VGLYPH_RESULT_TYPE vglyph_segment_closepath_t
+    #undef  VGLYPH_RESULT_TYPE
+    #define VGLYPH_RESULT_TYPE vglyph_segment_closepath_t
 
         VGLYPH_RESULT_TYPE* result;
         _vglyph_figure_add_segment(
