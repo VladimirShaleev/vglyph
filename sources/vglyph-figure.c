@@ -598,20 +598,25 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
                                             &((vglyph_segment_arc_t*)segment)->point, 
                                             segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS);
 
-                _vglyph_figure_get_arc_params(&radius, 
-                                              &center, 
-                                              &cos_fi, 
-                                              &sin_fi, 
-                                              &theta_0, 
-                                              &theta_d,
-                                              &prev_point, 
-                                              &point, 
-                                              &((vglyph_segment_arc_t*)segment)->radius, 
-                                              ((vglyph_segment_arc_t*)segment)->angle * degree_to_radians, 
-                                              ((vglyph_segment_arc_t*)segment)->large_arc_flag,
-                                              ((vglyph_segment_arc_t*)segment)->sweep_flag);
-
-                _vglyph_figure_get_arc_rectangle(&bound, &radius, &center, cos_fi, sin_fi, theta_0, theta_d);
+                if (_vglyph_figure_get_arc_params(&radius,
+                                                  &center,
+                                                  &cos_fi,
+                                                  &sin_fi,
+                                                  &theta_0,
+                                                  &theta_d,
+                                                  &prev_point,
+                                                  &point,
+                                                  &((vglyph_segment_arc_t*)segment)->radius,
+                                                  ((vglyph_segment_arc_t*)segment)->angle * degree_to_radians,
+                                                  ((vglyph_segment_arc_t*)segment)->large_arc_flag,
+                                                  ((vglyph_segment_arc_t*)segment)->sweep_flag))
+                {
+                    _vglyph_figure_get_arc_rectangle(&bound, &radius, &center, cos_fi, sin_fi, theta_0, theta_d);
+                }
+                else
+                {
+                    _vglyph_rectangle_from_points(&bound, &prev_point, &point);
+                }
                 break;
 
             case VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS:
