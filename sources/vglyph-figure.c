@@ -324,13 +324,14 @@ _vglyph_figure_get_arc_params(vglyph_point_t* result_radius,
     const vglyph_float32_t p_x_pow_2 = p_x * p_x;
     const vglyph_float32_t p_y_pow_2 = p_y * p_y;
 
+    const vglyph_float32_t k_error = 1.001f;
     const vglyph_float32_t lambda = 
         p_x_pow_2 / radius_x_pow_2 + 
         p_y_pow_2 / radius_y_pow_2;
 
-    if (lambda > 1.0f)
+    if (lambda * k_error > 1.0f)
     {
-        const vglyph_float32_t lambda_sqrt = sqrtf(lambda);
+        const vglyph_float32_t lambda_sqrt = sqrtf(lambda * k_error);
         radius_x *= lambda_sqrt;
         radius_y *= lambda_sqrt;
 

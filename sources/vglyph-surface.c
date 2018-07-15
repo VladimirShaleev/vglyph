@@ -486,7 +486,7 @@ _vglyph_surface_draw_polygon(vglyph_surface_t* surface,
 
                     for (; i < intersections_count; ++i)
                     {
-                        if (x_i >= intersections[i] - 0.00001f && x_i <= intersections[i] + 0.00001f)
+                        if (x_i >= intersections[i] - 0.00001f && x_i <= intersections[i] + 0.00001f && x_i != intersections[i])
                             goto NEXT;
 
                         if (x_i < intersections[i])
