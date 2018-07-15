@@ -466,12 +466,11 @@ int main(int argc, char* argv[])
     //vglyph_figure_draw_arc(figure, VGLYPH_COORDINATE_RELATIVE, , , 30.0f, 0, 0);
     //vglyph_figure_draw_closepath(figure);
 
-    vglyph_point_t p0 = { 0.5f, 0.5f };
+    vglyph_point_t p0 = { 0.25f, 0.5f };
     vglyph_point_t p1 = { 0.25f, -0.20f };
     vglyph_point_t r  = { 0.25f, 0.16666666666666666666666666666667f };
 
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &p0);
-    vglyph_figure_draw_lineto_horizontal(figure, VGLYPH_COORDINATE_RELATIVE, -0.25f);
     vglyph_figure_draw_arc(figure, VGLYPH_COORDINATE_RELATIVE, &p1, &r, -30.0f, 1, 0);
     vglyph_figure_draw_closepath(figure);
 

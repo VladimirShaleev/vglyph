@@ -134,6 +134,80 @@ _vglyph_figure_arc_point_to_bezier(vglyph_point_t* result_point1,
     *result_point2 = result2;
 }
 
+static void
+_vglyph_figure_get_arc_length_and_rect(vglyph_float32_t* length,
+                                       vglyph_rectangle_t* rectangle,
+                                       const vglyph_point_t* radius,
+                                       const vglyph_point_t* center,
+                                       vglyph_float32_t cos_fi,
+                                       vglyph_float32_t sin_fi,
+                                       vglyph_float32_t theta_0,
+                                       vglyph_float32_t theta_d)
+{
+    assert(radius);
+    assert(center);
+    assert(radius->x != 0.0f);
+    assert(radius->y != 0.0f);
+
+    if (length)
+        *length = 0.0f;
+
+    const vglyph_sint_t part_count = 8;
+
+    const vglyph_float32_t d             = theta_d / part_count;
+    const vglyph_float32_t d_div_3       = d / 3.0f;
+    const vglyph_float32_t d_div_3_mul_2 = d_div_3 * 2.0f;
+
+    vglyph_float32_t theta_start;
+    vglyph_float32_t theta1;
+    vglyph_float32_t theta2;
+    vglyph_float32_t theta3;
+
+    vglyph_point_t point0;
+    vglyph_point_t point1;
+    vglyph_point_t point2;
+    vglyph_point_t point3;
+
+    vglyph_rectangle_t bound;
+
+    _vglyph_figure_arc(&point0, radius, center, cos_fi, sin_fi, theta_0);
+
+    for (vglyph_sint_t part = 0; part < part_count; ++part)
+    {
+        theta_start = theta_0 + d * (vglyph_float32_t)part;
+
+        theta1 = theta_start + d_div_3;
+        theta2 = theta_start + d_div_3_mul_2;
+        theta3 = theta_start + d;
+
+        _vglyph_figure_arc(&point1, radius, center, cos_fi, sin_fi, theta1);
+        _vglyph_figure_arc(&point2, radius, center, cos_fi, sin_fi, theta2);
+        _vglyph_figure_arc(&point3, radius, center, cos_fi, sin_fi, theta3);
+
+        _vglyph_figure_arc_point_to_bezier(&point1, 
+                                           &point2, 
+                                           &point0, 
+                                           &point1, 
+                                           &point2, 
+                                           &point3);
+
+        if (length)
+            *length += _vglyph_figure_get_cubic_bezier_length(&point0, &point1, &point2, &point3);
+
+        if (rectangle)
+        {
+            _vglyph_figure_get_cubic_bezier_rectangle(&bound, &point0, &point1, &point2, &point3);
+
+            if (part == 0)
+                *rectangle = bound;
+            else
+                _vglyph_rectangle_union(rectangle, rectangle, &bound);
+        }
+
+        point0 = point3;
+    }
+}
+
 static vglyph_bool_t
 _vglyph_figure_cubic_bezier_min_max_t(vglyph_float32_t* t1,
                                       vglyph_float32_t* t2,
@@ -346,6 +420,52 @@ _vglyph_figure_arc(vglyph_point_t* result,
     return result;
 }
 
+vglyph_float32_t
+_vglyph_figure_get_cubic_bezier_length(const vglyph_point_t* point0,
+                                       const vglyph_point_t* point1,
+                                       const vglyph_point_t* point2,
+                                       const vglyph_point_t* point3)
+{
+
+    vglyph_point_t v01;
+    vglyph_point_t v12;
+    vglyph_point_t v23;
+    vglyph_point_t v03;
+
+    vglyph_float32_t length01 = _vglyph_point_length(_vglyph_point_sub(&v01, point1, point0));
+    vglyph_float32_t length12 = _vglyph_point_length(_vglyph_point_sub(&v12, point2, point1));
+    vglyph_float32_t length23 = _vglyph_point_length(_vglyph_point_sub(&v23, point3, point2));
+    vglyph_float32_t length03 = _vglyph_point_length(_vglyph_point_sub(&v03, point3, point0));
+    vglyph_float32_t length   = (length01 + length12 + length23 + length03) * 0.5f;
+
+    return length;
+}
+
+vglyph_float32_t
+_vglyph_figure_get_arc_length(const vglyph_point_t* radius,
+                              const vglyph_point_t* center,
+                              vglyph_float32_t cos_fi,
+                              vglyph_float32_t sin_fi,
+                              vglyph_float32_t theta_0,
+                              vglyph_float32_t theta_d)
+{
+    assert(radius);
+    assert(center);
+    assert(radius->x != 0.0f);
+    assert(radius->y != 0.0f);
+
+    vglyph_float32_t length;
+    _vglyph_figure_get_arc_length_and_rect(&length, 
+                                           NULL, 
+                                           radius, 
+                                           center, 
+                                           cos_fi, 
+                                           sin_fi, 
+                                           theta_0, 
+                                           theta_d);
+    return length;
+}
+
 vglyph_rectangle_t*
 _vglyph_figure_get_line_rectangle(vglyph_rectangle_t* rectangle,
                                   const vglyph_point_t* point0,
@@ -428,55 +548,14 @@ _vglyph_figure_get_arc_rectangle(vglyph_rectangle_t* rectangle,
     assert(radius->x != 0.0f);
     assert(radius->y != 0.0f);
 
-    const vglyph_sint_t part_count = 8;
-
-    const vglyph_float32_t d             = theta_d / part_count;
-    const vglyph_float32_t d_div_3       = d / 3.0f;
-    const vglyph_float32_t d_div_3_mul_2 = d_div_3 * 2.0f;
-
-    vglyph_float32_t theta_start;
-    vglyph_float32_t theta1;
-    vglyph_float32_t theta2;
-    vglyph_float32_t theta3;
-
-    vglyph_point_t point0;
-    vglyph_point_t point1;
-    vglyph_point_t point2;
-    vglyph_point_t point3;
-
-    vglyph_rectangle_t bound;
-
-    _vglyph_figure_arc(&point0, radius, center, cos_fi, sin_fi, theta_0);
-
-    for (vglyph_sint_t part = 0; part < part_count; ++part)
-    {
-        theta_start = theta_0 + d * (vglyph_float32_t)part;
-
-        theta1 = theta_start + d_div_3;
-        theta2 = theta_start + d_div_3_mul_2;
-        theta3 = theta_start + d;
-
-        _vglyph_figure_arc(&point1, radius, center, cos_fi, sin_fi, theta1);
-        _vglyph_figure_arc(&point2, radius, center, cos_fi, sin_fi, theta2);
-        _vglyph_figure_arc(&point3, radius, center, cos_fi, sin_fi, theta3);
-
-        _vglyph_figure_arc_point_to_bezier(&point1, 
-                                           &point2, 
-                                           &point0, 
-                                           &point1, 
-                                           &point2, 
-                                           &point3);
-
-        _vglyph_figure_get_cubic_bezier_rectangle(&bound, &point0, &point1, &point2, &point3);
-
-        if (part == 0)
-            *rectangle = bound;
-        else
-            _vglyph_rectangle_union(rectangle, rectangle, &bound);
-
-        point0 = point3;
-    }
-
+    _vglyph_figure_get_arc_length_and_rect(NULL, 
+                                           rectangle, 
+                                           radius, 
+                                           center, 
+                                           cos_fi, 
+                                           sin_fi, 
+                                           theta_0, 
+                                           theta_d);
     return rectangle;
 }
 
