@@ -275,6 +275,38 @@ _vglyph_figure_cubic_bezier(vglyph_point_t* result,
     return result;
 }
 
+vglyph_point_t*
+_vglyph_figure_quadratic_bezier(vglyph_point_t* result,
+                                const vglyph_point_t* point0,
+                                const vglyph_point_t* point1,
+                                const vglyph_point_t* point2,
+                                vglyph_float32_t t)
+{
+    assert(result);
+    assert(point0);
+    assert(point1);
+    assert(point2);
+
+    vglyph_float32_t t_pow_1 = t;
+    vglyph_float32_t t_pow_2 = t_pow_1 * t_pow_1;
+
+    vglyph_float32_t inv_t_pow_1 = 1.0f - t;
+    vglyph_float32_t inv_t_pow_2 = inv_t_pow_1 * inv_t_pow_1;
+
+    vglyph_point_t p0;
+    vglyph_point_t p1;
+    vglyph_point_t p2;
+
+    _vglyph_point_mul(&p0, point0,                  inv_t_pow_2);
+    _vglyph_point_mul(&p1, point1, 2.0f * t_pow_1 * inv_t_pow_1);
+    _vglyph_point_mul(&p2, point2,        t_pow_2);
+
+    _vglyph_point_add(result, &p0,    &p1);
+    _vglyph_point_add(result, result, &p2);
+
+    return result;
+}
+
 vglyph_bool_t
 _vglyph_figure_get_arc_params(vglyph_point_t* result_radius,
                               vglyph_point_t* result_center,
@@ -427,6 +459,10 @@ _vglyph_figure_get_cubic_bezier_length(const vglyph_point_t* point0,
                                        const vglyph_point_t* point2,
                                        const vglyph_point_t* point3)
 {
+    assert(point0);
+    assert(point1);
+    assert(point2);
+    assert(point3);
 
     vglyph_point_t v01;
     vglyph_point_t v12;
@@ -438,6 +474,28 @@ _vglyph_figure_get_cubic_bezier_length(const vglyph_point_t* point0,
     vglyph_float32_t length23 = _vglyph_point_length(_vglyph_point_sub(&v23, point3, point2));
     vglyph_float32_t length03 = _vglyph_point_length(_vglyph_point_sub(&v03, point3, point0));
     vglyph_float32_t length   = (length01 + length12 + length23 + length03) * 0.5f;
+
+    return length;
+}
+
+vglyph_float32_t
+_vglyph_figure_get_quadratic_bezier_length(const vglyph_point_t* point0,
+                                           const vglyph_point_t* point1,
+                                           const vglyph_point_t* point2)
+{
+    assert(point0);
+    assert(point1);
+    assert(point2);
+
+    vglyph_point_t v01;
+    vglyph_point_t v12;
+    vglyph_point_t v23;
+    vglyph_point_t v03;
+
+    vglyph_float32_t length01 = _vglyph_point_length(_vglyph_point_sub(&v01, point1, point0));
+    vglyph_float32_t length12 = _vglyph_point_length(_vglyph_point_sub(&v12, point2, point1));
+    vglyph_float32_t length02 = _vglyph_point_length(_vglyph_point_sub(&v23, point2, point0));
+    vglyph_float32_t length   = (length01 + length12 + length02) * 0.5f;
 
     return length;
 }
@@ -530,6 +588,20 @@ _vglyph_figure_get_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
             _vglyph_rectangle_add_point(rectangle, rectangle, &point);
         }
     }
+
+    return rectangle;
+}
+
+vglyph_rectangle_t*
+_vglyph_figure_get_quadratic_bezier_rectangle(vglyph_rectangle_t* rectangle,
+                                              const vglyph_point_t* point0,
+                                              const vglyph_point_t* point1,
+                                              const vglyph_point_t* point2)
+{
+    assert(rectangle);
+    assert(point0);
+    assert(point1);
+    assert(point2);
 
     return rectangle;
 }

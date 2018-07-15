@@ -36,6 +36,13 @@ _vglyph_figure_cubic_bezier(vglyph_point_t* result,
                             const vglyph_point_t* point3,
                             vglyph_float32_t t);
 
+vglyph_point_t*
+_vglyph_figure_quadratic_bezier(vglyph_point_t* result,
+                                const vglyph_point_t* point0,
+                                const vglyph_point_t* point1,
+                                const vglyph_point_t* point2,
+                                vglyph_float32_t t);
+
 vglyph_bool_t
 _vglyph_figure_get_arc_params(vglyph_point_t* result_radius,
                               vglyph_point_t* result_center,
@@ -65,6 +72,11 @@ _vglyph_figure_get_cubic_bezier_length(const vglyph_point_t* point0,
                                        const vglyph_point_t* point3);
 
 vglyph_float32_t
+_vglyph_figure_get_quadratic_bezier_length(const vglyph_point_t* point0,
+                                           const vglyph_point_t* point1,
+                                           const vglyph_point_t* point2);
+
+vglyph_float32_t
 _vglyph_figure_get_arc_length(const vglyph_point_t* radius,
                               const vglyph_point_t* center,
                               vglyph_float32_t cos_fi,
@@ -83,6 +95,12 @@ _vglyph_figure_get_cubic_bezier_rectangle(vglyph_rectangle_t* rectangle,
                                           const vglyph_point_t* point1,
                                           const vglyph_point_t* point2,
                                           const vglyph_point_t* point3);
+
+vglyph_rectangle_t*
+_vglyph_figure_get_quadratic_bezier_rectangle(vglyph_rectangle_t* rectangle,
+                                              const vglyph_point_t* point0,
+                                              const vglyph_point_t* point1,
+                                              const vglyph_point_t* point2);
 
 vglyph_rectangle_t*
 _vglyph_figure_get_arc_rectangle(vglyph_rectangle_t* rectangle,
