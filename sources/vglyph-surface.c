@@ -209,20 +209,14 @@ _vglyph_surface_arc(vglyph_surface_t* surface,
     const vglyph_float32_t dt = theta_d / count_part;
 
     vglyph_float32_t theta;
-    vglyph_float32_t radius_x_cos_theta;
-    vglyph_float32_t radius_y_sin_theta;
     vglyph_point_t   point;
 
     for (vglyph_uint32_t part = 1; part <= count_part; ++part)
     {
         theta = theta_0 + (part == count_part ? theta_d : dt * part);
 
-        radius_x_cos_theta = radius.x * cosf(theta);
-        radius_y_sin_theta = radius.y * sinf(theta);
-    
-        point.x = cos_fi * radius_x_cos_theta - sin_fi * radius_y_sin_theta + center.x;
-        point.y = sin_fi * radius_x_cos_theta + cos_fi * radius_y_sin_theta + center.y;
-    
+        _vglyph_figure_arc(&point, &radius, &center, cos_fi, sin_fi, theta);
+
         state = _vglyph_surface_add_point(points, &point);
 
         if (state != VGLYPH_STATE_SUCCESS)
