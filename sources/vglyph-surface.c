@@ -149,6 +149,66 @@ _vglyph_surface_curveto_cubic(vglyph_surface_t* surface,
     return state;
 }
 
+static vglyph_state_t
+_vglyph_surface_curveto_quadratic(vglyph_surface_t* surface,
+                                  const vglyph_segment_curveto_quadratic_t* segment,
+                                  vglyph_bool_t relative,
+                                  vglyph_vector_t* points,
+                                  vglyph_point_t* prev_point)
+{
+    vglyph_render_t* render = surface->render;
+    vglyph_state_t   state  = VGLYPH_STATE_SUCCESS;
+
+    vglyph_point_t start  = *prev_point;
+    vglyph_point_t end    = segment->point;
+    vglyph_point_t point1 = segment->point1;
+
+    _vglyph_surface_offset_point(&end,    surface, relative, prev_point);
+    _vglyph_surface_offset_point(&point1, surface, relative, prev_point);
+
+    *prev_point = end;
+
+    const vglyph_float32_t length = 
+        _vglyph_figure_get_quadratic_bezier_length(&start, &point1, &end);
+
+    const vglyph_float32_t dt = 1.0f / length * 4.0f;
+
+    vglyph_point_t old_point = start;
+    vglyph_point_t new_point;
+
+    vglyph_bool_t b_end = FALSE;
+
+    for (vglyph_float32_t t = dt;; t += dt)
+    {
+        if (t >= 1.0f)
+        {
+            t = 1.0f;
+            b_end = TRUE;
+        }
+
+        _vglyph_figure_quadratic_bezier(&new_point, &start, &point1, &end, t);
+
+        vglyph_point_t v;
+        _vglyph_point_sub(&v, &new_point, &old_point);
+
+        const vglyph_float32_t line_length = _vglyph_point_length(&v);
+
+        if (!b_end && line_length < 1.0f)
+            continue;
+
+        state = _vglyph_surface_add_point(points, &new_point);
+        old_point = new_point;
+
+        if (state != VGLYPH_STATE_SUCCESS)
+            return state;
+
+        if (b_end)
+            break;
+    }
+
+    return state;
+}
+
 static vglyph_state_t 
 _vglyph_surface_arc(vglyph_surface_t* surface,
                     const vglyph_segment_arc_t* segment,
@@ -337,6 +397,11 @@ _vglyph_surface_segment_to_lines(vglyph_surface_t* surface,
 
         case VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS:
         case VGLYPH_SEGMENT_CURVETO_QUADRATIC_REL:
+            return _vglyph_surface_curveto_quadratic(surface,
+                                                     (vglyph_segment_curveto_quadratic_t*)segment,
+                                                     segment_type - VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS,
+                                                     points,
+                                                     prev_point);
             break;
 
         case VGLYPH_SEGMENT_ARC_ABS:

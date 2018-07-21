@@ -236,6 +236,24 @@ _vglyph_figure_cubic_bezier_min_max_t(vglyph_float32_t* t1,
     return FALSE;
 }
 
+static vglyph_bool_t
+_vglyph_figure_quadratic_bezier_min_max_t(vglyph_float32_t* t,
+                                          vglyph_float32_t x0,
+                                          vglyph_float32_t x1,
+                                          vglyph_float32_t x2)
+{
+    const vglyph_float32_t x10 = x1  - x0;
+    const vglyph_float32_t D   = x10 - x2 + x1;
+
+    if (D != 0.0f)
+    {
+        *t = x10 / D;
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 vglyph_point_t*
 _vglyph_figure_cubic_bezier(vglyph_point_t* result,
                             const vglyph_point_t* point0,
@@ -489,12 +507,11 @@ _vglyph_figure_get_quadratic_bezier_length(const vglyph_point_t* point0,
 
     vglyph_point_t v01;
     vglyph_point_t v12;
-    vglyph_point_t v23;
-    vglyph_point_t v03;
+    vglyph_point_t v02;
 
     vglyph_float32_t length01 = _vglyph_point_length(_vglyph_point_sub(&v01, point1, point0));
     vglyph_float32_t length12 = _vglyph_point_length(_vglyph_point_sub(&v12, point2, point1));
-    vglyph_float32_t length02 = _vglyph_point_length(_vglyph_point_sub(&v23, point2, point0));
+    vglyph_float32_t length02 = _vglyph_point_length(_vglyph_point_sub(&v02, point2, point0));
     vglyph_float32_t length   = (length01 + length12 + length02) * 0.5f;
 
     return length;
@@ -602,6 +619,32 @@ _vglyph_figure_get_quadratic_bezier_rectangle(vglyph_rectangle_t* rectangle,
     assert(point0);
     assert(point1);
     assert(point2);
+
+    vglyph_float32_t t;
+
+    _vglyph_rectangle_from_points(rectangle, point0, point2);
+
+    if (_vglyph_figure_quadratic_bezier_min_max_t(&t, point0->x, point1->x, point2->x))
+    {
+        vglyph_point_t point;
+
+        if (t >= 0.0f && t <= 1.0f)
+        {
+            _vglyph_figure_quadratic_bezier(&point, point0, point1, point2, t);
+            _vglyph_rectangle_add_point(rectangle, rectangle, &point);
+        }
+    }
+
+    if (_vglyph_figure_quadratic_bezier_min_max_t(&t, point0->y, point1->y, point2->y))
+    {
+        vglyph_point_t point;
+
+        if (t >= 0.0f && t <= 1.0f)
+        {
+            _vglyph_figure_quadratic_bezier(&point, point0, point1, point2, t);
+            _vglyph_rectangle_add_point(rectangle, rectangle, &point);
+        }
+    }
 
     return rectangle;
 }
@@ -741,6 +784,16 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
 
             case VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS:
             case VGLYPH_SEGMENT_CURVETO_QUADRATIC_REL:
+                _vglyph_figure_offset_point(&point,
+                                            &prev_point, 
+                                            &((vglyph_segment_curveto_quadratic_t*)segment)->point, 
+                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS);
+                _vglyph_figure_offset_point(&point1,
+                                            &prev_point, 
+                                            &((vglyph_segment_curveto_quadratic_t*)segment)->point1, 
+                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS);
+
+                _vglyph_figure_get_quadratic_bezier_rectangle(&bound, &prev_point, &point1, &point);
                 break;
 
             case VGLYPH_SEGMENT_ARC_ABS:
