@@ -331,7 +331,11 @@ _vglyph_surface_curveto_cubic_smooth(vglyph_surface_t* surface,
                                      vglyph_point_t* control_point)
 {
     vglyph_point_t v;
-    _vglyph_point_sub(&v, prev_point, control_point);
+
+    if (control_point->x != control_point->x)
+        _vglyph_point_from_coord(&v, 0.0f, 0.0f);
+    else
+        _vglyph_point_sub(&v, prev_point, control_point);
 
     if (!relative)
         _vglyph_point_add(&v, prev_point, &v);
@@ -361,7 +365,11 @@ _vglyph_surface_curveto_quadratic_smooth(vglyph_surface_t* surface,
                                          vglyph_point_t* control_point)
 {
     vglyph_point_t v;
-    _vglyph_point_sub(&v, prev_point, control_point);
+
+    if (control_point->x != control_point->x)
+        _vglyph_point_from_coord(&v, 0.0f, 0.0f);
+    else
+        _vglyph_point_sub(&v, prev_point, control_point);
 
     if (!relative)
         _vglyph_point_add(&v, prev_point, &v);

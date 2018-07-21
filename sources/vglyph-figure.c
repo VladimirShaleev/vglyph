@@ -704,6 +704,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
     vglyph_rectangle_t bound;
     vglyph_point_t prev_point;
     vglyph_point_t start_point;
+    vglyph_point_t control_point;
     vglyph_point_t point;
     vglyph_point_t point1;
     vglyph_point_t point2;
@@ -717,6 +718,8 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
 
     prev_point.x = 0.0f;
     prev_point.y = 0.0f;
+    control_point.x = NAN;
+    control_point.y = NAN;
 
     figure->compute_bound_offset = 0;
     _vglyph_rectangle_from_coord(&figure->bound, 0.0f, 0.0f, 0.0f, 0.0f);
@@ -727,6 +730,12 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
             _vglyph_vector_at(figure->segment_types, figure->compute_bound_offset);
 
         segment = _vglyph_vector_at(figure->segments, segment_type->offset);   
+
+        if ((segment_type->segment < VGLYPH_SEGMENT_CURVETO_CUBIC_ABS || 
+             segment_type->segment > VGLYPH_SEGMENT_CURVETO_QUADRATIC_REL) &&
+            (segment_type->segment < VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS || 
+             segment_type->segment > VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_REL))
+            _vglyph_point_from_coord(&control_point, NAN, NAN);
 
         switch (segment_type->segment)
         {
@@ -779,6 +788,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
                                             &((vglyph_segment_curveto_cubic_t*)segment)->point2, 
                                             segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS);
 
+                control_point = point2;
                 _vglyph_figure_get_cubic_bezier_rectangle(&bound, &prev_point, &point1, &point2, &point);
                 break;
 
@@ -787,12 +797,13 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
                 _vglyph_figure_offset_point(&point,
                                             &prev_point, 
                                             &((vglyph_segment_curveto_quadratic_t*)segment)->point, 
-                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS);
+                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS);
                 _vglyph_figure_offset_point(&point1,
                                             &prev_point, 
                                             &((vglyph_segment_curveto_quadratic_t*)segment)->point1, 
-                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS);
+                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS);
 
+                control_point = point1;
                 _vglyph_figure_get_quadratic_bezier_rectangle(&bound, &prev_point, &point1, &point);
                 break;
 
@@ -801,7 +812,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
                 _vglyph_figure_offset_point(&point,
                                             &prev_point, 
                                             &((vglyph_segment_arc_t*)segment)->point, 
-                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS);
+                                            segment_type->segment - VGLYPH_SEGMENT_ARC_ABS);
 
                 if (_vglyph_figure_get_arc_params(&radius,
                                                   &center,
@@ -837,7 +848,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
             case VGLYPH_SEGMENT_LINETO_VERTICAL_ABS:
             case VGLYPH_SEGMENT_LINETO_VERTICAL_REL:
                 point.x = prev_point.x;
-                point.y = segment_type->segment - VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS ?
+                point.y = segment_type->segment - VGLYPH_SEGMENT_LINETO_VERTICAL_ABS ?
                     ((vglyph_segment_lineto_vertical_t*)segment)->y + prev_point.y :
                     ((vglyph_segment_lineto_vertical_t*)segment)->y;
 
@@ -846,10 +857,42 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
 
             case VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS:
             case VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_REL:
+                _vglyph_figure_offset_point(&point,
+                                            &prev_point, 
+                                            &((vglyph_segment_curveto_cubic_smooth_t*)segment)->point, 
+                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS);
+                _vglyph_figure_offset_point(&point2,
+                                            &prev_point, 
+                                            &((vglyph_segment_curveto_cubic_smooth_t*)segment)->point2, 
+                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS);
+
+                if (control_point.x != control_point.x)
+                    _vglyph_point_from_coord(&point1, 0.0f, 0.0f);
+                else
+                    _vglyph_point_sub(&point1, &prev_point, &control_point);
+
+                _vglyph_point_add(&point1, &prev_point, &point1);
+                control_point = point2;
+
+                _vglyph_figure_get_cubic_bezier_rectangle(&bound, &prev_point, &point1, &point2, &point);
                 break;
 
             case VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_ABS:
             case VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_REL:
+                _vglyph_figure_offset_point(&point,
+                                            &prev_point, 
+                                            &((vglyph_segment_curveto_quadratic_smooth_t*)segment)->point, 
+                                            segment_type->segment - VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_ABS);
+
+                if (control_point.x != control_point.x)
+                    _vglyph_point_from_coord(&point1, 0.0f, 0.0f);
+                else
+                    _vglyph_point_sub(&point1, &prev_point, &control_point);
+
+                _vglyph_point_add(&point1, &prev_point, &point1);
+                control_point = point1;
+
+                _vglyph_figure_get_quadratic_bezier_rectangle(&bound, &prev_point, &point1, &point);
                 break;
         }
 
