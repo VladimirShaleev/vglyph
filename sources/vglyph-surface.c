@@ -92,7 +92,8 @@ _vglyph_surface_curveto_cubic(vglyph_surface_t* surface,
                               const vglyph_segment_curveto_cubic_t* segment,
                               vglyph_bool_t relative,
                               vglyph_vector_t* points,
-                              vglyph_point_t* prev_point)
+                              vglyph_point_t* prev_point,
+                              vglyph_point_t* control_point)
 {
     vglyph_render_t* render = surface->render;
     vglyph_state_t   state  = VGLYPH_STATE_SUCCESS;
@@ -107,6 +108,7 @@ _vglyph_surface_curveto_cubic(vglyph_surface_t* surface,
     _vglyph_surface_offset_point(&point2, surface, relative, prev_point);
 
     *prev_point = end;
+    *control_point = point2;
 
     const vglyph_float32_t length = 
         _vglyph_figure_get_cubic_bezier_length(&start, &point1, &point2, &end);
@@ -154,7 +156,8 @@ _vglyph_surface_curveto_quadratic(vglyph_surface_t* surface,
                                   const vglyph_segment_curveto_quadratic_t* segment,
                                   vglyph_bool_t relative,
                                   vglyph_vector_t* points,
-                                  vglyph_point_t* prev_point)
+                                  vglyph_point_t* prev_point,
+                                  vglyph_point_t* control_point)
 {
     vglyph_render_t* render = surface->render;
     vglyph_state_t   state  = VGLYPH_STATE_SUCCESS;
@@ -167,6 +170,7 @@ _vglyph_surface_curveto_quadratic(vglyph_surface_t* surface,
     _vglyph_surface_offset_point(&point1, surface, relative, prev_point);
 
     *prev_point = end;
+    *control_point = point1;
 
     const vglyph_float32_t length = 
         _vglyph_figure_get_quadratic_bezier_length(&start, &point1, &end);
@@ -319,13 +323,73 @@ _vglyph_surface_lineto_vertical(vglyph_surface_t* surface,
 }
 
 static vglyph_state_t
+_vglyph_surface_curveto_cubic_smooth(vglyph_surface_t* surface,
+                                     const vglyph_segment_curveto_cubic_smooth_t* segment,
+                                     vglyph_bool_t relative,
+                                     vglyph_vector_t* points,
+                                     vglyph_point_t* prev_point,
+                                     vglyph_point_t* control_point)
+{
+    vglyph_point_t v;
+    _vglyph_point_sub(&v, prev_point, control_point);
+
+    if (!relative)
+        _vglyph_point_add(&v, prev_point, &v);
+
+    v.x /= surface->width;
+    v.y /= surface->height;
+
+    vglyph_segment_curveto_cubic_t cubic_segment;
+    cubic_segment.point  = segment->point;
+    cubic_segment.point1 = v;
+    cubic_segment.point2 = segment->point2;
+
+    return _vglyph_surface_curveto_cubic(surface,
+                                         &cubic_segment,
+                                         relative,
+                                         points,
+                                         prev_point,
+                                         control_point);
+}
+
+static vglyph_state_t
+_vglyph_surface_curveto_quadratic_smooth(vglyph_surface_t* surface,
+                                         const vglyph_segment_curveto_quadratic_smooth_t* segment,
+                                         vglyph_bool_t relative,
+                                         vglyph_vector_t* points,
+                                         vglyph_point_t* prev_point,
+                                         vglyph_point_t* control_point)
+{
+    vglyph_point_t v;
+    _vglyph_point_sub(&v, prev_point, control_point);
+
+    if (!relative)
+        _vglyph_point_add(&v, prev_point, &v);
+
+    v.x /= surface->width;
+    v.y /= surface->height;
+
+    vglyph_segment_curveto_quadratic_t quadratic_segment;
+    quadratic_segment.point  = segment->point;
+    quadratic_segment.point1 = v;
+
+    return _vglyph_surface_curveto_quadratic(surface,
+                                             &quadratic_segment,
+                                             relative,
+                                             points,
+                                             prev_point,
+                                             control_point);
+}
+
+static vglyph_state_t
 _vglyph_surface_segment_to_lines(vglyph_surface_t* surface,
                                  vglyph_segment_t segment_type,
                                  const void* segment,
                                  vglyph_vector_t* points,
                                  vglyph_bool_t* path_closed,
                                  vglyph_point_t* start_point,
-                                 vglyph_point_t* prev_point)
+                                 vglyph_point_t* prev_point,
+                                 vglyph_point_t* control_point)
 {
     vglyph_state_t state = VGLYPH_STATE_SUCCESS;
 
@@ -356,9 +420,8 @@ _vglyph_surface_segment_to_lines(vglyph_surface_t* surface,
                         return state;
                 }
 
-                vglyph_float32_t NaN = sqrtf(-1.0f);
                 vglyph_point_t end_marker;
-                _vglyph_point_from_coord(&end_marker, NaN, NaN);
+                _vglyph_point_from_coord(&end_marker, NAN, NAN);
 
                 return _vglyph_surface_add_point(points, &end_marker);
             }
@@ -393,7 +456,8 @@ _vglyph_surface_segment_to_lines(vglyph_surface_t* surface,
                                                  (vglyph_segment_curveto_cubic_t*)segment,
                                                  segment_type - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS,
                                                  points,
-                                                 prev_point);
+                                                 prev_point,
+                                                 control_point);
 
         case VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS:
         case VGLYPH_SEGMENT_CURVETO_QUADRATIC_REL:
@@ -401,7 +465,8 @@ _vglyph_surface_segment_to_lines(vglyph_surface_t* surface,
                                                      (vglyph_segment_curveto_quadratic_t*)segment,
                                                      segment_type - VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS,
                                                      points,
-                                                     prev_point);
+                                                     prev_point,
+                                                     control_point);
             break;
 
         case VGLYPH_SEGMENT_ARC_ABS:
@@ -430,11 +495,21 @@ _vglyph_surface_segment_to_lines(vglyph_surface_t* surface,
 
         case VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS:
         case VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_REL:
-            break;
+            return _vglyph_surface_curveto_cubic_smooth(surface,
+                                                        (vglyph_segment_curveto_cubic_smooth_t*)segment,
+                                                        segment_type - VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS,
+                                                        points,
+                                                        prev_point,
+                                                        control_point);
 
         case VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_ABS:
         case VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_REL:
-            break;
+            return _vglyph_surface_curveto_quadratic_smooth(surface,
+                                                            (vglyph_segment_curveto_quadratic_smooth_t*)segment,
+                                                            segment_type - VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_ABS,
+                                                            points,
+                                                            prev_point,
+                                                            control_point);
     }
 
     return state;
@@ -462,23 +537,33 @@ _vglyph_surface_figure_to_lines(vglyph_surface_t* surface,
 
     vglyph_point_t prev_point;
     vglyph_point_t start_point;
+    vglyph_point_t control_point;
 
     prev_point.x = 0.0f;
     prev_point.y = 0.0f;
+    control_point.x = NAN;
+    control_point.y = NAN;
 
     while (segment_count--)
     {
         segment_type = (vglyph_segment_type_t*)
             _vglyph_vector_at(figure->segment_types, offset_segment_type);
 
-        segment = _vglyph_vector_at(figure->segments, segment_type->offset);   
+        segment = _vglyph_vector_at(figure->segments, segment_type->offset);  
+
+        if ((segment_type->segment < VGLYPH_SEGMENT_CURVETO_CUBIC_ABS || 
+             segment_type->segment > VGLYPH_SEGMENT_CURVETO_QUADRATIC_REL) &&
+            (segment_type->segment < VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS || 
+             segment_type->segment > VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_REL))
+            _vglyph_point_from_coord(&control_point, NAN, NAN);
 
         *state = _vglyph_surface_segment_to_lines(surface, 
                                                   segment_type->segment, 
                                                   segment, result, 
                                                   &path_closed, 
                                                   &start_point, 
-                                                  &prev_point);
+                                                  &prev_point,
+                                                  &control_point);
 
         if (*state != VGLYPH_STATE_SUCCESS)
             return result;
@@ -495,7 +580,8 @@ _vglyph_surface_figure_to_lines(vglyph_surface_t* surface,
                                                   result, 
                                                   &path_closed, 
                                                   &start_point, 
-                                                  &prev_point);
+                                                  &prev_point,
+                                                  &control_point);
     }
 
     return result;
