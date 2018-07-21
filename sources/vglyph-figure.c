@@ -1156,3 +1156,63 @@ vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
 
     return FALSE;
 }
+
+vglyph_bool_t
+vglyph_figure_draw_curveto_cubic_smooth(vglyph_figure_t* figure,
+                                        vglyph_coordinate_t coordinate,
+                                        const vglyph_point_t* point,
+                                        const vglyph_point_t* point2)
+{
+    assert(figure);
+    assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
+    assert(point);
+    assert(point2);
+
+    if (_vglyph_figure_is_valid(figure))
+    {
+    #undef  VGLYPH_RESULT_TYPE
+    #define VGLYPH_RESULT_TYPE vglyph_segment_curveto_cubic_smooth_t
+
+        VGLYPH_RESULT_TYPE* result;
+        _vglyph_figure_add_segment(
+            figure, (vglyph_segment_t)(VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS + coordinate), result);
+
+        if (!result)
+            return FALSE;
+
+        result->point  = *point;
+        result->point2 = *point2;
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+vglyph_bool_t
+vglyph_figure_draw_curveto_quadratic_smooth(vglyph_figure_t* figure,
+                                            vglyph_coordinate_t coordinate,
+                                            const vglyph_point_t* point)
+{
+
+    assert(figure);
+    assert(coordinate == VGLYPH_COORDINATE_ABSOLUTE || coordinate == VGLYPH_COORDINATE_RELATIVE);
+    assert(point);
+
+    if (_vglyph_figure_is_valid(figure))
+    {
+    #undef  VGLYPH_RESULT_TYPE
+    #define VGLYPH_RESULT_TYPE vglyph_segment_curveto_quadratic_smooth_t
+
+        VGLYPH_RESULT_TYPE* result;
+        _vglyph_figure_add_segment(
+            figure, (vglyph_segment_t)(VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_ABS + coordinate), result);
+
+        if (!result)
+            return FALSE;
+
+        result->point = *point;
+        return TRUE;
+    }
+
+    return FALSE;
+}

@@ -327,6 +327,17 @@ vglyph_figure_draw_lineto_vertical(vglyph_figure_t* figure,
                                    vglyph_coordinate_t coordinate,
                                    vglyph_float32_t y);
 
+vglyph_public vglyph_bool_t
+vglyph_figure_draw_curveto_cubic_smooth(vglyph_figure_t* figure,
+                                        vglyph_coordinate_t coordinate,
+                                        const vglyph_point_t* point,
+                                        const vglyph_point_t* point2);
+
+vglyph_public vglyph_bool_t
+vglyph_figure_draw_curveto_quadratic_smooth(vglyph_figure_t* figure,
+                                            vglyph_coordinate_t coordinate,
+                                            const vglyph_point_t* point);
+
 vglyph_public vglyph_glyph_t*
 vglyph_glyph_create(vglyph_figure_t* figure);
 

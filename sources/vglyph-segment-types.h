@@ -81,4 +81,15 @@ typedef struct _vglyph_segment_lineto_vertical
     vglyph_float32_t y;
 } vglyph_segment_lineto_vertical_t;
 
+typedef struct _vglyph_segment_curveto_cubic_smooth
+{
+    vglyph_point_t point;
+    vglyph_point_t point2;
+} vglyph_segment_curveto_cubic_smooth_t;
+
+typedef struct _vglyph_segment_curveto_quadratic_smooth
+{
+    vglyph_point_t point;
+} vglyph_segment_curveto_quadratic_smooth_t;
+
 #endif
