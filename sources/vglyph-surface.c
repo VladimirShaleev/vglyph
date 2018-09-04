@@ -621,7 +621,7 @@ _vglyph_surface_compute_intersections(vglyph_surface_t* surface,
         _vglyph_point_sub(&v, &end_point, &start_point);
 
         vglyph_sint_t start_y = (vglyph_sint_t)floorf(start_point.y);
-        vglyph_sint_t end_y   = start_y + (vglyph_sint_t)fabsf(ceilf(v.y)) + 1;
+        vglyph_sint_t end_y   = start_y + (vglyph_sint_t)ceilf(v.y) + 1;
 
         vglyph_float32_t t;
         vglyph_float32_t inv_d = 1.0f / v.y;
