@@ -676,97 +676,32 @@ _vglyph_surface_compute_intersections(vglyph_surface_t* surface,
 
 static void 
 _vglyph_surface_draw_polygon(vglyph_surface_t* surface,
-                             const vglyph_color_t* color,
-                             vglyph_vector_t* points)
+                             vglyph_vector_t** intersections,
+                             const vglyph_color_t* color)
 {
-    const vglyph_uint32_t width  = surface->width;
     const vglyph_uint32_t height = surface->height;
+    const vglyph_uint_t offset_1 = sizeof(vglyph_float32_t);
+    const vglyph_uint_t offset_2 = sizeof(vglyph_float32_t) << 1;
 
-    vglyph_float32_t* buffer1 = (vglyph_float32_t*)malloc(sizeof(vglyph_float32_t) * width * 2);
-    vglyph_float32_t* buffer2 = buffer1 + width;
-    vglyph_float32_t* intersections = buffer1; // add dynamic size
-    vglyph_uint_t intersections_count;
+    vglyph_float32_t s_x;
+    vglyph_float32_t e_x;
 
     for (vglyph_uint32_t y = 0; y < height; ++y)
-    {
-        intersections_count = 0;
-
-        const vglyph_uint_t size = _vglyph_vector_size_in_bytes(points);
-        vglyph_point_t start = *((vglyph_point_t*)_vglyph_vector_at(points, 0));
-        vglyph_point_t end;
-
-        for (vglyph_uint_t offset = sizeof(vglyph_point_t); offset < size; offset += sizeof(vglyph_point_t))
+    { 
+        if (intersections[y])
         {
-            end = *((vglyph_point_t*)_vglyph_vector_at(points, offset));
+            const vglyph_uint_t count_intersections = _vglyph_vector_size_in_bytes(intersections[y]);
 
-            if (end.x != end.x)
+            for (vglyph_uint_t i = 0; i < count_intersections; i += offset_2)
             {
-                offset += sizeof(vglyph_point_t);
+                s_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i);
+                e_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i + offset_1);
 
-                if (offset == size)
-                    break;
-
-                start = *((vglyph_point_t*)_vglyph_vector_at(points, offset));
-                continue;
-            }
-
-            vglyph_point_t v;
-            _vglyph_point_sub(&v, &end, &start);
-
-            if (v.y != 0.0f)
-            {
-                vglyph_float32_t t = (y - start.y) / v.y;
-
-                if (t >= 0.0f && t <= 1.0f)
-                {
-                    vglyph_float32_t x_i = start.x + v.x * t;
-                    vglyph_uint_t i = 0;
-
-                    for (; i < intersections_count; ++i)
-                    {
-                        if (x_i >= intersections[i] - 0.00001f && x_i <= intersections[i] + 0.00001f && x_i != intersections[i])
-                            goto NEXT;
-
-                        if (x_i < intersections[i])
-                            break;
-                    }
-
-                    if (i == intersections_count)
-                    {
-                        intersections[i] = x_i;
-                    }
-                    else
-                    {
-                        vglyph_float32_t* swap_buffer =
-                            intersections == buffer1 ? buffer2 : buffer1;
-
-                        memcpy(swap_buffer + i + 1, intersections + i, (intersections_count - i) * sizeof(vglyph_float32_t));
-                        swap_buffer[i] = x_i;
-                        memcpy(swap_buffer, intersections, i * sizeof(vglyph_float32_t));
-
-                        intersections = swap_buffer;
-                    }
-                    ++intersections_count;
-                }
-            }
-        NEXT:
-            start = end;
-        }
-
-        if (intersections_count > 1)
-        {
-            for (vglyph_uint_t i = 0; i < intersections_count; i += 2)
-            {
-                vglyph_sint32_t s_x = (vglyph_sint32_t)intersections[i];
-                vglyph_sint32_t e_x = (vglyph_sint32_t)intersections[i + 1];
-
-                for (vglyph_sint32_t p = s_x; p < e_x; ++p)
+                for (vglyph_sint32_t p = (vglyph_sint32_t)s_x; p < (vglyph_sint32_t)e_x; ++p)
                     surface->render->backend->set_pixel(surface->render, surface, p, y, color);
             }
         }
     }
-
-    free(buffer1);
 }
 
 void
@@ -1006,44 +941,18 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
 
     if (state == VGLYPH_STATE_SUCCESS)
     {
-        const vglyph_uint32_t height = surface->height;
         vglyph_vector_t** intersections = _vglyph_surface_compute_intersections(surface, points, &state);
-
         _vglyph_vector_destroy(points);
 
         if (state == VGLYPH_STATE_SUCCESS)
-        {
-            // _vglyph_surface_draw_polygon(surface, color, points);
-            /////////////////////////////
-            // TODO: move to _vglyph_surface_draw_polygon
-
-            for (vglyph_uint32_t y = 0; y < height; ++y)
-            { 
-                if (intersections[y])
-                {
-                    const vglyph_uint_t count_intersections = _vglyph_vector_size_in_bytes(intersections[y]);
-
-                    for (vglyph_uint_t i = 0; i < count_intersections; i += sizeof(vglyph_float32_t) * 2)
-                    {
-                        vglyph_float32_t s_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i);
-                        vglyph_float32_t e_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i + sizeof(vglyph_float32_t));
-
-                        for (vglyph_sint32_t p = (vglyph_sint32_t)s_x; p < (vglyph_sint32_t)e_x; ++p)
-                            surface->render->backend->set_pixel(surface->render, surface, p, y, color);
-                    }
-                }
-            }
-
-            //
-            ////////////////////////////
-        }
+            _vglyph_surface_draw_polygon(surface, intersections, color);
         else
-        {
             _vglyph_surface_set_state(surface, state);
-        }
 
         if (intersections)
         {
+            const vglyph_uint32_t height = surface->height;
+
             for (vglyph_uint32_t y = 0; y < height; ++y)
             {
                 if (intersections[y])
