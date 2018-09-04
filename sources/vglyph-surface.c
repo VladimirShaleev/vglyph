@@ -11,36 +11,6 @@
 #include "vglyph-figure.h"
 #include "vglyph-segment-types.h"
 
-
- static void 
- _vglyph_surface_draw_line(vglyph_surface_t* surface,
-                           const vglyph_color_t* color,
-                           const vglyph_point_t* start,
-                           const vglyph_point_t* end)
- {
-     vglyph_render_t* render = surface->render;
- 
-     vglyph_point_t point = *start;
-     vglyph_point_t v;
-     vglyph_point_t n;
- 
-     _vglyph_point_sub(&v, end, start);
-     const vglyph_float32_t d = 1.0f / _vglyph_point_length(&v);
- 
-     _vglyph_point_mul(&n, &v, d);
- 
-     for (vglyph_float32_t t = 0.0f; t < 1.0f - d / 2; t += d)
-     {
-         _vglyph_point_add(&point, &point, &n);
-         _vglyph_surface_set_pixel_pos_fractional(surface, &point, color);
-     }
- }
-
-
-
-
-
-
 static vglyph_point_t* 
 _vglyph_surface_offset_point(vglyph_point_t* result,
                              vglyph_surface_t* surface,
