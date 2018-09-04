@@ -154,6 +154,56 @@ _vglyph_vector_push(vglyph_vector_t* vector,
     return offset;
 }
 
+static inline vglyph_state_t
+_vglyph_vector_add(vglyph_vector_t* vector, 
+                   const vglyph_uint8_t* data,
+                   vglyph_uint_t bytes)
+{
+    assert(vector);
+    assert(data);
+    assert(_vglyph_vector_is_valid(vector));
+
+    vglyph_uint_t offset = _vglyph_vector_push(vector, bytes);
+    vglyph_state_t state = _vglyph_vector_get_state(vector);
+
+    if (state == VGLYPH_STATE_SUCCESS)
+        memcpy(vector->data + offset, data, (size_t)bytes);
+
+    return state;
+}
+
+static inline vglyph_uint_t
+_vglyph_vector_insert(vglyph_vector_t* vector,
+                      const vglyph_uint8_t* data,
+                      vglyph_uint_t bytes,
+                      vglyph_uint_t offset)
+{
+    assert(vector);
+    assert(data);
+    assert(_vglyph_vector_is_valid(vector));
+
+    if (offset >= vector->count_bytes)
+    {
+        const vglyph_uint_t add_bytes = offset + bytes - vector->count_bytes;
+        _vglyph_vector_push(vector, add_bytes);
+    }
+    else
+    {
+        const size_t shift_bytes = (size_t)(vector->count_bytes - offset);
+        _vglyph_vector_push(vector, bytes);
+
+        if (_vglyph_vector_is_valid(vector))
+            memmove(vector->data + offset + bytes, vector->data + offset, shift_bytes);
+    }
+
+    vglyph_state_t state = _vglyph_vector_get_state(vector);
+
+    if (state == VGLYPH_STATE_SUCCESS)
+        memcpy(vector->data + offset, data, (size_t)bytes);
+
+    return state;
+}
+
 static inline void*
 _vglyph_vector_at(vglyph_vector_t* vector, 
                   vglyph_uint_t offset)
