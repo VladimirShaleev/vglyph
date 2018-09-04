@@ -595,6 +595,132 @@ _vglyph_surface_figure_to_lines(vglyph_surface_t* surface,
     return result;
 }
 
+static vglyph_vector_t**
+_vglyph_surface_compute_intersections(vglyph_surface_t* surface,
+                                      vglyph_vector_t* points,
+                                      vglyph_state_t* state)
+{
+    *state = VGLYPH_STATE_SUCCESS;
+
+    const vglyph_uint32_t height = surface->height;
+    vglyph_vector_t** intersections = malloc(sizeof(vglyph_vector_t*) * height);
+
+    if (!intersections)
+    {
+        *state = VGLYPH_STATE_OUT_OF_MEMORY;
+        return NULL;
+    }
+
+    for (vglyph_uint32_t y = 0; y < height; ++y)
+        intersections[y] = NULL;
+
+    for (vglyph_uint32_t y = 0; y < height; ++y)
+    {
+        vglyph_vector_t* item = _vglyph_vector_create(sizeof(vglyph_float32_t) * 10);
+
+        if (!_vglyph_vector_is_valid(item))
+        {
+            *state = _vglyph_vector_get_state(item);
+            _vglyph_vector_destroy(item);
+
+            return intersections;
+        }
+
+        intersections[y] = item;
+    }
+
+
+
+    const vglyph_uint_t size = _vglyph_vector_size_in_bytes(points);
+    vglyph_point_t start = *((vglyph_point_t*)_vglyph_vector_at(points, 0));
+    vglyph_point_t end;
+
+    for (vglyph_uint_t offset = sizeof(vglyph_point_t); offset < size; offset += sizeof(vglyph_point_t))
+    {
+        end = *((vglyph_point_t*)_vglyph_vector_at(points, offset));
+
+        if (end.x != end.x)
+        {
+            offset += sizeof(vglyph_point_t);
+
+            if (offset == size)
+                break;
+
+            start = *((vglyph_point_t*)_vglyph_vector_at(points, offset));
+            continue;
+        }
+        
+        //vglyph_point_t v;
+        //_vglyph_point_sub(&v, &end, &start);
+        //
+        //vglyph_point_t i;
+        //
+        //if (v.y != 0.0f)
+        //{
+            //vglyph_float32_t inv_d = 1.0f / v.y;
+            vglyph_float32_t t;
+
+            vglyph_point_t sp;
+            vglyph_point_t ep;
+
+            if (start.y > end.y)
+            {
+                sp = end;
+                ep = start;
+            }
+            else
+            {
+                sp = start;
+                ep = end;
+            }
+
+            vglyph_point_t v;
+            _vglyph_point_sub(&v, &ep, &sp);
+
+            //if (fabsf(v.y) > 1.001f)
+            {
+                vglyph_float32_t inv_d = 1.0f / v.y;
+
+                vglyph_sint_t sy = (vglyph_sint_t)floorf(sp.y);
+                vglyph_sint_t ey = sy + (vglyph_sint_t)fabsf(ceilf(v.y)) + 1;
+
+                for (vglyph_sint_t y = sy; y < ey; ++y)
+                {
+                    t = (y - sp.y) * inv_d;
+
+                    if (t >= 0.0f && t < 1.0f)
+                    {
+                        vglyph_float32_t ix = sp.x + v.x * t;
+
+                        const vglyph_uint_t count_intersections =
+                            _vglyph_vector_size_in_bytes(intersections[y]);
+
+                        vglyph_uint_t find_offset = 0;
+
+                        for (find_offset = 0; find_offset < count_intersections; find_offset += sizeof(vglyph_float32_t))
+                        {
+                            vglyph_float32_t* iiii = (vglyph_float32_t*)_vglyph_vector_at(intersections[y], find_offset);
+
+                            if (ix < *iiii)
+                                break;
+                        }
+
+                        _vglyph_vector_insert(intersections[y], (vglyph_uint8_t*)&ix, sizeof(vglyph_float32_t), find_offset);
+                    }
+                    else
+                    {
+                        //exit(1);
+                    }
+                }
+            }
+        //}
+
+        start = end;
+    }
+
+    return intersections;
+}
+
 static void 
 _vglyph_surface_draw_polygon(vglyph_surface_t* surface,
                              const vglyph_color_t* color,
@@ -927,12 +1053,53 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
 
     if (state == VGLYPH_STATE_SUCCESS)
     {
-        _vglyph_surface_draw_polygon(surface, color, points);
+        const vglyph_uint32_t height = surface->height;
+        vglyph_vector_t** intersections = _vglyph_surface_compute_intersections(surface, points, &state);
+
+        _vglyph_vector_destroy(points);
+
+        if (state == VGLYPH_STATE_SUCCESS)
+        {
+            // _vglyph_surface_draw_polygon(surface, color, points);
+            /////////////////////////////
+            // TODO: move to _vglyph_surface_draw_polygon
+
+            for (vglyph_uint32_t y = 0; y < height; ++y)
+            { 
+                const vglyph_uint_t count_intersections = _vglyph_vector_size_in_bytes(intersections[y]);
+
+                for (vglyph_uint_t i = 0; i < count_intersections; i += sizeof(vglyph_float32_t) * 2)
+                {
+                    vglyph_float32_t s_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i);
+                    vglyph_float32_t e_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i + sizeof(vglyph_float32_t));
+
+                    for (vglyph_sint32_t p = (vglyph_sint32_t)s_x; p < (vglyph_sint32_t)e_x; ++p)
+                        surface->render->backend->set_pixel(surface->render, surface, p, y, color);
+                }
+            }
+
+            //
+            ////////////////////////////
+        }
+        else
+        {
+            _vglyph_surface_set_state(surface, state);
+        }
+
+        if (intersections)
+        {
+            for (vglyph_uint32_t y = 0; y < height; ++y)
+            {
+                if (intersections[y])
+                    _vglyph_vector_destroy(intersections[y]);
+            }
+
+            free(intersections);
+        }
     }
     else
     {
         _vglyph_surface_set_state(surface, state);
+        _vglyph_vector_destroy(points);
     }
-
-    _vglyph_vector_destroy(points);
 }

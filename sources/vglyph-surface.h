@@ -195,15 +195,7 @@ _vglyph_surface_add_point(vglyph_vector_t* points,
     assert(points);
     assert(point);
 
-    vglyph_uint_t offset = _vglyph_vector_push(points, sizeof(vglyph_point_t));
-
-    if (!_vglyph_vector_is_valid(points))
-        return _vglyph_vector_get_state(points);
-
-    vglyph_point_t* new_point = (vglyph_point_t*)_vglyph_vector_at(points, offset);
-    *new_point = *point;
-
-    return VGLYPH_STATE_SUCCESS;
+    return _vglyph_vector_add(points, (const vglyph_uint8_t*)point, sizeof(vglyph_point_t));
 }
 
 #endif
