@@ -614,21 +614,6 @@ _vglyph_surface_compute_intersections(vglyph_surface_t* surface,
     for (vglyph_uint32_t y = 0; y < height; ++y)
         intersections[y] = NULL;
 
-    for (vglyph_uint32_t y = 0; y < height; ++y)
-    {
-        vglyph_vector_t* item = _vglyph_vector_create(sizeof(vglyph_float32_t) * 10);
-
-        if (!_vglyph_vector_is_valid(item))
-        {
-            *state = _vglyph_vector_get_state(item);
-            _vglyph_vector_destroy(item);
-
-            return intersections;
-        }
-
-        intersections[y] = item;
-    }
-
 
 
     const vglyph_uint_t size = _vglyph_vector_size_in_bytes(points);
@@ -690,6 +675,21 @@ _vglyph_surface_compute_intersections(vglyph_surface_t* surface,
 
                     if (t >= 0.0f && t < 1.0f)
                     {
+                        if (!intersections[y])
+                        {
+                            vglyph_vector_t* item = _vglyph_vector_create(sizeof(vglyph_float32_t) << 3);
+
+                            if (!_vglyph_vector_is_valid(item))
+                            {
+                                *state = _vglyph_vector_get_state(item);
+                                _vglyph_vector_destroy(item);
+
+                                return intersections;
+                            }
+
+                            intersections[y] = item;
+                        }
+
                         vglyph_float32_t ix = sp.x + v.x * t;
 
                         const vglyph_uint_t count_intersections =
@@ -1066,15 +1066,18 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
 
             for (vglyph_uint32_t y = 0; y < height; ++y)
             { 
-                const vglyph_uint_t count_intersections = _vglyph_vector_size_in_bytes(intersections[y]);
-
-                for (vglyph_uint_t i = 0; i < count_intersections; i += sizeof(vglyph_float32_t) * 2)
+                if (intersections[y])
                 {
-                    vglyph_float32_t s_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i);
-                    vglyph_float32_t e_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i + sizeof(vglyph_float32_t));
+                    const vglyph_uint_t count_intersections = _vglyph_vector_size_in_bytes(intersections[y]);
 
-                    for (vglyph_sint32_t p = (vglyph_sint32_t)s_x; p < (vglyph_sint32_t)e_x; ++p)
-                        surface->render->backend->set_pixel(surface->render, surface, p, y, color);
+                    for (vglyph_uint_t i = 0; i < count_intersections; i += sizeof(vglyph_float32_t) * 2)
+                    {
+                        vglyph_float32_t s_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i);
+                        vglyph_float32_t e_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i + sizeof(vglyph_float32_t));
+
+                        for (vglyph_sint32_t p = (vglyph_sint32_t)s_x; p < (vglyph_sint32_t)e_x; ++p)
+                            surface->render->backend->set_pixel(surface->render, surface, p, y, color);
+                    }
                 }
             }
 
