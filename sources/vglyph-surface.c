@@ -679,12 +679,35 @@ _vglyph_surface_draw_polygon(vglyph_surface_t* surface,
                              vglyph_vector_t** intersections,
                              const vglyph_color_t* color)
 {
+    vglyph_render_t* render = surface->render;
+
+    void (*set_pixel)(vglyph_render_t*,
+                      vglyph_surface_t*,
+                      vglyph_sint32_t,
+                      vglyph_sint32_t,
+                      const vglyph_color_t*) = color->alpha < 1.0 ? 
+        render->backend->alpha_blend : 
+        render->backend->set_pixel;
+
     const vglyph_uint32_t height = surface->height;
     const vglyph_uint_t offset_1 = sizeof(vglyph_float32_t);
     const vglyph_uint_t offset_2 = sizeof(vglyph_float32_t) << 1;
 
     vglyph_float32_t s_x;
     vglyph_float32_t e_x;
+
+    vglyph_fixed_t x;
+    vglyph_fixed_t fx;
+    vglyph_fixed_t cx;
+
+    vglyph_sint32_t s_ix;
+    vglyph_sint32_t e_ix;
+
+    vglyph_color_t result_color;
+    result_color.red   = color->red;
+    result_color.green = color->green;
+    result_color.blue  = color->blue;
+    double alpha;
 
     for (vglyph_uint32_t y = 0; y < height; ++y)
     { 
@@ -697,8 +720,38 @@ _vglyph_surface_draw_polygon(vglyph_surface_t* surface,
                 s_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i);
                 e_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i + offset_1);
 
-                for (vglyph_sint32_t p = (vglyph_sint32_t)s_x; p < (vglyph_sint32_t)e_x; ++p)
-                    surface->render->backend->set_pixel(surface->render, surface, p, y, color);
+                x  = _vglyph_fixed_from_float32(s_x);
+                fx = _vglyph_fixed_floor(x);
+                cx = _vglyph_fixed_ceil(x);
+
+                s_ix = _vglyph_fixed_to_sint32_floor(fx);
+
+                if (fx != cx)
+                {
+                    alpha = _vglyph_fixed_to_float32(cx - x);
+                    result_color.alpha = color->alpha * alpha;
+
+                    render->backend->alpha_blend(render, surface, s_ix, y, &result_color);
+                    ++s_ix;
+                }
+
+                x  = _vglyph_fixed_from_float32(e_x);
+                fx = _vglyph_fixed_floor(x);
+                cx = _vglyph_fixed_ceil(x);
+
+                e_ix = _vglyph_fixed_to_sint32_ceil(cx);
+
+                if (fx != cx)
+                {
+                    alpha = _vglyph_fixed_to_float32(x - fx);
+                    result_color.alpha = color->alpha * alpha;
+
+                    render->backend->alpha_blend(render, surface, e_ix - 1, y, &result_color);
+                    --e_ix;
+                }
+
+                for (vglyph_sint32_t x = s_ix; x < e_ix; ++x)
+                    set_pixel(render, surface, x, y, color);
             }
         }
     }
