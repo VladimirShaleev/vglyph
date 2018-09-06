@@ -143,6 +143,17 @@ typedef enum _vglyph_rgba_float_size
     VGLYPH_RGBA_FLOAT_SIZE_64 = 64
 } vglyph_rgba_float_size_t;
 
+typedef enum _vglyph_multisampling
+{
+    VGLYPH_MULTISAMPLING_DEFAULT = 0,
+    VGLYPH_MULTISAMPLING_1       = 1,
+    VGLYPH_MULTISAMPLING_2       = 2,
+    VGLYPH_MULTISAMPLING_4       = 4,
+    VGLYPH_MULTISAMPLING_8       = 8,
+    VGLYPH_MULTISAMPLING_16      = 16,
+    VGLYPH_MULTISAMPLING_32      = 32
+} vglyph_multisampling_t;
+
 typedef struct _vglyph_point
 {
     vglyph_float32_t x;
@@ -456,6 +467,13 @@ vglyph_surface_get_height(vglyph_surface_t* surface);
 
 vglyph_public vglyph_uint32_t
 vglyph_surface_get_pitch(vglyph_surface_t* surface);
+
+vglyph_public vglyph_multisampling_t
+vglyph_surface_get_multisampling(vglyph_surface_t* surface);
+
+vglyph_public void
+vglyph_surface_set_multisampling(vglyph_surface_t* surface,
+                                 vglyph_multisampling_t quality);
 
 vglyph_public vglyph_uint8_t*
 vglyph_surface_lock(vglyph_surface_t* surface,
