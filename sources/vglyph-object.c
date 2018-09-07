@@ -89,7 +89,9 @@ void
 vglyph_object_reset_state(vglyph_object_t* object)
 {
     assert(object);
-    _vglyph_object_set_state(object, VGLYPH_STATE_SUCCESS);
+
+    if (object->state & VGLYPH_STATE_NOT_FATAL)
+        _vglyph_object_set_state(object, VGLYPH_STATE_SUCCESS);
 }
 
 vglyph_type_t*

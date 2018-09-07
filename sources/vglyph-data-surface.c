@@ -1098,11 +1098,13 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
             else
             {
                 _vglyph_data_surface_set_state(data_surface, VGLYPH_STATE_OUT_OF_MEMORY);
+                _vglyph_object_set_state_not_fatal(&data_surface->base.object);
             }
         }
         else
         {
             _vglyph_data_surface_set_state(data_surface, state);
+            _vglyph_object_set_state_not_fatal(&data_surface->base.object);
         }
 
         if (intersections)
@@ -1122,6 +1124,8 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     else
     {
         _vglyph_data_surface_set_state(data_surface, state);
+        _vglyph_object_set_state_not_fatal(&data_surface->base.object);
+
         _vglyph_vector_destroy(points);
     }
 }
