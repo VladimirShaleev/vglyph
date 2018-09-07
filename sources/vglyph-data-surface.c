@@ -820,10 +820,10 @@ _vglyph_data_surface_draw_polygon(vglyph_surface_t* surface,
 static void 
 _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
                                   vglyph_vector_t** intersections,
-                                  const vglyph_color_t* color,
-                                  vglyph_uint8_t* back_surface)
+                                  const vglyph_color_t* color)
 {
-    vglyph_render_t* render = surface->base.render;
+    vglyph_render_t* render    = surface->base.render;
+    vglyph_uint8_t*  data_back = surface->data_back;
 
     const vglyph_uint_t multisampling = (vglyph_uint_t)surface->base.multisampling;
     const vglyph_uint_t shift_mulitsampling = surface->shift_mulitsampling;
@@ -885,10 +885,8 @@ _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
                     if (e_ix > max_e_ix)
                         max_e_ix = e_ix;
 
-                    // TODO: add negative check
-
                     for (vglyph_sint32_t x = s_ix; x < e_ix; ++x)
-                        back_surface[x + offset_y] = 1;
+                        data_back[x + offset_y] = 1;
                 }
             }
         }
@@ -905,7 +903,7 @@ _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
                 for (vglyph_uint_t my = 0, offset_y = 0; my < multisampling; ++my, offset_y += rasterizer_width)
                 {
                     for (vglyph_uint_t mx = 0; mx < multisampling; ++mx)
-                        hit += back_surface[offset_x + mx + offset_y];
+                        hit += data_back[offset_x + mx + offset_y];
 
                 }
 
@@ -919,7 +917,7 @@ _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
             }
 
             for (vglyph_uint_t my = 0, offset_y = 0; my < multisampling; ++my, offset_y += rasterizer_width)
-                memset(back_surface + min_s_ix + offset_y, 0, max_e_ix - min_s_ix);
+                memset(data_back + min_s_ix + offset_y, 0, max_e_ix - min_s_ix);
 
             min_s_ix = INT32_MAX;
             max_e_ix = INT32_MIN;
@@ -949,7 +947,8 @@ _vglyph_data_surface_init(vglyph_data_surface_t* surface,
                          height, 
                          pitch);
 
-    surface->data = data;
+    surface->data      = data;
+    surface->data_back = NULL;
 
     _vglyph_data_surface_update_multisampling(&surface->base);
 }
@@ -967,6 +966,8 @@ _vglyph_data_surface_ctor(vglyph_data_surface_t* surface)
 void
 _vglyph_data_surface_dtor(vglyph_data_surface_t* surface)
 {
+    free(surface->data_back);
+
     _vglyph_surface_dtor(&surface->base);
 }
 
@@ -999,10 +1000,26 @@ _vglyph_data_surface_update_multisampling(vglyph_surface_t* surface)
     vglyph_multisampling_t multisampling = surface->multisampling;
     vglyph_data_surface_t* data_surface = (vglyph_data_surface_t*)surface;
 
-    data_surface->shift_mulitsampling = 0;
-    
-    while (multisampling >>= 1)
-        ++data_surface->shift_mulitsampling;
+    vglyph_uint_t data_back_size =
+        surface->width * multisampling * surface->multisampling;
+
+    vglyph_uint8_t* data_back = (vglyph_uint8_t*)malloc(data_back_size);
+
+    if (data_back)
+    {
+        memset(data_back, 0, data_back_size);
+
+        data_surface->data_back = data_back;
+        data_surface->shift_mulitsampling = 0;
+
+        while (multisampling >>= 1)
+            ++data_surface->shift_mulitsampling;
+    }
+    else
+    {
+        _vglyph_data_surface_set_state(data_surface, VGLYPH_STATE_OUT_OF_MEMORY);
+        _vglyph_object_set_state_not_fatal(&data_surface->base.object);
+    }
 }
 
 vglyph_uint8_t*
@@ -1084,22 +1101,7 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
 
         if (state == VGLYPH_STATE_SUCCESS)
         {
-            vglyph_uint_t back_surface_size =
-                (surface->width << data_surface->shift_mulitsampling) * surface->multisampling;
-
-            vglyph_uint8_t* back_surface = (vglyph_uint8_t*)malloc(back_surface_size);
-            memset(back_surface, 0, back_surface_size);
-
-            if (back_surface)
-            {
-                _vglyph_data_surface_draw_polygon(data_surface, intersections, color, back_surface);
-                free(back_surface);
-            }
-            else
-            {
-                _vglyph_data_surface_set_state(data_surface, VGLYPH_STATE_OUT_OF_MEMORY);
-                _vglyph_object_set_state_not_fatal(&data_surface->base.object);
-            }
+            _vglyph_data_surface_draw_polygon(data_surface, intersections, color);
         }
         else
         {

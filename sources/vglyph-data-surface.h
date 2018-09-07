@@ -17,6 +17,7 @@ typedef struct _vglyph_data_surface
 {
     vglyph_surface_t base;
     vglyph_uint8_t*  data;
+    vglyph_uint8_t*  data_back;
     vglyph_uint_t    shift_mulitsampling;
 } vglyph_data_surface_t;
 
