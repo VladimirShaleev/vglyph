@@ -206,8 +206,8 @@ _vglyph_rgba_uint_data_render_fill(vglyph_render_t* render,
 {
     vglyph_sint32_t x_start = x < 0 ? 0 : x;
     vglyph_sint32_t y_start = y < 0 ? 0 : y;
-    vglyph_sint32_t x_end = (vglyph_sint32_t)(y + height > surface->height ? surface->height : height + y);
-    vglyph_sint32_t y_end = (vglyph_sint32_t)(x + width  > surface->width  ? surface->width  : width  + x);
+    vglyph_sint32_t x_end = (vglyph_sint32_t)(x + width  > surface->width  ? surface->width  : width  + x);
+    vglyph_sint32_t y_end = (vglyph_sint32_t)(y + height > surface->height ? surface->height : height + y);
 
     for (y = y_start; y < y_end; ++y)
     {
