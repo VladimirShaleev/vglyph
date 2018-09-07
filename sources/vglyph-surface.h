@@ -14,6 +14,7 @@
 
 typedef struct _vglyph_surface_backend
 {
+    void (*update_multisampling)(vglyph_surface_t* surface);
     vglyph_uint8_t* (*lock)(vglyph_surface_t* surface,
                             vglyph_uint32_t x,
                             vglyph_uint32_t y,
@@ -51,8 +52,7 @@ struct _vglyph_surface
     vglyph_uint32_t                 width;
     vglyph_uint32_t                 height;
     vglyph_uint32_t                 pitch;
-    vglyph_uint32_t                 rasterizer_width;
-    vglyph_uint32_t                 rasterizer_height;
+    vglyph_multisampling_t          multisampling;
 };
 
 void
@@ -89,7 +89,7 @@ _vglyph_surface_is_valid(vglyph_surface_t* surface)
     return _vglyph_object_is_valid(&surface->object);
 }
 
-static inline 
+static inline vglyph_multisampling_t
 _vglyph_surface_get_default_multisampling(void)
 {
     return VGLYPH_MULTISAMPLING_4;

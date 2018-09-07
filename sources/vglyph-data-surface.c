@@ -18,12 +18,12 @@
 
 static vglyph_point_t* 
 _vglyph_data_surface_offset_point(vglyph_point_t* result,
-                                  vglyph_surface_t* surface,
+                                  vglyph_data_surface_t* surface,
                                   vglyph_bool_t relative,
                                   const vglyph_point_t* prev_point)
 {
-    result->x *= surface->rasterizer_width;
-    result->y *= surface->rasterizer_height;
+    result->x *= surface->base.width  << surface->shift_mulitsampling;
+    result->y *= surface->base.height << surface->shift_mulitsampling;
 
     if (relative)
     {
@@ -35,7 +35,7 @@ _vglyph_data_surface_offset_point(vglyph_point_t* result,
 }
 
 static vglyph_state_t
-_vglyph_data_surface_moveto(vglyph_surface_t* surface,
+_vglyph_data_surface_moveto(vglyph_data_surface_t* surface,
                             const vglyph_segment_moveto_t* segment,
                             vglyph_bool_t relative,
                             vglyph_vector_t* points,
@@ -49,7 +49,7 @@ _vglyph_data_surface_moveto(vglyph_surface_t* surface,
 }
 
 static vglyph_state_t 
-_vglyph_data_surface_lineto(vglyph_surface_t* surface,
+_vglyph_data_surface_lineto(vglyph_data_surface_t* surface,
                             const vglyph_segment_lineto_t* segment,
                             vglyph_bool_t relative,
                             vglyph_vector_t* points,
@@ -63,15 +63,14 @@ _vglyph_data_surface_lineto(vglyph_surface_t* surface,
 }
 
 static vglyph_state_t
-_vglyph_data_surface_curveto_cubic(vglyph_surface_t* surface,
+_vglyph_data_surface_curveto_cubic(vglyph_data_surface_t* surface,
                                    const vglyph_segment_curveto_cubic_t* segment,
                                    vglyph_bool_t relative,
                                    vglyph_vector_t* points,
                                    vglyph_point_t* prev_point,
                                    vglyph_point_t* control_point)
 {
-    vglyph_render_t* render = surface->render;
-    vglyph_state_t   state  = VGLYPH_STATE_SUCCESS;
+    vglyph_state_t state = VGLYPH_STATE_SUCCESS;
 
     vglyph_point_t start  = *prev_point;
     vglyph_point_t end    = segment->point;
@@ -127,15 +126,14 @@ _vglyph_data_surface_curveto_cubic(vglyph_surface_t* surface,
 }
 
 static vglyph_state_t
-_vglyph_data_surface_curveto_quadratic(vglyph_surface_t* surface,
+_vglyph_data_surface_curveto_quadratic(vglyph_data_surface_t* surface,
                                        const vglyph_segment_curveto_quadratic_t* segment,
                                        vglyph_bool_t relative,
                                        vglyph_vector_t* points,
                                        vglyph_point_t* prev_point,
                                        vglyph_point_t* control_point)
 {
-    vglyph_render_t* render = surface->render;
-    vglyph_state_t   state  = VGLYPH_STATE_SUCCESS;
+    vglyph_state_t state = VGLYPH_STATE_SUCCESS;
 
     vglyph_point_t start  = *prev_point;
     vglyph_point_t end    = segment->point;
@@ -189,7 +187,7 @@ _vglyph_data_surface_curveto_quadratic(vglyph_surface_t* surface,
 }
 
 static vglyph_state_t 
-_vglyph_data_surface_arc(vglyph_surface_t* surface,
+_vglyph_data_surface_arc(vglyph_data_surface_t* surface,
                          const vglyph_segment_arc_t* segment,
                          vglyph_bool_t relative,
                          vglyph_vector_t* points,
@@ -221,8 +219,8 @@ _vglyph_data_surface_arc(vglyph_surface_t* surface,
     _vglyph_data_surface_offset_point(&end, surface, relative, prev_point);
     *prev_point = end;
 
-    radius.x = segment->radius.x * surface->rasterizer_width;
-    radius.y = segment->radius.y * surface->rasterizer_height;
+    radius.x = segment->radius.x * (surface->base.width  << surface->shift_mulitsampling);
+    radius.y = segment->radius.y * (surface->base.height << surface->shift_mulitsampling);
 
     _vglyph_figure_get_arc_params(&radius, 
                                   &center, 
@@ -267,7 +265,7 @@ _vglyph_data_surface_arc(vglyph_surface_t* surface,
 }
 
 static vglyph_state_t
-_vglyph_data_surface_lineto_horizontal(vglyph_surface_t* surface,
+_vglyph_data_surface_lineto_horizontal(vglyph_data_surface_t* surface,
                                        const vglyph_segment_lineto_horizontal_t* segment,
                                        vglyph_bool_t relative,
                                        vglyph_vector_t* points,
@@ -283,7 +281,7 @@ _vglyph_data_surface_lineto_horizontal(vglyph_surface_t* surface,
 }
 
 static vglyph_state_t
-_vglyph_data_surface_lineto_vertical(vglyph_surface_t* surface,
+_vglyph_data_surface_lineto_vertical(vglyph_data_surface_t* surface,
                                      const vglyph_segment_lineto_vertical_t* segment,
                                      vglyph_bool_t relative,
                                      vglyph_vector_t* points,
@@ -299,7 +297,7 @@ _vglyph_data_surface_lineto_vertical(vglyph_surface_t* surface,
 }
 
 static vglyph_state_t
-_vglyph_data_surface_curveto_cubic_smooth(vglyph_surface_t* surface,
+_vglyph_data_surface_curveto_cubic_smooth(vglyph_data_surface_t* surface,
                                           const vglyph_segment_curveto_cubic_smooth_t* segment,
                                           vglyph_bool_t relative,
                                           vglyph_vector_t* points,
@@ -316,8 +314,8 @@ _vglyph_data_surface_curveto_cubic_smooth(vglyph_surface_t* surface,
     if (!relative)
         _vglyph_point_add(&v, prev_point, &v);
 
-    v.x /= surface->rasterizer_width;
-    v.y /= surface->rasterizer_height;
+    v.x /= surface->base.width  << surface->shift_mulitsampling;
+    v.y /= surface->base.height << surface->shift_mulitsampling;
 
     vglyph_segment_curveto_cubic_t cubic_segment;
     cubic_segment.point  = segment->point;
@@ -333,7 +331,7 @@ _vglyph_data_surface_curveto_cubic_smooth(vglyph_surface_t* surface,
 }
 
 static vglyph_state_t
-_vglyph_data_surface_curveto_quadratic_smooth(vglyph_surface_t* surface,
+_vglyph_data_surface_curveto_quadratic_smooth(vglyph_data_surface_t* surface,
                                               const vglyph_segment_curveto_quadratic_smooth_t* segment,
                                               vglyph_bool_t relative,
                                               vglyph_vector_t* points,
@@ -350,8 +348,8 @@ _vglyph_data_surface_curveto_quadratic_smooth(vglyph_surface_t* surface,
     if (!relative)
         _vglyph_point_add(&v, prev_point, &v);
 
-    v.x /= surface->rasterizer_width;
-    v.y /= surface->rasterizer_height;
+    v.x /= surface->base.width  << surface->shift_mulitsampling;
+    v.y /= surface->base.height << surface->shift_mulitsampling;
 
     vglyph_segment_curveto_quadratic_t quadratic_segment;
     quadratic_segment.point  = segment->point;
@@ -366,7 +364,7 @@ _vglyph_data_surface_curveto_quadratic_smooth(vglyph_surface_t* surface,
 }
 
 static vglyph_state_t
-_vglyph_data_surface_segment_to_lines(vglyph_surface_t* surface,
+_vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
                                       vglyph_segment_t segment_type,
                                       const void* segment,
                                       vglyph_vector_t* points,
@@ -500,7 +498,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_surface_t* surface,
 }
 
 static vglyph_vector_t*
-_vglyph_data_surface_figure_to_lines(vglyph_surface_t* surface,
+_vglyph_data_surface_figure_to_lines(vglyph_data_surface_t* surface,
                                      vglyph_figure_t* figure,
                                      vglyph_state_t* state)
 {
@@ -572,13 +570,13 @@ _vglyph_data_surface_figure_to_lines(vglyph_surface_t* surface,
 }
 
 static vglyph_vector_t**
-_vglyph_data_surface_compute_intersections(vglyph_surface_t* surface,
+_vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
                                            vglyph_vector_t* points,
                                            vglyph_state_t* state)
 {
     *state = VGLYPH_STATE_SUCCESS;
 
-    const vglyph_uint32_t height = surface->rasterizer_height;
+    const vglyph_uint32_t height = surface->base.height << surface->shift_mulitsampling;
     vglyph_vector_t** intersections = malloc(sizeof(vglyph_vector_t*) * height);
 
     if (!intersections)
@@ -820,18 +818,20 @@ _vglyph_data_surface_draw_polygon(vglyph_surface_t* surface,
 }*/
 
 static void 
-_vglyph_data_surface_draw_polygon(vglyph_surface_t* surface,
+_vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
                                   vglyph_vector_t** intersections,
                                   const vglyph_color_t* color,
                                   vglyph_uint8_t* back_surface)
 {
-    const vglyph_uint_t multisampling = (vglyph_uint_t)vglyph_surface_get_multisampling(surface);
-    vglyph_render_t* render = surface->render;
+    vglyph_render_t* render = surface->base.render;
 
-    const vglyph_uint32_t rasterizer_width  = surface->rasterizer_width;
-    const vglyph_uint32_t rasterizer_height = surface->rasterizer_height;
-    const vglyph_uint32_t width  = surface->width;
-    const vglyph_uint32_t height = surface->height;
+    const vglyph_uint_t multisampling = (vglyph_uint_t)surface->base.multisampling;
+    const vglyph_uint_t shift_mulitsampling = surface->shift_mulitsampling;
+
+    const vglyph_uint32_t width  = surface->base.width;
+    const vglyph_uint32_t height = surface->base.height;
+    const vglyph_uint32_t rasterizer_width  = width << shift_mulitsampling;
+    const vglyph_uint32_t rasterizer_height = height << shift_mulitsampling;
     const vglyph_uint_t offset_1 = sizeof(vglyph_float32_t);
     const vglyph_uint_t offset_2 = sizeof(vglyph_float32_t) << 1;
 
@@ -914,7 +914,7 @@ _vglyph_data_surface_draw_polygon(vglyph_surface_t* surface,
                     vglyph_color_t ca = *color;
                     ca.alpha *= hit * inv_max_hits;
 
-                    render->backend->alpha_blend(render, surface, x, y, &ca);
+                    render->backend->alpha_blend(render, &surface->base, x, y, &ca);
                 }
             }
 
@@ -950,6 +950,8 @@ _vglyph_data_surface_init(vglyph_data_surface_t* surface,
                          pitch);
 
     surface->data = data;
+
+    _vglyph_data_surface_update_multisampling(&surface->base);
 }
 
 void
@@ -989,6 +991,18 @@ _vglyph_data_surface_destroy(vglyph_object_t* object)
     _vglyph_data_surface_dtor(surface);
 
     free(surface);
+}
+
+void 
+_vglyph_data_surface_update_multisampling(vglyph_surface_t* surface)
+{
+    vglyph_multisampling_t multisampling = surface->multisampling;
+    vglyph_data_surface_t* data_surface = (vglyph_data_surface_t*)surface;
+
+    data_surface->shift_mulitsampling = 0;
+    
+    while (multisampling >>= 1)
+        ++data_surface->shift_mulitsampling;
 }
 
 vglyph_uint8_t*
@@ -1058,40 +1072,43 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     //if (position)
     //    _vglyph_matrix_translate(&mat, &mat, position->x, position->y);
 
+    vglyph_data_surface_t* data_surface = (vglyph_data_surface_t*)surface;
+
     vglyph_state_t state;
-    vglyph_vector_t* points = _vglyph_data_surface_figure_to_lines(surface, glyph->figure, &state);
+    vglyph_vector_t* points = _vglyph_data_surface_figure_to_lines(data_surface, glyph->figure, &state);
 
     if (state == VGLYPH_STATE_SUCCESS)
     {
-        vglyph_vector_t** intersections = _vglyph_data_surface_compute_intersections(surface, points, &state);
+        vglyph_vector_t** intersections = _vglyph_data_surface_compute_intersections(data_surface, points, &state);
         _vglyph_vector_destroy(points);
 
         if (state == VGLYPH_STATE_SUCCESS)
         {
-            vglyph_uint_t back_surface_size = 
-                surface->rasterizer_width * vglyph_surface_get_multisampling(surface);
+            vglyph_uint_t back_surface_size =
+                (surface->width << data_surface->shift_mulitsampling) * surface->multisampling;
 
             vglyph_uint8_t* back_surface = (vglyph_uint8_t*)malloc(back_surface_size);
             memset(back_surface, 0, back_surface_size);
 
             if (back_surface)
             {
-                _vglyph_data_surface_draw_polygon(surface, intersections, color, back_surface);
+                _vglyph_data_surface_draw_polygon(data_surface, intersections, color, back_surface);
                 free(back_surface);
             }
             else
             {
-                _vglyph_data_surface_set_state(surface, VGLYPH_STATE_OUT_OF_MEMORY);
+                _vglyph_data_surface_set_state(data_surface, VGLYPH_STATE_OUT_OF_MEMORY);
             }
         }
         else
         {
-            _vglyph_data_surface_set_state(surface, state);
+            _vglyph_data_surface_set_state(data_surface, state);
         }
 
         if (intersections)
         {
-            const vglyph_uint32_t height = surface->rasterizer_height;
+            const vglyph_uint32_t height = 
+                surface->height << data_surface->shift_mulitsampling;
 
             for (vglyph_uint32_t y = 0; y < height; ++y)
             {
@@ -1104,7 +1121,7 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     }
     else
     {
-        _vglyph_data_surface_set_state(surface, state);
+        _vglyph_data_surface_set_state(data_surface, state);
         _vglyph_vector_destroy(points);
     }
 }
@@ -1116,6 +1133,7 @@ static const vglyph_object_backend_t vglyph_data_surface_object_backend = {
 };
 
 const vglyph_surface_backend_t vglyph_data_surface_backend = {
+    _vglyph_data_surface_update_multisampling,
     _vglyph_data_surface_lock,
     _vglyph_data_surface_unlock,
     _vglyph_data_surface_fill,

@@ -31,8 +31,7 @@ _vglyph_surface_init(vglyph_surface_t* surface,
     surface->width             = width;
     surface->height            = height;
     surface->pitch             = pitch;
-    surface->rasterizer_width  = width  * _vglyph_surface_get_default_multisampling();
-    surface->rasterizer_height = height * _vglyph_surface_get_default_multisampling();
+    surface->multisampling     = _vglyph_surface_get_default_multisampling();
 }
 
 void
@@ -146,7 +145,7 @@ vglyph_surface_get_multisampling(vglyph_surface_t* surface)
     assert(surface);
 
     if (_vglyph_surface_is_valid(surface))
-        return (vglyph_multisampling_t)(surface->rasterizer_width / surface->width);
+        return surface->multisampling;
 
     return 0;
 }
@@ -169,8 +168,8 @@ vglyph_surface_set_multisampling(vglyph_surface_t* surface,
         if (quality == VGLYPH_MULTISAMPLING_DEFAULT)
             quality = _vglyph_surface_get_default_multisampling();
 
-        surface->rasterizer_width  = surface->width  * quality;
-        surface->rasterizer_height = surface->height * quality;
+        surface->multisampling = quality;
+        surface->backend->update_multisampling(surface);
     }
 }
 
