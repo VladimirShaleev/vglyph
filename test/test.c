@@ -449,7 +449,7 @@ int main(int argc, char* argv[])
     point6.x = 0.05f;
     point6.y = 0.7f;
 
-    vglyph_point_t p0 = { 0.3f, 0.20f };
+    vglyph_point_t p0 = { 0.1f, 0.20f };
     vglyph_point_t p1 = { 0.25f, 0.099f };
     vglyph_point_t r  = { 0.12f, 0.055f };
 
