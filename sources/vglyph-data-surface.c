@@ -678,12 +678,12 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
     return intersections;
 }
 
-/*static void 
-_vglyph_data_surface_draw_polygon(vglyph_surface_t* surface,
-                                  vglyph_vector_t** intersections,
-                                  const vglyph_color_t* color)
+static void 
+_vglyph_data_surface_draw_polygon_without_multisampling(vglyph_data_surface_t* surface,
+                                                        vglyph_vector_t** intersections,
+                                                        const vglyph_color_t* color)
 {
-    vglyph_render_t* render = surface->render;
+    vglyph_render_t* render = surface->base.render;
 
     void (*set_pixel)(vglyph_render_t*,
                       vglyph_surface_t*,
@@ -693,9 +693,12 @@ _vglyph_data_surface_draw_polygon(vglyph_surface_t* surface,
         render->backend->alpha_blend : 
         render->backend->set_pixel;
 
-    const vglyph_uint32_t height = surface->height;
+    const vglyph_sint32_t width  = (vglyph_sint32_t)surface->base.width;
+    const vglyph_sint32_t height = (vglyph_sint32_t)surface->base.height;
     const vglyph_uint_t offset_1 = sizeof(vglyph_float32_t);
     const vglyph_uint_t offset_2 = sizeof(vglyph_float32_t) << 1;
+
+    vglyph_vector_t* currect_intersections;
 
     vglyph_float32_t s_x;
     vglyph_float32_t e_x;
@@ -703,119 +706,38 @@ _vglyph_data_surface_draw_polygon(vglyph_surface_t* surface,
     vglyph_sint32_t s_ix;
     vglyph_sint32_t e_ix;
 
-    vglyph_uint_t s = surface->width * 8 * sizeof(vglyph_uint8_t);
-    vglyph_uint8_t* in_polygon = (vglyph_uint8_t*)malloc(s);
-    memset(in_polygon, 1, s);
-
-    for (vglyph_uint32_t y = 0, r = 0; y < height; ++y, ++r)
+    for (vglyph_sint32_t y = 0; y < height; ++y)
     { 
-        if (r == 8)
+        currect_intersections = intersections[y];
+
+        if (currect_intersections)
         {
-            for (vglyph_uint32_t rx = 0; rx < surface->width / 8; ++rx)
-            {
-                vglyph_uint8_t a =
-                    in_polygon[rx * 8 + 0 + 0 * surface->width] +
-                    in_polygon[rx * 8 + 1 + 0 * surface->width] +
-                    in_polygon[rx * 8 + 2 + 0 * surface->width] +
-                    in_polygon[rx * 8 + 3 + 0 * surface->width] +
-                    in_polygon[rx * 8 + 4 + 0 * surface->width] +
-                    in_polygon[rx * 8 + 5 + 0 * surface->width] +
-                    in_polygon[rx * 8 + 6 + 0 * surface->width] +
-                    in_polygon[rx * 8 + 7 + 0 * surface->width] +
-                                    
-                    in_polygon[rx * 8 + 0 + 1 * surface->width] +
-                    in_polygon[rx * 8 + 1 + 1 * surface->width] +
-                    in_polygon[rx * 8 + 2 + 1 * surface->width] +
-                    in_polygon[rx * 8 + 3 + 1 * surface->width] +
-                    in_polygon[rx * 8 + 4 + 1 * surface->width] +
-                    in_polygon[rx * 8 + 5 + 1 * surface->width] +
-                    in_polygon[rx * 8 + 6 + 1 * surface->width] +
-                    in_polygon[rx * 8 + 7 + 1 * surface->width] +
-                                    
-                    in_polygon[rx * 8 + 0 + 2 * surface->width] +
-                    in_polygon[rx * 8 + 1 + 2 * surface->width] +
-                    in_polygon[rx * 8 + 2 + 2 * surface->width] +
-                    in_polygon[rx * 8 + 3 + 2 * surface->width] +
-                    in_polygon[rx * 8 + 4 + 2 * surface->width] +
-                    in_polygon[rx * 8 + 5 + 2 * surface->width] +
-                    in_polygon[rx * 8 + 6 + 2 * surface->width] +
-                    in_polygon[rx * 8 + 7 + 2 * surface->width] +
-                                    
-                    in_polygon[rx * 8 + 0 + 3 * surface->width] +
-                    in_polygon[rx * 8 + 1 + 3 * surface->width] +
-                    in_polygon[rx * 8 + 2 + 3 * surface->width] +
-                    in_polygon[rx * 8 + 3 + 3 * surface->width] +
-                    in_polygon[rx * 8 + 4 + 3 * surface->width] +
-                    in_polygon[rx * 8 + 5 + 3 * surface->width] +
-                    in_polygon[rx * 8 + 6 + 3 * surface->width] +
-                    in_polygon[rx * 8 + 7 + 3 * surface->width] +
-
-                    in_polygon[rx * 8 + 0 + 4 * surface->width] +
-                    in_polygon[rx * 8 + 1 + 4 * surface->width] +
-                    in_polygon[rx * 8 + 2 + 4 * surface->width] +
-                    in_polygon[rx * 8 + 3 + 4 * surface->width] +
-                    in_polygon[rx * 8 + 4 + 4 * surface->width] +
-                    in_polygon[rx * 8 + 5 + 4 * surface->width] +
-                    in_polygon[rx * 8 + 6 + 4 * surface->width] +
-                    in_polygon[rx * 8 + 7 + 4 * surface->width] +
-
-                    in_polygon[rx * 8 + 0 + 5 * surface->width] +
-                    in_polygon[rx * 8 + 1 + 5 * surface->width] +
-                    in_polygon[rx * 8 + 2 + 5 * surface->width] +
-                    in_polygon[rx * 8 + 3 + 5 * surface->width] +
-                    in_polygon[rx * 8 + 4 + 5 * surface->width] +
-                    in_polygon[rx * 8 + 5 + 5 * surface->width] +
-                    in_polygon[rx * 8 + 6 + 5 * surface->width] +
-                    in_polygon[rx * 8 + 7 + 5 * surface->width] +
-
-                    in_polygon[rx * 8 + 0 + 6 * surface->width] +
-                    in_polygon[rx * 8 + 1 + 6 * surface->width] +
-                    in_polygon[rx * 8 + 2 + 6 * surface->width] +
-                    in_polygon[rx * 8 + 3 + 6 * surface->width] +
-                    in_polygon[rx * 8 + 4 + 6 * surface->width] +
-                    in_polygon[rx * 8 + 5 + 6 * surface->width] +
-                    in_polygon[rx * 8 + 6 + 6 * surface->width] +
-                    in_polygon[rx * 8 + 7 + 6 * surface->width] +
-
-                    in_polygon[rx * 8 + 0 + 7 * surface->width] +
-                    in_polygon[rx * 8 + 1 + 7 * surface->width] +
-                    in_polygon[rx * 8 + 2 + 7 * surface->width] +
-                    in_polygon[rx * 8 + 3 + 7 * surface->width] +
-                    in_polygon[rx * 8 + 4 + 7 * surface->width] +
-                    in_polygon[rx * 8 + 5 + 7 * surface->width] +
-                    in_polygon[rx * 8 + 6 + 7 * surface->width] +
-                    in_polygon[rx * 8 + 7 + 7 * surface->width];
-
-                vglyph_color_t ca = *color;
-                ca.alpha *= a / 64.0;
-
-                render->backend->alpha_blend(render, surface, rx, (y - 9) / 8, &ca);
-            }
-
-            memset(in_polygon, 0, s);
-            r = 0;
-        }
-
-        if (intersections[y])
-        {
-            const vglyph_uint_t count_intersections = _vglyph_vector_size_in_bytes(intersections[y]);
+            const vglyph_uint_t count_intersections = _vglyph_vector_size_in_bytes(currect_intersections);
 
             for (vglyph_uint_t i = 0; i < count_intersections; i += offset_2)
             {
-                s_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i);
-                e_x = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], i + offset_1);
+                s_x = *(vglyph_float32_t*)_vglyph_vector_at(currect_intersections, i);
+                e_x = *(vglyph_float32_t*)_vglyph_vector_at(currect_intersections, i + offset_1);
 
                 s_ix = (vglyph_sint32_t)floorf(s_x);
                 e_ix = (vglyph_sint32_t)ceilf(e_x);
 
+                if (s_ix < 0)
+                    s_ix = 0;
+                else if (s_ix > width)
+                    s_ix = width;
+
+                if (e_ix < 0)
+                    e_ix = 0;
+                else if (e_ix > width)
+                    e_ix = width;
+
                 for (vglyph_sint32_t x = s_ix; x < e_ix; ++x)
-                    in_polygon[x + r * surface->width] = 1;
+                    set_pixel(render, &surface->base, x, y, color);
             }
         }
     }
-
-    free(in_polygon);
-}*/
+}
 
 static void 
 _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
@@ -851,7 +773,7 @@ _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
 
     vglyph_float64_t inv_max_hits = 1.0 / (multisampling * multisampling);
 
-    for (vglyph_uint32_t y = 0, ry = 0; y < height;  ++y, ry += multisampling)
+    for (vglyph_uint32_t y = 0, ry = 0; y < height; ++y, ry += multisampling)
     { 
         for (vglyph_uint32_t my = 0, offset_y = 0; my < multisampling; ++my, offset_y += rasterizer_width)
         {
@@ -1000,26 +922,35 @@ _vglyph_data_surface_update_multisampling(vglyph_surface_t* surface)
     vglyph_multisampling_t multisampling = surface->multisampling;
     vglyph_data_surface_t* data_surface = (vglyph_data_surface_t*)surface;
 
-    vglyph_uint_t data_back_size =
-        surface->width * multisampling * surface->multisampling;
-
-    vglyph_uint8_t* data_back = (vglyph_uint8_t*)malloc(data_back_size);
-
-    if (data_back)
+    if (multisampling != VGLYPH_MULTISAMPLING_1)
     {
+        vglyph_uint_t data_back_size =
+            surface->width * multisampling * surface->multisampling;
+
+        vglyph_uint8_t* data_back = (vglyph_uint8_t*)malloc(data_back_size);
+
+        if (!data_back)
+        {
+            _vglyph_data_surface_set_state(data_surface, VGLYPH_STATE_OUT_OF_MEMORY);
+            _vglyph_object_set_state_not_fatal(&data_surface->base.object);
+            return;
+        }
+
         memset(data_back, 0, data_back_size);
+        free(data_surface->data_back);
 
         data_surface->data_back = data_back;
-        data_surface->shift_mulitsampling = 0;
-
-        while (multisampling >>= 1)
-            ++data_surface->shift_mulitsampling;
     }
     else
     {
-        _vglyph_data_surface_set_state(data_surface, VGLYPH_STATE_OUT_OF_MEMORY);
-        _vglyph_object_set_state_not_fatal(&data_surface->base.object);
+        free(data_surface->data_back);
+        data_surface->data_back = NULL;
     }
+
+    data_surface->shift_mulitsampling = 0;
+
+    while (multisampling >>= 1)
+        ++data_surface->shift_mulitsampling;
 }
 
 vglyph_uint8_t*
@@ -1101,7 +1032,10 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
 
         if (state == VGLYPH_STATE_SUCCESS)
         {
-            _vglyph_data_surface_draw_polygon(data_surface, intersections, color);
+            if (data_surface->base.multisampling == VGLYPH_MULTISAMPLING_1)
+                _vglyph_data_surface_draw_polygon_without_multisampling(data_surface, intersections, color);
+            else
+                _vglyph_data_surface_draw_polygon(data_surface, intersections, color);
         }
         else
         {
