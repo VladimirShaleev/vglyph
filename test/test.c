@@ -525,7 +525,7 @@ int main(int argc, char* argv[])
     glyph_color.green = 0.0;
     glyph_color.blue  = 0.0;
     glyph_color.alpha = 1.0;
-    vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_1);
+    vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_32);
     vglyph_surface_fill(surface, 0, 0, 200, 200, &fill_color);
     vglyph_surface_draw_glyph(surface, glyph, &glyph_color, NULL, NULL, 0.0f);
   

@@ -841,8 +841,10 @@ _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
                      ; ++sample_y, offset_y += rasterizer_width)
                 {
                     for (vglyph_uint_t mx = 0; mx < multisampling; ++mx)
+                    {
                         samples += data_back[offset_x + mx + offset_y];
-
+                        data_back[offset_x + mx + offset_y] = 0;
+                    }
                 }
 
                 if (samples)
@@ -860,9 +862,6 @@ _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
                     }
                 }
             }
-
-            for (vglyph_uint_t my = 0, offset_y = 0; my < multisampling; ++my, offset_y += rasterizer_width)
-                memset(data_back + min_s_ix + offset_y, 0, max_e_ix - min_s_ix);
 
             min_s_ix = INT32_MAX;
             max_e_ix = INT32_MIN;
