@@ -171,6 +171,9 @@ _vglyph_figure_add_segment_type(vglyph_figure_t* figure)
     if (!_vglyph_vector_is_valid(figure->segment_types))
     {
         _vglyph_figure_set_state(figure, _vglyph_vector_get_state(figure->segment_types));
+        _vglyph_object_set_state_not_fatal(&figure->object);
+
+        vglyph_object_reset_state(&figure->segment_types->object);
         return NULL;
     }
 
@@ -178,27 +181,29 @@ _vglyph_figure_add_segment_type(vglyph_figure_t* figure)
 }
 
 #define VGLYPH_RESULT_TYPE
-#define _vglyph_figure_add_segment(_figure, _segment, _result)                               \
-{                                                                                            \
-    vglyph_segment_type_t* _segment_type = _vglyph_figure_add_segment_type(_figure);         \
-                                                                                             \
-    if (!_segment_type)                                                                      \
-        _result = NULL;                                                                      \
-                                                                                             \
-    _segment_type->segment = _segment;                                                       \
-    _segment_type->offset = _vglyph_vector_push(                                             \
-        _figure->segments, sizeof(VGLYPH_RESULT_TYPE));                                      \
-                                                                                             \
-    if (!_vglyph_vector_is_valid(_figure->segments))                                         \
-    {                                                                                        \
-        _vglyph_figure_set_state(_figure, _vglyph_vector_get_state(_figure->segments));      \
-        _result = NULL;                                                                      \
-    }                                                                                        \
-    else                                                                                     \
-    {                                                                                        \
-        _result = (VGLYPH_RESULT_TYPE*)                                                      \
-            _vglyph_vector_at(_figure->segments, _segment_type->offset);                     \
-    }                                                                                        \
+#define _vglyph_figure_add_segment(_figure, _segment, _result)                                   \
+{                                                                                                \
+    vglyph_segment_type_t* _segment_type = _vglyph_figure_add_segment_type(_figure);             \
+                                                                                                 \
+    if (!_segment_type)                                                                          \
+        _result = NULL;                                                                          \
+                                                                                                 \
+    _segment_type->segment = _segment;                                                           \
+    _segment_type->offset = _vglyph_vector_push(_figure->segments, sizeof(VGLYPH_RESULT_TYPE));  \
+                                                                                                 \
+    if (!_vglyph_vector_is_valid(_figure->segments))                                             \
+    {                                                                                            \
+        _vglyph_figure_set_state(_figure, _vglyph_vector_get_state(_figure->segments));          \
+        _vglyph_object_set_state_not_fatal(&figure->object);                                     \
+                                                                                                 \
+        vglyph_object_reset_state(&_figure->segments->object);                                   \
+        _result = NULL;                                                                          \
+    }                                                                                            \
+    else                                                                                         \
+    {                                                                                            \
+        _result = (VGLYPH_RESULT_TYPE*)                                                          \
+            _vglyph_vector_at(_figure->segments, _segment_type->offset);                         \
+    }                                                                                            \
 }
 
 #endif

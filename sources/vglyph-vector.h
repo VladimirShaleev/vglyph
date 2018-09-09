@@ -142,13 +142,15 @@ _vglyph_vector_push(vglyph_vector_t* vector,
     if (vector->count_bytes > vector->max_bytes)
     {
         vector->max_bytes += vector->reserved_bytes;
-        vector->data = (vglyph_uint8_t*)realloc(vector->data, vector->max_bytes);
+        vglyph_uint8_t* data = (vglyph_uint8_t*)realloc(vector->data, vector->max_bytes);
 
-        if (!vector->data)
+        if (!data)
         {
             _vglyph_vector_set_state(vector, VGLYPH_STATE_OUT_OF_MEMORY);
             return 0;
         }
+
+        vector->data = data;
     }
 
     return offset;
