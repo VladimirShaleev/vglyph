@@ -511,7 +511,7 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                           const vglyph_color_t* color,
                           const vglyph_point_t* position,
                           const vglyph_point_t* origin,
-                          vglyph_float32_t radians);
+                          vglyph_float32_t angle);
 
 VGLYPH_END
 

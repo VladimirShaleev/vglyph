@@ -10,7 +10,6 @@
 #include "vglyph-rgba-little-uint-data-render.h"
 #include "vglyph-rgba-uint16-data-render.h"
 #include "vglyph-rgba-uint32-data-render.h"
-#include "vglyph-matrix.h"
 #include "vglyph-type.h"
 #include "vglyph-glyph.h"
 #include "vglyph-figure.h"
@@ -37,6 +36,7 @@ _vglyph_data_surface_offset_point(vglyph_point_t* result,
 static vglyph_state_t
 _vglyph_data_surface_moveto(vglyph_data_surface_t* surface,
                             const vglyph_segment_moveto_t* segment,
+                            const vglyph_matrix_t* matrix,
                             vglyph_bool_t relative,
                             vglyph_vector_t* points,
                             vglyph_point_t* prev_point)
@@ -45,12 +45,13 @@ _vglyph_data_surface_moveto(vglyph_data_surface_t* surface,
     _vglyph_data_surface_offset_point(&point, surface, relative, prev_point);
     *prev_point = point;
 
-    return _vglyph_data_surface_add_point(points, &point);
+    return _vglyph_data_surface_add_point(points, matrix, &point);
 }
 
 static vglyph_state_t 
 _vglyph_data_surface_lineto(vglyph_data_surface_t* surface,
                             const vglyph_segment_lineto_t* segment,
+                            const vglyph_matrix_t* matrix,
                             vglyph_bool_t relative,
                             vglyph_vector_t* points,
                             vglyph_point_t* prev_point)
@@ -59,12 +60,13 @@ _vglyph_data_surface_lineto(vglyph_data_surface_t* surface,
     _vglyph_data_surface_offset_point(&point, surface, relative, prev_point);
     *prev_point = point;
 
-    return _vglyph_data_surface_add_point(points, &point);
+    return _vglyph_data_surface_add_point(points, matrix, &point);
 }
 
 static vglyph_state_t
 _vglyph_data_surface_curveto_cubic(vglyph_data_surface_t* surface,
                                    const vglyph_segment_curveto_cubic_t* segment,
+                                   const vglyph_matrix_t* matrix,
                                    vglyph_bool_t relative,
                                    vglyph_vector_t* points,
                                    vglyph_point_t* prev_point,
@@ -112,7 +114,7 @@ _vglyph_data_surface_curveto_cubic(vglyph_data_surface_t* surface,
         if (!b_end && line_length < 1.0f)
             continue;
 
-        state = _vglyph_data_surface_add_point(points, &new_point);
+        state = _vglyph_data_surface_add_point(points, matrix, &new_point);
         old_point = new_point;
 
         if (state != VGLYPH_STATE_SUCCESS)
@@ -128,6 +130,7 @@ _vglyph_data_surface_curveto_cubic(vglyph_data_surface_t* surface,
 static vglyph_state_t
 _vglyph_data_surface_curveto_quadratic(vglyph_data_surface_t* surface,
                                        const vglyph_segment_curveto_quadratic_t* segment,
+                                       const vglyph_matrix_t* matrix,
                                        vglyph_bool_t relative,
                                        vglyph_vector_t* points,
                                        vglyph_point_t* prev_point,
@@ -173,7 +176,7 @@ _vglyph_data_surface_curveto_quadratic(vglyph_data_surface_t* surface,
         if (!b_end && line_length < 1.0f)
             continue;
 
-        state = _vglyph_data_surface_add_point(points, &new_point);
+        state = _vglyph_data_surface_add_point(points, matrix, &new_point);
         old_point = new_point;
 
         if (state != VGLYPH_STATE_SUCCESS)
@@ -189,6 +192,7 @@ _vglyph_data_surface_curveto_quadratic(vglyph_data_surface_t* surface,
 static vglyph_state_t 
 _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
                          const vglyph_segment_arc_t* segment,
+                         const vglyph_matrix_t* matrix,
                          vglyph_bool_t relative,
                          vglyph_vector_t* points,
                          vglyph_point_t* prev_point)
@@ -198,7 +202,7 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
         vglyph_segment_lineto_t line_segment;
         line_segment.point = segment->point;
 
-        return _vglyph_data_surface_lineto(surface, &line_segment, relative, points, prev_point);
+        return _vglyph_data_surface_lineto(surface, &line_segment, matrix, relative, points, prev_point);
     }
 
     vglyph_state_t state = VGLYPH_STATE_SUCCESS;
@@ -254,19 +258,20 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
 
         _vglyph_figure_arc(&point, &radius, &center, cos_fi, sin_fi, theta);
 
-        state = _vglyph_data_surface_add_point(points, &point);
+        state = _vglyph_data_surface_add_point(points, matrix, &point);
 
         if (state != VGLYPH_STATE_SUCCESS)
             return state;
     }
 
-    state = _vglyph_data_surface_add_point(points, &end);
+    state = _vglyph_data_surface_add_point(points, matrix, &end);
     return state;
 }
 
 static vglyph_state_t
 _vglyph_data_surface_lineto_horizontal(vglyph_data_surface_t* surface,
                                        const vglyph_segment_lineto_horizontal_t* segment,
+                                       const vglyph_matrix_t* matrix,
                                        vglyph_bool_t relative,
                                        vglyph_vector_t* points,
                                        vglyph_point_t* prev_point)
@@ -277,12 +282,13 @@ _vglyph_data_surface_lineto_horizontal(vglyph_data_surface_t* surface,
                              segment->x, 
                              relative ? 0.0f : prev_point->y);
 
-    return _vglyph_data_surface_lineto(surface, &line_segment, relative, points, prev_point);
+    return _vglyph_data_surface_lineto(surface, &line_segment, matrix, relative, points, prev_point);
 }
 
 static vglyph_state_t
 _vglyph_data_surface_lineto_vertical(vglyph_data_surface_t* surface,
                                      const vglyph_segment_lineto_vertical_t* segment,
+                                     const vglyph_matrix_t* matrix,
                                      vglyph_bool_t relative,
                                      vglyph_vector_t* points,
                                      vglyph_point_t* prev_point)
@@ -293,12 +299,13 @@ _vglyph_data_surface_lineto_vertical(vglyph_data_surface_t* surface,
                              relative ? 0.0f : prev_point->x,
                              segment->y);
 
-    return _vglyph_data_surface_lineto(surface, &line_segment, relative, points, prev_point);
+    return _vglyph_data_surface_lineto(surface, &line_segment, matrix, relative, points, prev_point);
 }
 
 static vglyph_state_t
 _vglyph_data_surface_curveto_cubic_smooth(vglyph_data_surface_t* surface,
                                           const vglyph_segment_curveto_cubic_smooth_t* segment,
+                                          const vglyph_matrix_t* matrix,
                                           vglyph_bool_t relative,
                                           vglyph_vector_t* points,
                                           vglyph_point_t* prev_point,
@@ -324,6 +331,7 @@ _vglyph_data_surface_curveto_cubic_smooth(vglyph_data_surface_t* surface,
 
     return _vglyph_data_surface_curveto_cubic(surface,
                                               &cubic_segment,
+                                              matrix,
                                               relative,
                                               points,
                                               prev_point,
@@ -333,6 +341,7 @@ _vglyph_data_surface_curveto_cubic_smooth(vglyph_data_surface_t* surface,
 static vglyph_state_t
 _vglyph_data_surface_curveto_quadratic_smooth(vglyph_data_surface_t* surface,
                                               const vglyph_segment_curveto_quadratic_smooth_t* segment,
+                                              const vglyph_matrix_t* matrix,
                                               vglyph_bool_t relative,
                                               vglyph_vector_t* points,
                                               vglyph_point_t* prev_point,
@@ -357,6 +366,7 @@ _vglyph_data_surface_curveto_quadratic_smooth(vglyph_data_surface_t* surface,
 
     return _vglyph_data_surface_curveto_quadratic(surface,
                                                   &quadratic_segment,
+                                                  matrix,
                                                   relative,
                                                   points,
                                                   prev_point,
@@ -367,6 +377,7 @@ static vglyph_state_t
 _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
                                       vglyph_segment_t segment_type,
                                       const void* segment,
+                                      const vglyph_matrix_t* matrix,
                                       vglyph_vector_t* points,
                                       vglyph_bool_t* path_closed,
                                       vglyph_point_t* start_point,
@@ -381,7 +392,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
         *path_closed = FALSE;
         *start_point = *prev_point;
         
-        if ((state = _vglyph_data_surface_add_point(points, prev_point)) != VGLYPH_STATE_SUCCESS)
+        if ((state = _vglyph_data_surface_add_point(points, matrix, prev_point)) != VGLYPH_STATE_SUCCESS)
             return state;
     }
 
@@ -396,7 +407,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
                     prev_point->y != start_point->y)
                 {
                     prev_point = start_point;
-                    state = _vglyph_data_surface_add_point(points, start_point);
+                    state = _vglyph_data_surface_add_point(points, matrix, start_point);
 
                     if (state != VGLYPH_STATE_SUCCESS)
                         return state;
@@ -405,7 +416,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
                 vglyph_point_t end_marker;
                 _vglyph_point_from_coord(&end_marker, NAN, NAN);
 
-                return _vglyph_data_surface_add_point(points, &end_marker);
+                return _vglyph_data_surface_add_point(points, matrix, &end_marker);
             }
             break;
 
@@ -413,6 +424,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
         case VGLYPH_SEGMENT_MOVETO_REL:
             state = _vglyph_data_surface_moveto(surface,
                                                 (vglyph_segment_moveto_t*)segment,
+                                                matrix,
                                                 segment_type - VGLYPH_SEGMENT_MOVETO_ABS,
                                                 points,
                                                 prev_point);
@@ -428,6 +440,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
         case VGLYPH_SEGMENT_LINETO_REL:
             return _vglyph_data_surface_lineto(surface,
                                                (vglyph_segment_lineto_t*)segment,
+                                               matrix,
                                                segment_type - VGLYPH_SEGMENT_LINETO_ABS,
                                                points,
                                                prev_point);
@@ -436,6 +449,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
         case VGLYPH_SEGMENT_CURVETO_CUBIC_REL:
             return _vglyph_data_surface_curveto_cubic(surface,
                                                       (vglyph_segment_curveto_cubic_t*)segment,
+                                                      matrix,
                                                       segment_type - VGLYPH_SEGMENT_CURVETO_CUBIC_ABS,
                                                       points,
                                                       prev_point,
@@ -445,6 +459,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
         case VGLYPH_SEGMENT_CURVETO_QUADRATIC_REL:
             return _vglyph_data_surface_curveto_quadratic(surface,
                                                           (vglyph_segment_curveto_quadratic_t*)segment,
+                                                          matrix,
                                                           segment_type - VGLYPH_SEGMENT_CURVETO_QUADRATIC_ABS,
                                                           points,
                                                           prev_point,
@@ -455,6 +470,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
         case VGLYPH_SEGMENT_ARC_REL:
             return _vglyph_data_surface_arc(surface,
                                             (vglyph_segment_arc_t*)segment,
+                                            matrix,
                                             segment_type - VGLYPH_SEGMENT_ARC_ABS,
                                             points,
                                             prev_point);
@@ -463,6 +479,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
         case VGLYPH_SEGMENT_LINETO_HORIZONTAL_REL:
             return _vglyph_data_surface_lineto_horizontal(surface,
                                                           (vglyph_segment_lineto_horizontal_t*)segment,
+                                                          matrix,
                                                           segment_type - VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS,
                                                           points,
                                                           prev_point);
@@ -471,6 +488,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
         case VGLYPH_SEGMENT_LINETO_VERTICAL_REL:
             return _vglyph_data_surface_lineto_vertical(surface,
                                                         (vglyph_segment_lineto_vertical_t*)segment,
+                                                        matrix,
                                                         segment_type - VGLYPH_SEGMENT_LINETO_HORIZONTAL_ABS,
                                                         points,
                                                         prev_point);
@@ -479,6 +497,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
         case VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_REL:
             return _vglyph_data_surface_curveto_cubic_smooth(surface,
                                                              (vglyph_segment_curveto_cubic_smooth_t*)segment,
+                                                             matrix,
                                                              segment_type - VGLYPH_SEGMENT_CURVETO_CUBIC_SMOOTH_ABS,
                                                              points,
                                                              prev_point,
@@ -488,6 +507,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
         case VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_REL:
             return _vglyph_data_surface_curveto_quadratic_smooth(surface,
                                                                  (vglyph_segment_curveto_quadratic_smooth_t*)segment,
+                                                                 matrix,
                                                                  segment_type - VGLYPH_SEGMENT_CURVETO_QUADRATIC_SMOOTH_ABS,
                                                                  points,
                                                                  prev_point,
@@ -500,6 +520,7 @@ _vglyph_data_surface_segment_to_lines(vglyph_data_surface_t* surface,
 static vglyph_vector_t*
 _vglyph_data_surface_figure_to_lines(vglyph_data_surface_t* surface,
                                      vglyph_figure_t* figure,
+                                     const vglyph_matrix_t* matrix,
                                      vglyph_state_t* state)
 {
     *state = VGLYPH_STATE_SUCCESS;
@@ -541,7 +562,9 @@ _vglyph_data_surface_figure_to_lines(vglyph_data_surface_t* surface,
 
         *state = _vglyph_data_surface_segment_to_lines(surface, 
                                                        segment_type->segment, 
-                                                       segment, result, 
+                                                       segment, 
+                                                       matrix,
+                                                       result, 
                                                        &path_closed, 
                                                        &start_point, 
                                                        &prev_point,
@@ -559,6 +582,7 @@ _vglyph_data_surface_figure_to_lines(vglyph_data_surface_t* surface,
         *state = _vglyph_data_surface_segment_to_lines(surface, 
                                                        VGLYPH_SEGMENT_CLOSEPATH, 
                                                        &closepath, 
+                                                       matrix,
                                                        result, 
                                                        &path_closed, 
                                                        &start_point, 
@@ -1028,16 +1052,19 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
                                 const vglyph_color_t* color,
                                 const vglyph_point_t* position,
                                 const vglyph_point_t* origin,
-                                vglyph_float32_t radians)
+                                vglyph_float32_t angle)
 {
-    //vglyph_matrix_t mat;
-    //_vglyph_matrix_identity(&mat);
+    const vglyph_float32_t pi = 3.14159265358979323846f;
+    const vglyph_float32_t degree_to_radians = pi / 180.0f;
+
+    vglyph_matrix_t mat;
+    _vglyph_matrix_identity(&mat);
 
     //if (origin)
     //    _vglyph_matrix_translate(&mat, &mat, origin->x, origin->y);
 
-    //if (radians != 0.0f)
-    //    _vglyph_matrix_rotate(&mat, &mat, radians);
+    if (angle != 0.0f)
+        _vglyph_matrix_rotate(&mat, &mat, angle * degree_to_radians);
 
     //if (position)
     //    _vglyph_matrix_translate(&mat, &mat, position->x, position->y);
@@ -1050,7 +1077,7 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
 
     do
     {
-        points = _vglyph_data_surface_figure_to_lines(data_surface, glyph->figure, &state);
+        points = _vglyph_data_surface_figure_to_lines(data_surface, glyph->figure, &mat, &state);
 
         if (state != VGLYPH_STATE_SUCCESS)
             break;

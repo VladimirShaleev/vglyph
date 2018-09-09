@@ -40,7 +40,7 @@ typedef struct _vglyph_surface_backend
                                 const vglyph_color_t* color,
                                 const vglyph_point_t* position,
                                 const vglyph_point_t* origin,
-                                vglyph_float32_t radians);
+                                vglyph_float32_t angle);
 } vglyph_surface_backend_t;
 
 struct _vglyph_surface

@@ -9,7 +9,7 @@
 
 #include "vglyph-surface.h"
 #include "vglyph-vector.h"
-#include "vglyph-fixed.h"
+#include "vglyph-matrix.h"
 
 extern const vglyph_surface_backend_t vglyph_data_surface_backend;
 
@@ -111,12 +111,16 @@ _vglyph_data_surface_is_valid(vglyph_data_surface_t* surface)
 
 static inline vglyph_state_t
 _vglyph_data_surface_add_point(vglyph_vector_t* points, 
+                               const vglyph_matrix_t* matrix,
                                const vglyph_point_t* point)
 {
     assert(points);
     assert(point);
 
-    return _vglyph_vector_add(points, (const vglyph_uint8_t*)point, sizeof(vglyph_point_t));
+    vglyph_point_t transform_point;
+    _vglyph_matrix_transform_point(&transform_point, matrix, point);
+
+    return _vglyph_vector_add(points, (const vglyph_uint8_t*)&transform_point, sizeof(vglyph_point_t));
 }
 
 #endif
