@@ -651,9 +651,6 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
         vglyph_sint_t start_y = (vglyph_sint_t)floorf(start_point.y);
         vglyph_sint_t end_y   = start_y + (vglyph_sint_t)ceilf(v.y) + 1;
 
-        vglyph_float32_t t;
-        vglyph_float32_t inv_d = 1.0f / v.y;
-
         if (start_y < height && end_y >= 0)
         {
             if (start_y < 0)
@@ -661,6 +658,9 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
 
             if (end_y > height)
                 end_y = height;
+
+            vglyph_float32_t t;
+            vglyph_float32_t inv_d = 1.0f / v.y;
 
             for (vglyph_sint_t y = start_y; y < end_y; ++y)
             {
@@ -698,7 +698,7 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
                     }
 
                     _vglyph_vector_insert(intersections[y],
-                        (vglyph_uint8_t*)&intersection_x,
+                                          (vglyph_uint8_t*)&intersection_x,
                                           sizeof(vglyph_float32_t),
                                           find_offset);
                 }
