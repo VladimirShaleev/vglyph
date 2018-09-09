@@ -242,7 +242,7 @@ vglyph_surface_set_pixel(vglyph_surface_t* surface,
         surface->backend->set_pixel(surface, x, y, color);
 }
 
-void
+vglyph_bool_t
 vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                           vglyph_glyph_t* glyph,
                           const vglyph_color_t* color,
@@ -265,11 +265,13 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
         if (!origin)
             origin = &empty_point;
 
-        surface->backend->draw_glyph(surface,
-                                     glyph,
-                                     color,
-                                     position,
-                                     origin,
-                                     radians);
+        return surface->backend->draw_glyph(surface,
+                                            glyph,
+                                            color,
+                                            position,
+                                            origin,
+                                            radians);
     }
+
+    return FALSE;
 }

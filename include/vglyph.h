@@ -505,7 +505,7 @@ vglyph_surface_set_pixel(vglyph_surface_t* surface,
                          vglyph_sint32_t y,
                          const vglyph_color_t* color);
 
-vglyph_public void
+vglyph_public vglyph_bool_t
 vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                           vglyph_glyph_t* glyph,
                           const vglyph_color_t* color,

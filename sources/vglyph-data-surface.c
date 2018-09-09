@@ -1000,7 +1000,7 @@ _vglyph_data_surface_set_pixel(vglyph_surface_t* surface,
     render->backend->set_pixel(render, surface, x, y, color);
 }
 
-void
+vglyph_bool_t
 _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
                                 vglyph_glyph_t* glyph,
                                 const vglyph_color_t* color,
@@ -1022,48 +1022,58 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
 
     vglyph_data_surface_t* data_surface = (vglyph_data_surface_t*)surface;
 
-    vglyph_state_t state;
-    vglyph_vector_t* points = _vglyph_data_surface_figure_to_lines(data_surface, glyph->figure, &state);
+    vglyph_state_t    state         = VGLYPH_STATE_SUCCESS;
+    vglyph_vector_t*  points        = NULL;
+    vglyph_vector_t** intersections = NULL;
 
-    if (state == VGLYPH_STATE_SUCCESS)
+    do
     {
-        vglyph_vector_t** intersections = _vglyph_data_surface_compute_intersections(data_surface, points, &state);
+        points = _vglyph_data_surface_figure_to_lines(data_surface, glyph->figure, &state);
+
+        if (state != VGLYPH_STATE_SUCCESS)
+            break;
+
+        intersections = _vglyph_data_surface_compute_intersections(data_surface, points, &state);
+        
+        if (state != VGLYPH_STATE_SUCCESS)
+            break;
+
+        _vglyph_vector_destroy(points);
+        points = NULL;
+
+        if (data_surface->base.multisampling == VGLYPH_MULTISAMPLING_1)
+            _vglyph_data_surface_draw_polygon_without_multisampling(data_surface, intersections, color);
+        else
+            _vglyph_data_surface_draw_polygon(data_surface, intersections, color);
+
+    } while (FALSE);
+
+    if (points)
         _vglyph_vector_destroy(points);
 
-        if (state == VGLYPH_STATE_SUCCESS)
+    if (intersections)
+    {
+        const vglyph_uint32_t height = 
+            surface->height << data_surface->shift_mulitsampling;
+
+        for (vglyph_uint32_t y = 0; y < height; ++y)
         {
-            if (data_surface->base.multisampling == VGLYPH_MULTISAMPLING_1)
-                _vglyph_data_surface_draw_polygon_without_multisampling(data_surface, intersections, color);
-            else
-                _vglyph_data_surface_draw_polygon(data_surface, intersections, color);
-        }
-        else
-        {
-            _vglyph_data_surface_set_state(data_surface, state);
-            _vglyph_object_set_state_not_fatal(&data_surface->base.object);
+            if (intersections[y])
+                _vglyph_vector_destroy(intersections[y]);
         }
 
-        if (intersections)
-        {
-            const vglyph_uint32_t height = 
-                surface->height << data_surface->shift_mulitsampling;
-
-            for (vglyph_uint32_t y = 0; y < height; ++y)
-            {
-                if (intersections[y])
-                    _vglyph_vector_destroy(intersections[y]);
-            }
-
-            free(intersections);
-        }
+        free(intersections);
     }
-    else
+
+    if (state != VGLYPH_STATE_SUCCESS)
     {
         _vglyph_data_surface_set_state(data_surface, state);
         _vglyph_object_set_state_not_fatal(&data_surface->base.object);
 
-        _vglyph_vector_destroy(points);
+        return FALSE;
     }
+
+    return TRUE;
 }
 
 static const vglyph_object_backend_t vglyph_data_surface_object_backend = {

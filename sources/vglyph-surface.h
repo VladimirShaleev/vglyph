@@ -35,12 +35,12 @@ typedef struct _vglyph_surface_backend
                       vglyph_sint32_t x,
                       vglyph_sint32_t y,
                       const vglyph_color_t* color);
-    void (*draw_glyph)(vglyph_surface_t* surface,
-                       vglyph_glyph_t* glyph,
-                       const vglyph_color_t* color,
-                       const vglyph_point_t* position,
-                       const vglyph_point_t* origin,
-                       vglyph_float32_t radians);
+    vglyph_bool_t (*draw_glyph)(vglyph_surface_t* surface,
+                                vglyph_glyph_t* glyph,
+                                const vglyph_color_t* color,
+                                const vglyph_point_t* position,
+                                const vglyph_point_t* origin,
+                                vglyph_float32_t radians);
 } vglyph_surface_backend_t;
 
 struct _vglyph_surface
