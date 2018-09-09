@@ -747,15 +747,26 @@ _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
     vglyph_render_t* render    = surface->base.render;
     vglyph_uint8_t*  data_back = surface->data_back;
 
-    const vglyph_uint_t multisampling = (vglyph_uint_t)surface->base.multisampling;
-    const vglyph_uint_t shift_mulitsampling = surface->shift_mulitsampling;
+    void (*set_pixel)(vglyph_render_t*,
+                      vglyph_surface_t*,
+                      vglyph_sint32_t,
+                      vglyph_sint32_t,
+                      const vglyph_color_t*) = color->alpha < 1.0 ? 
+        render->backend->alpha_blend : 
+        render->backend->set_pixel;
 
-    const vglyph_uint32_t width  = surface->base.width;
-    const vglyph_uint32_t height = surface->base.height;
-    const vglyph_uint32_t rasterizer_width  = width << shift_mulitsampling;
-    const vglyph_uint32_t rasterizer_height = height << shift_mulitsampling;
-    const vglyph_uint_t offset_1 = sizeof(vglyph_float32_t);
-    const vglyph_uint_t offset_2 = sizeof(vglyph_float32_t) << 1;
+    const vglyph_sint32_t multisampling       = (vglyph_sint_t)surface->base.multisampling;
+    const vglyph_uint_t   shift_mulitsampling = surface->shift_mulitsampling;
+
+    const vglyph_sint32_t  width             = surface->base.width;
+    const vglyph_sint32_t  height            = surface->base.height;
+    const vglyph_sint32_t  rasterizer_width  = width  << shift_mulitsampling;
+    const vglyph_sint32_t  rasterizer_height = height << shift_mulitsampling;
+    const vglyph_uint_t    offset_1          = sizeof(vglyph_float32_t);
+    const vglyph_uint_t    offset_2          = sizeof(vglyph_float32_t) << 1;
+    const vglyph_uint_t    max_samples       = multisampling * multisampling;
+    const vglyph_float64_t inv_max_samples   = 1.0 / max_samples;
+    const vglyph_float64_t alpha             = color->alpha;
 
     vglyph_vector_t* currect_intersections;
 
@@ -771,16 +782,17 @@ _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
     vglyph_sint32_t min_x;
     vglyph_sint32_t max_x;
 
-    vglyph_float64_t inv_max_hits = 1.0 / (multisampling * multisampling);
+    vglyph_color_t result_color = *color;
 
-    for (vglyph_uint32_t y = 0, ry = 0; y < height; ++y, ry += multisampling)
+    for (vglyph_sint32_t y = 0; y < height; ++y)
     { 
-        for (vglyph_uint32_t my = 0, offset_y = 0; my < multisampling; ++my, offset_y += rasterizer_width)
+        for (vglyph_sint32_t sample_y = 0; sample_y < multisampling; ++sample_y)
         {
-            currect_intersections = intersections[ry + my];
+            currect_intersections = intersections[(y << shift_mulitsampling) + sample_y];
 
             if (currect_intersections)
             {
+                const vglyph_sint32_t offset_y = rasterizer_width * sample_y;
                 const vglyph_uint_t count_intersections = _vglyph_vector_size_in_bytes(currect_intersections);
 
                 for (vglyph_uint_t i = 0; i < count_intersections; i += offset_2)
@@ -815,26 +827,37 @@ _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
 
         if (min_s_ix != INT32_MAX)
         {
-            min_x = (min_s_ix) / multisampling;
-            max_x = (max_e_ix + multisampling - 1) / multisampling;
+            min_x = (min_s_ix) >> shift_mulitsampling;
+            max_x = (max_e_ix + multisampling - 1) >> shift_mulitsampling;
 
-            for (vglyph_uint32_t x = min_x, offset_x = min_x * multisampling; x < max_x; ++x, offset_x += multisampling)
+            for (vglyph_sint32_t x = min_x, offset_x = min_x << shift_mulitsampling
+                 ; x < max_x
+                 ; ++x, offset_x += multisampling)
             {
-                vglyph_uint_t hit = 0;
+                vglyph_uint_t samples = 0;
 
-                for (vglyph_uint_t my = 0, offset_y = 0; my < multisampling; ++my, offset_y += rasterizer_width)
+                for (vglyph_sint_t sample_y = 0, offset_y = 0
+                     ; sample_y < multisampling
+                     ; ++sample_y, offset_y += rasterizer_width)
                 {
                     for (vglyph_uint_t mx = 0; mx < multisampling; ++mx)
-                        hit += data_back[offset_x + mx + offset_y];
+                        samples += data_back[offset_x + mx + offset_y];
 
                 }
 
-                if (hit)
+                if (samples)
                 {
-                    vglyph_color_t ca = *color;
-                    ca.alpha *= hit * inv_max_hits;
+                    result_color.alpha = alpha;
 
-                    render->backend->alpha_blend(render, &surface->base, x, y, &ca);
+                    if (samples == max_samples)
+                    {
+                        set_pixel(render, &surface->base, x, y, &result_color);
+                    }
+                    else
+                    {
+                        result_color.alpha *= samples * inv_max_samples;
+                        render->backend->alpha_blend(render, &surface->base, x, y, &result_color);
+                    }
                 }
             }
 
