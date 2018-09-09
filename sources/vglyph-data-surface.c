@@ -654,45 +654,54 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
         vglyph_float32_t t;
         vglyph_float32_t inv_d = 1.0f / v.y;
 
-        for (vglyph_sint_t y = start_y; y < end_y; ++y)
+        if (start_y < height && end_y >= 0)
         {
-            t = (y - start_point.y) * inv_d;
+            if (start_y < 0)
+                start_y = 0;
 
-            if (t >= 0.0f && t < 1.0f)
+            if (end_y > height)
+                end_y = height;
+
+            for (vglyph_sint_t y = start_y; y < end_y; ++y)
             {
-                if (!intersections[y])
+                t = (y - start_point.y) * inv_d;
+
+                if (t >= 0.0f && t < 1.0f)
                 {
-                    vglyph_vector_t* item = _vglyph_vector_create(sizeof(vglyph_float32_t) << 3);
-
-                    if (!_vglyph_vector_is_valid(item))
+                    if (!intersections[y])
                     {
-                        *state = _vglyph_vector_get_state(item);
-                        _vglyph_vector_destroy(item);
+                        vglyph_vector_t* item = _vglyph_vector_create(sizeof(vglyph_float32_t) << 3);
 
-                        return intersections;
+                        if (!_vglyph_vector_is_valid(item))
+                        {
+                            *state = _vglyph_vector_get_state(item);
+                            _vglyph_vector_destroy(item);
+
+                            return intersections;
+                        }
+
+                        intersections[y] = item;
                     }
 
-                    intersections[y] = item;
+                    vglyph_float32_t intersection_x = start_point.x + v.x * t;
+                    vglyph_float32_t intersection_current;
+
+                    vglyph_uint_t count_intersections = _vglyph_vector_size_in_bytes(intersections[y]);
+                    vglyph_uint_t find_offset;
+
+                    for (find_offset = 0; find_offset < count_intersections; find_offset += sizeof(vglyph_float32_t))
+                    {
+                        intersection_current = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], find_offset);
+
+                        if (intersection_x < intersection_current)
+                            break;
+                    }
+
+                    _vglyph_vector_insert(intersections[y],
+                        (vglyph_uint8_t*)&intersection_x,
+                                          sizeof(vglyph_float32_t),
+                                          find_offset);
                 }
-
-                vglyph_float32_t intersection_x = start_point.x + v.x * t;
-                vglyph_float32_t intersection_current;
-
-                vglyph_uint_t count_intersections = _vglyph_vector_size_in_bytes(intersections[y]);
-                vglyph_uint_t find_offset;
-
-                for (find_offset = 0; find_offset < count_intersections; find_offset += sizeof(vglyph_float32_t))
-                {
-                    intersection_current = *(vglyph_float32_t*)_vglyph_vector_at(intersections[y], find_offset);
-
-                    if (intersection_x < intersection_current)
-                        break;
-                }
-
-                _vglyph_vector_insert(intersections[y], 
-                                      (vglyph_uint8_t*)&intersection_x, 
-                                      sizeof(vglyph_float32_t), 
-                                      find_offset);
             }
         }
 
