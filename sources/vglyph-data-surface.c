@@ -93,25 +93,14 @@ _vglyph_data_surface_curveto_cubic(vglyph_data_surface_t* surface,
 
     vglyph_point_t old_point = start;
     vglyph_point_t new_point;
+    vglyph_point_t vec;
 
-    vglyph_bool_t b_end = FALSE;
-
-    for (vglyph_float32_t t = dt;; t += dt)
+    for (vglyph_float32_t t = dt; t < 1.0f; t += dt)
     {
-        if (t >= 1.0f)
-        {
-            t = 1.0f;
-            b_end = TRUE;
-        }
-
         _vglyph_figure_cubic_bezier(&new_point, &start, &point1, &point2, &end, t);
+        _vglyph_point_sub(&vec, &new_point, &old_point);
 
-        vglyph_point_t v;
-        _vglyph_point_sub(&v, &new_point, &old_point);
-
-        const vglyph_float32_t line_length = _vglyph_point_length(&v);
-
-        if (!b_end && line_length < 1.0f)
+        if (_vglyph_point_length_square(&vec) < 1.0f)
             continue;
 
         state = _vglyph_data_surface_add_point(points, matrix, &new_point);
@@ -119,11 +108,9 @@ _vglyph_data_surface_curveto_cubic(vglyph_data_surface_t* surface,
 
         if (state != VGLYPH_STATE_SUCCESS)
             return state;
-
-        if (b_end)
-            break;
     }
 
+    state = _vglyph_data_surface_add_point(points, matrix, &end);
     return state;
 }
 
@@ -155,25 +142,14 @@ _vglyph_data_surface_curveto_quadratic(vglyph_data_surface_t* surface,
 
     vglyph_point_t old_point = start;
     vglyph_point_t new_point;
+    vglyph_point_t vec;
 
-    vglyph_bool_t b_end = FALSE;
-
-    for (vglyph_float32_t t = dt;; t += dt)
+    for (vglyph_float32_t t = dt; t < 1.0f; t += dt)
     {
-        if (t >= 1.0f)
-        {
-            t = 1.0f;
-            b_end = TRUE;
-        }
-
         _vglyph_figure_quadratic_bezier(&new_point, &start, &point1, &end, t);
+        _vglyph_point_sub(&vec, &new_point, &old_point);
 
-        vglyph_point_t v;
-        _vglyph_point_sub(&v, &new_point, &old_point);
-
-        const vglyph_float32_t line_length = _vglyph_point_length(&v);
-
-        if (!b_end && line_length < 1.0f)
+        if (_vglyph_point_length_square(&vec) < 1.0f)
             continue;
 
         state = _vglyph_data_surface_add_point(points, matrix, &new_point);
@@ -181,11 +157,9 @@ _vglyph_data_surface_curveto_quadratic(vglyph_data_surface_t* surface,
 
         if (state != VGLYPH_STATE_SUCCESS)
             return state;
-
-        if (b_end)
-            break;
     }
 
+    state = _vglyph_data_surface_add_point(points, matrix, &end);
     return state;
 }
 
@@ -1072,11 +1046,11 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     //if (origin)
     //    _vglyph_matrix_translate(&mat, &mat, origin->x, origin->y);
 
-    if (angle != 0.0f)
-        _vglyph_matrix_rotate(&mat, &mat, angle * degree_to_radians);
-
     _vglyph_matrix_translate(&mat, &mat, 0.0f, surface->height * (vglyph_sint_t)(((vglyph_data_surface_t*)surface)->base.multisampling));
     _vglyph_matrix_scale(&mat, &mat, 1.0f, -1.0f);
+
+    if (angle != 0.0f)
+        _vglyph_matrix_rotate(&mat, &mat, angle * degree_to_radians);
 
     //if (position)
     //    _vglyph_matrix_translate(&mat, &mat, position->x, position->y);
