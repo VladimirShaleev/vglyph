@@ -246,7 +246,7 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
                                                                   theta_0, 
                                                                   theta_d);
 
-    const vglyph_uint32_t count_part = (vglyph_uint32_t)ceilf(length * 0.25f) - 1;
+    const vglyph_uint32_t count_part = (vglyph_uint32_t)ceilf(length * 0.5f) - 1;
     const vglyph_float32_t dt = theta_d / count_part;
 
     vglyph_float32_t theta;
@@ -254,7 +254,7 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
 
     for (vglyph_uint32_t part = 1; part < count_part; ++part)
     {
-        theta = theta_0 + (part == count_part ? theta_d : dt * part);
+        theta = theta_0 + dt * part;
 
         _vglyph_figure_arc(&point, &radius, &center, cos_fi, sin_fi, theta);
 
