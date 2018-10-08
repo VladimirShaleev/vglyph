@@ -246,7 +246,7 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
                                                                   theta_0, 
                                                                   theta_d);
 
-    const vglyph_uint32_t count_part = (vglyph_uint32_t)ceilf(length * 0.5f);
+    const vglyph_uint32_t count_part = (vglyph_uint32_t)ceilf(length * 0.25f) - 1;
     const vglyph_float32_t dt = theta_d / count_part;
 
     vglyph_float32_t theta;
@@ -1074,6 +1074,9 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
 
     if (angle != 0.0f)
         _vglyph_matrix_rotate(&mat, &mat, angle * degree_to_radians);
+
+    _vglyph_matrix_translate(&mat, &mat, 0.0f, surface->height * (vglyph_sint_t)(((vglyph_data_surface_t*)surface)->base.multisampling));
+    _vglyph_matrix_scale(&mat, &mat, 1.0f, -1.0f);
 
     //if (position)
     //    _vglyph_matrix_translate(&mat, &mat, position->x, position->y);

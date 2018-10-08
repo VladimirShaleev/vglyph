@@ -427,30 +427,34 @@ int main(int argc, char* argv[])
 
     vglyph_point_t point1;
     point1.x = 0.1f;
-    point1.y = 0.1f;
+    point1.y = 0.9f;
 
     vglyph_point_t point2;
     point2.x = 0.7f;
-    point2.y = 0.7f;
+    point2.y = -0.7f;
 
     vglyph_point_t point3;
     point3.x =  0.1f;
-    point3.y = -0.1f;
+    point3.y = 0.1f;
 
     vglyph_point_t point4;
     point4.x = -0.5f;
-    point4.y = -0.3f;
+    point4.y = 0.3f;
 
     vglyph_point_t point5;
     point5.x = -0.1f;
-    point5.y = -0.5f;
+    point5.y = 0.5f;
 
     vglyph_point_t point6;
     point6.x = 0.05f;
-    point6.y = 0.7f;
+    point6.y = 0.3f;
 
-    vglyph_point_t p0 = { 0.1f, 0.20f };
-    vglyph_point_t p1 = { 0.25f, 0.099f };
+    vglyph_point_t point7;
+    point7.x = 0.1f;
+    point7.y = -0.1f;
+
+    vglyph_point_t p0 = { 0.1f, 0.80f };
+    vglyph_point_t p1 = { 0.25f, -0.099f };
     vglyph_point_t r  = { 0.12f, 0.055f };
 
     vglyph_figure_t* figure = vglyph_figure_create();
@@ -460,15 +464,15 @@ int main(int argc, char* argv[])
     vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_RELATIVE, &point2);
     vglyph_figure_draw_curveto_cubic(figure, VGLYPH_COORDINATE_RELATIVE, &point5, &point3, &point4);
     vglyph_figure_draw_lineto_horizontal(figure, VGLYPH_COORDINATE_RELATIVE, 0.1f);
-    vglyph_figure_draw_lineto_vertical(figure, VGLYPH_COORDINATE_RELATIVE, -0.1f);
+    vglyph_figure_draw_lineto_vertical(figure, VGLYPH_COORDINATE_RELATIVE, 0.1f);
     vglyph_figure_draw_closepath(figure);
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &point6);
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_RELATIVE, &point3);
-    vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_RELATIVE, &point1);
+    vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_RELATIVE, &point7);
     vglyph_figure_draw_closepath(figure);
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &p0);
-    vglyph_figure_draw_arc(figure, VGLYPH_COORDINATE_RELATIVE, &p1, &r, 15.0f, 1, 0);
-    vglyph_figure_draw_arc(figure, VGLYPH_COORDINATE_ABSOLUTE, &p0, &r, 15.0f, 1, 0);
+    vglyph_figure_draw_arc(figure, VGLYPH_COORDINATE_RELATIVE, &p1, &r, -15.0f, 1, 0);
+    vglyph_figure_draw_arc(figure, VGLYPH_COORDINATE_ABSOLUTE, &p0, &r, -15.0f, 1, 0);
     vglyph_figure_draw_closepath(figure);
 
     //vglyph_point_t b0 = { 0.4f, 0.4f };
@@ -487,9 +491,9 @@ int main(int argc, char* argv[])
     vglyph_object_destroy(vglyph_figure_to_object(figure));
     show_object_type(vglyph_glyph_to_object(glyph));
 
-    vglyph_glyph_set_advance(glyph, 0.8f);
-    vglyph_glyph_set_bearing_x(glyph, 0.0f);
-    vglyph_glyph_set_bearing_y(glyph, 0.4f);
+    vglyph_glyph_set_advance(glyph, vglyph_glyph_get_width(glyph));
+    vglyph_glyph_set_bearing_x(glyph, point6.x);
+    vglyph_glyph_set_bearing_y(glyph, point6.y);
 
     vglyph_packaging_bytes_t packaging_bytes;
     packaging_bytes.byte_count = 4;
