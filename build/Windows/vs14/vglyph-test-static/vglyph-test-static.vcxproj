@@ -22,7 +22,8 @@
     <ProjectGuid>{F7DFFE4E-57ED-48EF-BF72-C66A06C42DEA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>vglyphteststatic</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <DefaultTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</DefaultTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>$(DefaultTargetPlatformVersion)</WindowsTargetPlatformVersion>
 	<PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
