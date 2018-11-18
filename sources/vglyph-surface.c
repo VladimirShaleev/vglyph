@@ -147,7 +147,7 @@ vglyph_surface_get_multisampling(vglyph_surface_t* surface)
     if (_vglyph_surface_is_valid(surface))
         return surface->multisampling;
 
-    return 0;
+    return VGLYPH_MULTISAMPLING_DEFAULT;
 }
 
 void

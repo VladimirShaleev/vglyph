@@ -86,7 +86,7 @@ static inline vglyph_state_t
 _vglyph_object_get_state(vglyph_object_t* object)
 {
     assert(object);
-    return object->state & ~VGLYPH_STATE_NOT_FATAL;
+    return (vglyph_state_t)(object->state & ~VGLYPH_STATE_NOT_FATAL);
 }
 
 static inline void
@@ -94,14 +94,14 @@ _vglyph_object_set_state(vglyph_object_t* object,
                          vglyph_state_t state)
 {
     assert(object);
-    object->state = state & ~VGLYPH_STATE_NOT_FATAL;
+    object->state = (vglyph_state_t)(state & ~VGLYPH_STATE_NOT_FATAL);
 }
 
 static inline void
 _vglyph_object_set_state_not_fatal(vglyph_object_t* object)
 {
     assert(object);
-    object->state |= VGLYPH_STATE_NOT_FATAL;
+    object->state = (vglyph_state_t)(object->state | VGLYPH_STATE_NOT_FATAL);
 }
 
 static inline vglyph_bool_t

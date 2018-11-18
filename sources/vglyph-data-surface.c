@@ -575,7 +575,7 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
     *state = VGLYPH_STATE_SUCCESS;
 
     const vglyph_sint_t height = (vglyph_sint_t)(surface->base.height << surface->shift_mulitsampling);
-    vglyph_vector_t** intersections = malloc(sizeof(vglyph_vector_t*) * height);
+    vglyph_vector_t** intersections = (vglyph_vector_t**)malloc(sizeof(vglyph_vector_t*) * height);
 
     if (!intersections)
     {
@@ -976,9 +976,10 @@ _vglyph_data_surface_update_multisampling(vglyph_surface_t* surface)
         data_surface->data_back = NULL;
     }
 
+    vglyph_uint_t samples = multisampling;
     data_surface->shift_mulitsampling = 0;
 
-    while (multisampling >>= 1)
+    while (samples >>= 1)
         ++data_surface->shift_mulitsampling;
 }
 
