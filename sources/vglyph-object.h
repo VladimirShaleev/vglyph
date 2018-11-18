@@ -11,7 +11,7 @@
 #include "vglyph-types.h"
 
 #define VGLYPH_REFERENCE_COUNT_INVALID (-1)
-#define VGLYPH_STATE_NOT_FATAL         (((vglyph_state_t)-1) << ((sizeof(vglyph_state_t) << 3) - 1))
+#define VGLYPH_STATE_NOT_FATAL         ((vglyph_state_t)(((vglyph_uint64_t)-1) << ((sizeof(vglyph_state_t) << 3) - 1)))
 
 typedef struct _vglyph_object_backend
 {

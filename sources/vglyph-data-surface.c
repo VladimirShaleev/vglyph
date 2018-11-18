@@ -90,7 +90,7 @@ _vglyph_data_surface_curveto_cubic(vglyph_data_surface_t* surface,
         _vglyph_figure_get_cubic_bezier_length(&start, &point1, &point2, &end);
 
     const vglyph_float32_t dt = 1.0f / length * 4.0f;
-
+    
     vglyph_point_t old_point = start;
     vglyph_point_t new_point;
     vglyph_point_t vec;
@@ -574,7 +574,7 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
 {
     *state = VGLYPH_STATE_SUCCESS;
 
-    const vglyph_uint32_t height = surface->base.height << surface->shift_mulitsampling;
+    const vglyph_sint_t height = (vglyph_sint_t)(surface->base.height << surface->shift_mulitsampling);
     vglyph_vector_t** intersections = malloc(sizeof(vglyph_vector_t*) * height);
 
     if (!intersections)
@@ -583,7 +583,7 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
         return NULL;
     }
 
-    for (vglyph_uint32_t y = 0; y < height; ++y)
+    for (vglyph_sint_t y = 0; y < height; ++y)
         intersections[y] = NULL;
 
     const vglyph_uint_t size = _vglyph_vector_size_in_bytes(points);
@@ -771,7 +771,7 @@ _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
     const vglyph_sint32_t  rasterizer_height = height << shift_mulitsampling;
     const vglyph_uint_t    offset_1          = sizeof(vglyph_float32_t);
     const vglyph_uint_t    offset_2          = sizeof(vglyph_float32_t) << 1;
-    const vglyph_uint_t    max_samples       = multisampling * multisampling;
+    const vglyph_uint_t    max_samples       = (vglyph_uint_t)(multisampling * multisampling);
     const vglyph_float64_t inv_max_samples   = 1.0 / max_samples;
     const vglyph_float64_t alpha             = color->alpha;
 
@@ -847,7 +847,7 @@ _vglyph_data_surface_draw_polygon(vglyph_data_surface_t* surface,
                      ; sample_y < multisampling
                      ; ++sample_y, offset_y += rasterizer_width)
                 {
-                    for (vglyph_uint_t mx = 0; mx < multisampling; ++mx)
+                    for (vglyph_sint32_t mx = 0; mx < multisampling; ++mx)
                     {
                         samples += data_back[offset_x + mx + offset_y];
                         data_back[offset_x + mx + offset_y] = 0;
@@ -1040,17 +1040,25 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     const vglyph_float32_t pi = 3.14159265358979323846f;
     const vglyph_float32_t degree_to_radians = pi / 180.0f;
 
+    const vglyph_sint_t multisampling = 
+        (vglyph_sint_t)(((vglyph_data_surface_t*)surface)->base.multisampling);
+
+    const vglyph_float32_t width  = (vglyph_float32_t)(surface->width  * multisampling);
+    const vglyph_float32_t height = (vglyph_float32_t)(surface->height * multisampling);
+
     vglyph_matrix_t mat;
     _vglyph_matrix_identity(&mat);
 
     //if (origin)
     //    _vglyph_matrix_translate(&mat, &mat, origin->x, origin->y);
 
-    _vglyph_matrix_translate(&mat, &mat, 0.0f, surface->height * (vglyph_sint_t)(((vglyph_data_surface_t*)surface)->base.multisampling));
+    _vglyph_matrix_translate(&mat, &mat, 0.0f, height);
     _vglyph_matrix_scale(&mat, &mat, 1.0f, -1.0f);
 
     if (angle != 0.0f)
         _vglyph_matrix_rotate(&mat, &mat, angle * degree_to_radians);
+
+    _vglyph_matrix_translate(&mat, &mat, -glyph->bearing_x * width, -glyph->bearing_y * height);
 
     //if (position)
     //    _vglyph_matrix_translate(&mat, &mat, position->x, position->y);

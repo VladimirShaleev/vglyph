@@ -514,7 +514,7 @@ int main(int argc, char* argv[])
     vglyph_format_t* format = vglyph_rgba_uint_format_to_format(
         vglyph_rgba_uint_format_create(&packaging_bytes, &components, &bit_count));
 
-    static char path[512] = { '\0' };
+    char path[512] = { '\0' };
     strcpy(path, app_dir);
     strcat(path, "glyph.bmp");
 
