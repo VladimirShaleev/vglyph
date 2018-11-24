@@ -434,7 +434,7 @@ int main(int argc, char* argv[])
     point2.y = -0.7f;
 
     vglyph_point_t point3;
-    point3.x =  0.1f;
+    point3.x = 0.1f;
     point3.y = 0.1f;
 
     vglyph_point_t point4;
@@ -518,6 +518,14 @@ int main(int argc, char* argv[])
     strcpy(path, app_dir);
     strcat(path, "glyph.bmp");
 
+    //point3.y /= 2;
+    //
+    //vglyph_float32_t w = vglyph_glyph_get_width(glyph);
+    //vglyph_float32_t h = vglyph_glyph_get_height(glyph);
+    //
+    //vglyph_point_t pos = { 0.0f, 0.1f };
+    //vglyph_point_t scale = { 1.0f / w, 1.0f / h };
+
     vglyph_surface_t* surface = vglyph_surface_create(format, 200, 200, VGLYPH_ALIGNMENT_4);
     vglyph_color_t fill_color;
     fill_color.red   = 1.0;
@@ -531,7 +539,7 @@ int main(int argc, char* argv[])
     glyph_color.alpha = 1.0;
     vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_16);
     vglyph_surface_fill(surface, 0, 0, 200, 200, &fill_color);
-    vglyph_surface_draw_glyph(surface, glyph, &glyph_color, NULL, NULL, 0.0f);
+    vglyph_surface_draw_glyph_size(surface, glyph, &glyph_color, 0, 0, 0, 0, 20.0f);
   
     bitmap_save(surface, path);
 

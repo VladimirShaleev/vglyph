@@ -37,6 +37,7 @@ typedef struct _vglyph_glyph             vglyph_glyph_t;
 typedef struct _vglyph_format            vglyph_format_t;
 typedef struct _vglyph_rgba_uint_format  vglyph_rgba_uint_format_t;
 typedef struct _vglyph_rgba_float_format vglyph_rgba_float_format_t;
+typedef struct _vglyph_transform         vglyph_transform_t;
 typedef struct _vglyph_surface           vglyph_surface_t;
 
 typedef _vglyph_bool    vglyph_bool_t;
@@ -508,10 +509,28 @@ vglyph_surface_set_pixel(vglyph_surface_t* surface,
 vglyph_public vglyph_bool_t
 vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                           vglyph_glyph_t* glyph,
+                          vglyph_float32_t pt,
                           const vglyph_color_t* color,
                           const vglyph_point_t* position,
                           const vglyph_point_t* origin,
+                          const vglyph_point_t* scale,
                           vglyph_float32_t angle);
+
+vglyph_public vglyph_bool_t
+vglyph_surface_draw_glyph_size(vglyph_surface_t* surface,
+                               vglyph_glyph_t* glyph,
+                               const vglyph_color_t* color,
+                               const vglyph_point_t* position,
+                               const vglyph_point_t* size,
+                               const vglyph_point_t* origin,
+                               const vglyph_point_t* scale,
+                               vglyph_float32_t angle);
+
+vglyph_public vglyph_bool_t
+vglyph_surface_draw_glyph_transform(vglyph_surface_t* surface,
+                                    vglyph_glyph_t* glyph,
+                                    const vglyph_color_t* color,
+                                    const vglyph_transform_t* transform);
 
 VGLYPH_END
 

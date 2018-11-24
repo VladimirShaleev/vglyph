@@ -80,10 +80,28 @@ _vglyph_data_surface_set_pixel(vglyph_surface_t* surface,
 vglyph_bool_t
 _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
                                 vglyph_glyph_t* glyph,
+                                vglyph_float32_t pt,
                                 const vglyph_color_t* color,
                                 const vglyph_point_t* position,
                                 const vglyph_point_t* origin,
-                                vglyph_float32_t radians);
+                                const vglyph_point_t* scale,
+                                vglyph_float32_t angle);
+
+vglyph_bool_t
+_vglyph_data_surface_draw_glyph_size(vglyph_surface_t* surface,
+                                     vglyph_glyph_t* glyph,
+                                     const vglyph_color_t* color,
+                                     const vglyph_point_t* position,
+                                     const vglyph_point_t* size,
+                                     const vglyph_point_t* origin,
+                                     const vglyph_point_t* scale,
+                                     vglyph_float32_t angle);
+
+vglyph_bool_t
+_vglyph_data_surface_draw_glyph_transform(vglyph_surface_t* surface,
+                                          vglyph_glyph_t* glyph,
+                                          const vglyph_color_t* color,
+                                          const vglyph_transform_t* transform);
 
 vglyph_uint32_t
 _vglyph_data_surface_get_pitch(vglyph_format_t* format,

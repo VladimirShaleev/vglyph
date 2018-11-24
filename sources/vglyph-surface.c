@@ -245,9 +245,11 @@ vglyph_surface_set_pixel(vglyph_surface_t* surface,
 vglyph_bool_t
 vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                           vglyph_glyph_t* glyph,
+                          vglyph_float32_t pt,
                           const vglyph_color_t* color,
                           const vglyph_point_t* position,
                           const vglyph_point_t* origin,
+                          const vglyph_point_t* scale,
                           vglyph_float32_t angle)
 {
     assert(surface);
@@ -256,21 +258,64 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
 
     if (_vglyph_surface_is_valid(surface))
     {
-        vglyph_point_t empty_point;
-        _vglyph_point_from_coord(&empty_point, 0.0f, 0.0f);
-
-        if (!position)
-            position = &empty_point;
-
-        if (!origin)
-            origin = &empty_point;
-
         return surface->backend->draw_glyph(surface,
                                             glyph,
+                                            pt,
                                             color,
                                             position,
                                             origin,
+                                            scale,
                                             angle);
+    }
+
+    return FALSE;
+}
+
+vglyph_bool_t
+vglyph_surface_draw_glyph_size(vglyph_surface_t* surface,
+                               vglyph_glyph_t* glyph,
+                               const vglyph_color_t* color,
+                               const vglyph_point_t* position,
+                               const vglyph_point_t* size,
+                               const vglyph_point_t* origin,
+                               const vglyph_point_t* scale,
+                               vglyph_float32_t angle)
+{
+    assert(surface);
+    assert(glyph);
+    assert(color);
+
+    if (_vglyph_surface_is_valid(surface))
+    {
+        return surface->backend->draw_glyph_size(surface,
+                                                 glyph,
+                                                 color,
+                                                 position,
+                                                 size,
+                                                 origin,
+                                                 scale,
+                                                 angle);
+    }
+
+    return FALSE;
+}
+
+vglyph_bool_t
+vglyph_surface_draw_glyph_transform(vglyph_surface_t* surface,
+                                    vglyph_glyph_t* glyph,
+                                    const vglyph_color_t* color,
+                                    const vglyph_transform_t* transform)
+{
+    assert(surface);
+    assert(glyph);
+    assert(color);
+
+    if (_vglyph_surface_is_valid(surface))
+    {
+        return surface->backend->draw_glyph_transform(surface,
+                                                      glyph,
+                                                      color,
+                                                      transform);
     }
 
     return FALSE;
