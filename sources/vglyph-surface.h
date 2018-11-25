@@ -47,7 +47,7 @@ typedef struct _vglyph_surface_backend
                                      vglyph_glyph_t* glyph,
                                      const vglyph_color_t* color,
                                      const vglyph_point_t* position,
-                                     const vglyph_point_t* size,
+                                     const vglyph_point_t* viewport,
                                      const vglyph_point_t* origin,
                                      const vglyph_point_t* scale,
                                      vglyph_float32_t angle);

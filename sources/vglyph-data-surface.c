@@ -1110,7 +1110,7 @@ _vglyph_data_surface_draw_glyph_size(vglyph_surface_t* surface,
                                      vglyph_glyph_t* glyph,
                                      const vglyph_color_t* color,
                                      const vglyph_point_t* position,
-                                     const vglyph_point_t* size,
+                                     const vglyph_point_t* viewport,
                                      const vglyph_point_t* origin,
                                      const vglyph_point_t* scale,
                                      vglyph_float32_t angle)
@@ -1124,16 +1124,33 @@ _vglyph_data_surface_draw_glyph_size(vglyph_surface_t* surface,
     const vglyph_float32_t width  = (vglyph_float32_t)(surface->width  * multisampling);
     const vglyph_float32_t height = (vglyph_float32_t)(surface->height * multisampling);
 
+    const vglyph_float32_t glyph_width  = vglyph_glyph_get_width(glyph);
+    const vglyph_float32_t glyph_height = vglyph_glyph_get_height(glyph);
+
+    if (glyph_width == 0.0f || glyph_height == 0.0f)
+        return TRUE;
+
     vglyph_matrix_t mat;
     _vglyph_matrix_identity(&mat);
-
     _vglyph_matrix_translate(&mat, &mat, 0.0f, height);
-    _vglyph_matrix_scale(&mat, &mat, 1.0f, -1.0f);
+    _vglyph_matrix_scale(&mat, &mat, 1.0f / glyph_width, -1.0f / glyph_height);
 
-    _vglyph_matrix_translate(&mat, &mat, -glyph->bearing_x * width, -glyph->bearing_y * height);
+    if (viewport)
+        _vglyph_matrix_scale(&mat, &mat, viewport->x / surface->width, viewport->y / surface->height);
+
+    if (scale)
+        _vglyph_matrix_scale(&mat, &mat, scale->x, scale->y);
+
+    if (position)
+        _vglyph_matrix_translate(&mat, &mat, position->x * multisampling, position->y * multisampling);
 
     if (angle != 0.0f)
         _vglyph_matrix_rotate(&mat, &mat, angle * degree_to_radians);
+
+    if (origin)
+        _vglyph_matrix_translate(&mat, &mat, -origin->x * multisampling, -origin->y * multisampling);
+
+    _vglyph_matrix_translate(&mat, &mat, -glyph->bearing_x * width, -glyph->bearing_y * height);
 
     return _vglyph_data_surface_draw_glyph_matrix(surface,
                                                   glyph,
