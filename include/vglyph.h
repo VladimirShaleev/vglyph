@@ -233,6 +233,9 @@ vglyph_get_rgba_uint_format_type(void);
 //vglyph_get_rgba_float_format_type(void);
 
 vglyph_public vglyph_type_t*
+vglyph_get_transform_type(void);
+
+vglyph_public vglyph_type_t*
 vglyph_get_surface_type(void);
 
 vglyph_public vglyph_object_t*
@@ -274,6 +277,9 @@ vglyph_object_to_rgba_uint_format(vglyph_object_t* object);
 
 //vglyph_public vglyph_rgba_float_format_t*
 //vglyph_object_to_rgba_float_format(vglyph_object_t* object);
+
+vglyph_public vglyph_transform_t*
+vglyph_object_to_transform(vglyph_object_t* object);
 
 vglyph_public vglyph_surface_t*
 vglyph_object_to_surface(vglyph_object_t* object);
@@ -433,6 +439,15 @@ vglyph_rgba_uint_format_get_bit_count(vglyph_rgba_uint_format_t* format,
 
 //vglyph_public vglyph_format_t*
 //vglyph_rgba_float_format_to_format(vglyph_rgba_float_format_t* format);
+
+vglyph_public vglyph_transform_t*
+vglyph_transform_create();
+
+vglyph_public vglyph_transform_t*
+vglyph_transform_create_copy(vglyph_transform_t* transform);
+
+vglyph_public vglyph_object_t*
+vglyph_transform_to_object(vglyph_transform_t* transform);
 
 vglyph_public vglyph_uint32_t
 vglyph_surface_get_data_size(vglyph_format_t* format,

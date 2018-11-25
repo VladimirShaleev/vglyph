@@ -29,7 +29,7 @@ _vglyph_type_is_valid(vglyph_type_t* type)
     { VGLYPH_REFERENCE_COUNT_INVALID, \
       VGLYPH_STATE_SUCCESS,           \
       &_vglyph_type_object_backend }, \
-    _is_cast                          \
+     _is_cast                         \
 };
 
 #endif
