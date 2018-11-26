@@ -1106,14 +1106,14 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
 }
 
 vglyph_bool_t
-_vglyph_data_surface_draw_glyph_size(vglyph_surface_t* surface,
-                                     vglyph_glyph_t* glyph,
-                                     const vglyph_color_t* color,
-                                     const vglyph_point_t* position,
-                                     const vglyph_point_t* viewport,
-                                     const vglyph_point_t* origin,
-                                     const vglyph_point_t* scale,
-                                     vglyph_float32_t angle)
+_vglyph_data_surface_draw_glyph_viewport(vglyph_surface_t* surface,
+                                         vglyph_glyph_t* glyph,
+                                         const vglyph_color_t* color,
+                                         const vglyph_point_t* position,
+                                         const vglyph_point_t* viewport,
+                                         const vglyph_point_t* origin,
+                                         const vglyph_point_t* scale,
+                                         vglyph_float32_t angle)
 {
     const vglyph_float32_t pi = 3.14159265358979323846f;
     const vglyph_float32_t degree_to_radians = pi / 180.0f;
@@ -1181,7 +1181,7 @@ const vglyph_surface_backend_t vglyph_data_surface_backend = {
     _vglyph_data_surface_get_pixel,
     _vglyph_data_surface_set_pixel,
     _vglyph_data_surface_draw_glyph,
-    _vglyph_data_surface_draw_glyph_size,
+    _vglyph_data_surface_draw_glyph_viewport,
     _vglyph_data_surface_draw_glyph_transform
 };
 

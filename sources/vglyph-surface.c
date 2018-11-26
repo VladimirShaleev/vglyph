@@ -272,14 +272,14 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
 }
 
 vglyph_bool_t
-vglyph_surface_draw_glyph_size(vglyph_surface_t* surface,
-                               vglyph_glyph_t* glyph,
-                               const vglyph_color_t* color,
-                               const vglyph_point_t* position,
-                               const vglyph_point_t* viewport,
-                               const vglyph_point_t* origin,
-                               const vglyph_point_t* scale,
-                               vglyph_float32_t angle)
+vglyph_surface_draw_glyph_viewport(vglyph_surface_t* surface,
+                                   vglyph_glyph_t* glyph,
+                                   const vglyph_color_t* color,
+                                   const vglyph_point_t* position,
+                                   const vglyph_point_t* viewport,
+                                   const vglyph_point_t* origin,
+                                   const vglyph_point_t* scale,
+                                   vglyph_float32_t angle)
 {
     assert(surface);
     assert(glyph);
@@ -287,14 +287,14 @@ vglyph_surface_draw_glyph_size(vglyph_surface_t* surface,
 
     if (_vglyph_surface_is_valid(surface))
     {
-        return surface->backend->draw_glyph_size(surface,
-                                                 glyph,
-                                                 color,
-                                                 position,
-                                                 viewport,
-                                                 origin,
-                                                 scale,
-                                                 angle);
+        return surface->backend->draw_glyph_viewport(surface,
+                                                     glyph,
+                                                     color,
+                                                     position,
+                                                     viewport,
+                                                     origin,
+                                                     scale,
+                                                     angle);
     }
 
     return FALSE;
