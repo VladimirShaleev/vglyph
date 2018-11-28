@@ -696,9 +696,6 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
     const vglyph_segment_type_t* segment_type;
     const void* segment;
 
-    const vglyph_float32_t pi = 3.14159265358979323846f;
-    const vglyph_float32_t degree_to_radians = pi / 180.0f;
-
     vglyph_bool_t path_closed = TRUE;
 
     vglyph_rectangle_t bound;
@@ -823,7 +820,7 @@ _vglyph_figure_get_bound(vglyph_figure_t* figure,
                                                   &prev_point,
                                                   &point,
                                                   &((vglyph_segment_arc_t*)segment)->radius,
-                                                  ((vglyph_segment_arc_t*)segment)->angle * degree_to_radians,
+                                                  _vglyph_degree_to_radians(((vglyph_segment_arc_t*)segment)->angle),
                                                   ((vglyph_segment_arc_t*)segment)->large_arc_flag,
                                                   ((vglyph_segment_arc_t*)segment)->sweep_flag))
                 {

@@ -539,7 +539,7 @@ int main(int argc, char* argv[])
     glyph_color.alpha = 1.0;
     vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_32);
     vglyph_surface_fill(surface, 0, 0, 200, 200, &fill_color);
-    vglyph_surface_draw_glyph_size(surface, glyph, &glyph_color, &pos, &viewport, 0, 0, 0.0f);
+    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color, &pos, &viewport, 0, 0, 0.0f);
   
     bitmap_save(surface, path);
 

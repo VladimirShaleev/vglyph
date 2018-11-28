@@ -188,9 +188,6 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
     vglyph_float32_t theta_0;
     vglyph_float32_t theta_d;
 
-    const vglyph_float32_t pi = 3.14159265358979323846f;
-    const vglyph_float32_t degree_to_radians = pi / 180.0f;
-
     vglyph_point_t start = *prev_point;
     vglyph_point_t end   = segment->point;
 
@@ -209,7 +206,7 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
                                   &start, 
                                   &end, 
                                   &radius, 
-                                  segment->angle * degree_to_radians, 
+                                  _vglyph_degree_to_radians(segment->angle),
                                   segment->large_arc_flag,
                                   segment->sweep_flag);
 
@@ -1115,9 +1112,6 @@ _vglyph_data_surface_draw_glyph_viewport(vglyph_surface_t* surface,
                                          const vglyph_point_t* scale,
                                          vglyph_float32_t angle)
 {
-    const vglyph_float32_t pi = 3.14159265358979323846f;
-    const vglyph_float32_t degree_to_radians = pi / 180.0f;
-
     const vglyph_sint_t multisampling =
         (vglyph_sint_t)(((vglyph_data_surface_t*)surface)->base.multisampling);
 
@@ -1145,7 +1139,7 @@ _vglyph_data_surface_draw_glyph_viewport(vglyph_surface_t* surface,
         _vglyph_matrix_translate(&mat, &mat, position->x * multisampling, position->y * multisampling);
 
     if (angle != 0.0f)
-        _vglyph_matrix_rotate(&mat, &mat, angle * degree_to_radians);
+        _vglyph_matrix_rotate(&mat, &mat, _vglyph_degree_to_radians(angle));
 
     if (origin)
         _vglyph_matrix_translate(&mat, &mat, -origin->x * multisampling, -origin->y * multisampling);

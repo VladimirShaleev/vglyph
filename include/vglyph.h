@@ -449,6 +449,31 @@ vglyph_transform_create_copy(vglyph_transform_t* transform);
 vglyph_public vglyph_object_t*
 vglyph_transform_to_object(vglyph_transform_t* transform);
 
+vglyph_public void
+_vglyph_transform_clear(vglyph_transform_t* transform);
+
+vglyph_public void
+_vglyph_transform_combine(vglyph_transform_t* transform,
+                          vglyph_transform_t* value);
+
+vglyph_public void
+_vglyph_transform_translate(vglyph_transform_t* transform,
+                            vglyph_float32_t x,
+                            vglyph_float32_t y);
+
+vglyph_public void
+_vglyph_transform_scale(vglyph_transform_t* transform,
+                        vglyph_float32_t sx,
+                        vglyph_float32_t sy);
+
+vglyph_public void
+_vglyph_transform_rotate(vglyph_transform_t* transform,
+                         vglyph_float32_t angle);
+
+vglyph_public void
+_vglyph_transform_transform_point(vglyph_transform_t* transform,
+                                  vglyph_point_t* point);
+
 vglyph_public vglyph_uint32_t
 vglyph_surface_get_data_size(vglyph_format_t* format,
                              vglyph_uint32_t width,

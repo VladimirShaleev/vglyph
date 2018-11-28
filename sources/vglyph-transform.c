@@ -98,10 +98,65 @@ vglyph_transform_create_copy(vglyph_transform_t* transform)
     return _vglyph_transform_create(&transform->matrix);
 }
 
-//void
-//vglyph_glyph_set_advance(vglyph_glyph_t* glyph,
-//                         vglyph_float32_t advance)
-//{
-//    assert(glyph);
-//    glyph->advance = advance;
-//}
+void
+_vglyph_transform_clear(vglyph_transform_t* transform)
+{
+    assert(transform);
+
+    if (_vglyph_transform_is_valid(transform))
+        _vglyph_matrix_identity(&transform->matrix);
+}
+
+void
+_vglyph_transform_combine(vglyph_transform_t* transform,
+                          vglyph_transform_t* value)
+{
+    assert(transform);
+    assert(value);
+
+    if (_vglyph_transform_is_valid(transform))
+        _vglyph_matrix_multiply(&transform->matrix, &transform->matrix, &value->matrix);
+}
+
+void
+_vglyph_transform_translate(vglyph_transform_t* transform,
+                            vglyph_float32_t x,
+                            vglyph_float32_t y)
+{
+    assert(transform);
+
+    if (_vglyph_transform_is_valid(transform))
+        _vglyph_matrix_translate(&transform->matrix, &transform->matrix, x, y);
+}
+
+void
+_vglyph_transform_scale(vglyph_transform_t* transform,
+                        vglyph_float32_t sx,
+                        vglyph_float32_t sy)
+{
+    assert(transform);
+
+    if (_vglyph_transform_is_valid(transform))
+        _vglyph_matrix_scale(&transform->matrix, &transform->matrix, sx, sy);
+}
+
+void
+_vglyph_transform_rotate(vglyph_transform_t* transform,
+                         vglyph_float32_t angle)
+{
+    assert(transform);
+
+    if (_vglyph_transform_is_valid(transform))
+        _vglyph_matrix_rotate(&transform->matrix, &transform->matrix, _vglyph_degree_to_radians(angle));
+}
+
+void
+_vglyph_transform_transform_point(vglyph_transform_t* transform,
+                                  vglyph_point_t* point)
+{
+    assert(transform);
+    assert(point);
+
+    if (_vglyph_transform_is_valid(transform))
+        _vglyph_matrix_transform_point(point, &transform->matrix, point);
+}

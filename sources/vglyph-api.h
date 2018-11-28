@@ -53,4 +53,13 @@ _vglyph_swap_uint32(vglyph_uint32_t value)
     return value;
 }
 
+static inline vglyph_float32_t
+_vglyph_degree_to_radians(vglyph_float32_t angle)
+{
+    const vglyph_float32_t pi = 3.14159265358979323846f;
+    const vglyph_float32_t degree_to_radians = pi / 180.0f;
+
+    return angle * degree_to_radians;
+}
+
 #endif
