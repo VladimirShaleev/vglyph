@@ -1125,8 +1125,7 @@ _vglyph_data_surface_draw_glyph_viewport(vglyph_surface_t* surface,
         return TRUE;
 
     vglyph_matrix_t mat;
-    _vglyph_matrix_identity(&mat);
-    _vglyph_matrix_translate(&mat, &mat, 0.0f, height);
+    _vglyph_matrix_init_translate(&mat, 0.0f, height);
     _vglyph_matrix_scale(&mat, &mat, 1.0f / glyph_width, -1.0f / glyph_height);
 
     if (viewport)
