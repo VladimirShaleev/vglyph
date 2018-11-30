@@ -99,7 +99,7 @@ vglyph_transform_create_copy(vglyph_transform_t* transform)
 }
 
 void
-_vglyph_transform_clear(vglyph_transform_t* transform)
+vglyph_transform_clear(vglyph_transform_t* transform)
 {
     assert(transform);
 
@@ -108,8 +108,8 @@ _vglyph_transform_clear(vglyph_transform_t* transform)
 }
 
 void
-_vglyph_transform_combine(vglyph_transform_t* transform,
-                          vglyph_transform_t* value)
+vglyph_transform_combine(vglyph_transform_t* transform,
+                         vglyph_transform_t* value)
 {
     assert(transform);
     assert(value);
@@ -119,9 +119,9 @@ _vglyph_transform_combine(vglyph_transform_t* transform,
 }
 
 void
-_vglyph_transform_translate(vglyph_transform_t* transform,
-                            vglyph_float32_t x,
-                            vglyph_float32_t y)
+vglyph_transform_translate(vglyph_transform_t* transform,
+                           vglyph_float32_t x,
+                           vglyph_float32_t y)
 {
     assert(transform);
 
@@ -130,9 +130,9 @@ _vglyph_transform_translate(vglyph_transform_t* transform,
 }
 
 void
-_vglyph_transform_scale(vglyph_transform_t* transform,
-                        vglyph_float32_t sx,
-                        vglyph_float32_t sy)
+vglyph_transform_scale(vglyph_transform_t* transform,
+                       vglyph_float32_t sx,
+                       vglyph_float32_t sy)
 {
     assert(transform);
 
@@ -141,8 +141,8 @@ _vglyph_transform_scale(vglyph_transform_t* transform,
 }
 
 void
-_vglyph_transform_rotate(vglyph_transform_t* transform,
-                         vglyph_float32_t angle)
+vglyph_transform_rotate(vglyph_transform_t* transform,
+                        vglyph_float32_t angle)
 {
     assert(transform);
 
@@ -151,8 +151,8 @@ _vglyph_transform_rotate(vglyph_transform_t* transform,
 }
 
 void
-_vglyph_transform_transform_point(vglyph_transform_t* transform,
-                                  vglyph_point_t* point)
+vglyph_transform_transform_point(vglyph_transform_t* transform,
+                                 vglyph_point_t* point)
 {
     assert(transform);
     assert(point);

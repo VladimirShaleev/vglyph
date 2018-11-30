@@ -13,6 +13,7 @@
 #include "vglyph-type.h"
 #include "vglyph-glyph.h"
 #include "vglyph-figure.h"
+#include "vglyph-transform.h"
 #include "vglyph-segment-types.h"
 
 static vglyph_point_t* 
@@ -1157,7 +1158,37 @@ _vglyph_data_surface_draw_glyph_transform(vglyph_surface_t* surface,
                                           const vglyph_color_t* color,
                                           const vglyph_transform_t* transform)
 {
-    return FALSE;
+    const vglyph_sint_t multisampling =
+        (vglyph_sint_t)(((vglyph_data_surface_t*)surface)->base.multisampling);
+
+    const vglyph_float32_t width  = (vglyph_float32_t)(surface->width  * multisampling);
+    const vglyph_float32_t height = (vglyph_float32_t)(surface->height * multisampling);
+
+    const vglyph_float32_t glyph_width  = vglyph_glyph_get_width(glyph);
+    const vglyph_float32_t glyph_height = vglyph_glyph_get_height(glyph);
+
+    if (glyph_width == 0.0f || glyph_height == 0.0f)
+        return TRUE;
+
+    vglyph_matrix_t mat;
+    _vglyph_matrix_init_translate(&mat, 0.0f, height);
+    _vglyph_matrix_scale(&mat, &mat, 1.0f / glyph_width, -1.0f / glyph_height);
+
+    if (transform)
+    {
+        vglyph_matrix_t mat2 = transform->matrix;
+        mat2.x0 *= multisampling;
+        mat2.y0 *= multisampling;
+
+        _vglyph_matrix_multiply(&mat, &mat2, &mat);
+    }
+
+    _vglyph_matrix_translate(&mat, &mat, -glyph->bearing_x * width, -glyph->bearing_y * height);
+
+    return _vglyph_data_surface_draw_glyph_matrix(surface,
+                                                  glyph,
+                                                  color,
+                                                  &mat);
 }
 
 static const vglyph_object_backend_t vglyph_data_surface_object_backend = {
