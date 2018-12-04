@@ -8,7 +8,6 @@
 #define VGLYPH_FIXED_H
 
 #include "vglyph-api.h"
-#include "vglyph-types.h"
 
 #define VGLYPH_FIXED_BITS      32
 #define VGLYPH_FIXED_FRAC_BITS 8

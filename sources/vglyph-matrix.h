@@ -8,7 +8,6 @@
 #define VGLYPH_MATRIX_H
 
 #include "vglyph-api.h"
-#include "vglyph-types.h"
 
 /* vglyph_matrix_t holds an affine
  * transformation: scale, rotation, shear.

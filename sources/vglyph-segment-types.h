@@ -8,7 +8,6 @@
 #define VGLYPH_SEGMENT_TYPES_H
 
 #include "vglyph-api.h"
-#include "vglyph-types.h"
 
 typedef enum _vglyph_segment
 {

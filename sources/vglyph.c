@@ -5,7 +5,6 @@
  */
 
 #include "vglyph-api.h"
-#include "vglyph-types.h"
 
 vglyph_uint32_t
 vglyph_version(void)

@@ -27,9 +27,13 @@
 #endif
 
 #include "vglyph.h"
+#include "vglyph-types.h"
 
 #define VGLYPH_MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define VGLYPH_MIN(a, b) (((a) < (b)) ? (a) : (b))
+
+vglyph_uint_t
+_vglyph_get_device_dpi(void);
 
 static inline vglyph_bool_t
 _vglyph_is_little_endian(void)

@@ -8,7 +8,6 @@
 #define VGLYPH_POINT_H
 
 #include "vglyph-api.h"
-#include "vglyph-types.h"
 
 static inline vglyph_point_t*
 _vglyph_point_from_coord(vglyph_point_t* result,
