@@ -25,13 +25,13 @@ _vglyph_surface_init(vglyph_surface_t* surface,
 
     _vglyph_object_init(&surface->object, object_backend);
 
-    surface->backend           = surface_backend;
-    surface->format            = _vglyph_format_reference(format);
-    surface->render            = _vglyph_render_reference(render);
-    surface->width             = width;
-    surface->height            = height;
-    surface->pitch             = pitch;
-    surface->multisampling     = _vglyph_surface_get_default_multisampling();
+    surface->backend       = surface_backend;
+    surface->format        = _vglyph_format_reference(format);
+    surface->render        = _vglyph_render_reference(render);
+    surface->width         = width;
+    surface->height        = height;
+    surface->pitch         = pitch;
+    surface->multisampling = _vglyph_surface_get_default_multisampling();
 }
 
 void

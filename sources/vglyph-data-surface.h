@@ -77,6 +77,9 @@ _vglyph_data_surface_set_pixel(vglyph_surface_t* surface,
                                vglyph_sint32_t y,
                                const vglyph_color_t* color);
 
+vglyph_uint_t
+_vglyph_data_surface_get_dpi(vglyph_surface_t* surface);
+
 vglyph_bool_t
 _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
                                 vglyph_glyph_t* glyph,

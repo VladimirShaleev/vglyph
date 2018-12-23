@@ -631,14 +631,14 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
             if (end_y > height)
                 end_y = height;
 
-            vglyph_float32_t t;
-            vglyph_float32_t inv_d = 1.0f / v.y;
+            vglyph_float64_t t;
+            vglyph_float64_t inv_d = 1.0 / v.y;
 
             for (vglyph_sint_t y = start_y; y < end_y; ++y)
             {
                 t = y * inv_d - start_point.y * inv_d;
 
-                if (t >= 0.0f && t < 1.0f)
+                if (t >= 0.0 && t < 1.0)
                 {
                     if (!intersections[y])
                     {
@@ -655,7 +655,7 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
                         intersections[y] = item;
                     }
 
-                    vglyph_float32_t intersection_x = start_point.x + v.x * t;
+                    vglyph_float32_t intersection_x = (vglyph_float32_t)(start_point.x + v.x * t);
                     vglyph_float32_t intersection_current;
 
                     vglyph_uint_t count_intersections = _vglyph_vector_size_in_bytes(intersections[y]);
@@ -1090,6 +1090,12 @@ _vglyph_data_surface_set_pixel(vglyph_surface_t* surface,
     render->backend->set_pixel(render, surface, x, y, color);
 }
 
+vglyph_uint_t 
+_vglyph_data_surface_get_dpi(vglyph_surface_t* surface)
+{
+    return _vglyph_get_device_dpi();
+}
+
 vglyph_bool_t
 _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
                                 vglyph_glyph_t* glyph,
@@ -1100,7 +1106,67 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
                                 const vglyph_point_t* scale,
                                 vglyph_float32_t angle)
 {
-    return FALSE;
+    const vglyph_float32_t size_glyph = pt * surface->backend->get_dpi(surface) / 72.0f;
+
+    if (size_glyph == 0.0f)
+        return TRUE;
+
+    const vglyph_sint_t multisampling =
+        (vglyph_sint_t)(((vglyph_data_surface_t*)surface)->base.multisampling);
+
+    const vglyph_float32_t width  = (vglyph_float32_t)(surface->width  * multisampling);
+    const vglyph_float32_t height = (vglyph_float32_t)(surface->height * multisampling);
+
+    if (width == 0.0f || height == 0.0f)
+        return TRUE;
+
+    const vglyph_float32_t glyph_width = vglyph_glyph_get_width(glyph);
+    const vglyph_float32_t glyph_height = vglyph_glyph_get_height(glyph);
+
+    if (glyph_width == 0.0f || glyph_height == 0.0f)
+        return TRUE;
+
+    vglyph_float32_t scale_x = 1.0f;
+    vglyph_float32_t scale_y = 1.0f;
+
+    vglyph_matrix_t mat;
+    _vglyph_matrix_init_translate(&mat, 0.0f, height);
+
+    if (position)
+        _vglyph_matrix_translate(&mat, &mat, position->x * multisampling, -position->y * multisampling);
+
+    _vglyph_matrix_scale(&mat, &mat, size_glyph / surface->width, -size_glyph / surface->height);
+
+    if (scale)
+    {
+        scale_x = scale->x;
+        scale_y = scale->y;
+
+        if (scale_x == 0.0f || scale_y == 0.0f)
+            return TRUE;
+
+        _vglyph_matrix_scale(&mat, &mat, scale->x, scale->y);
+    }
+
+    if (angle != 0.0f)
+    {
+        _vglyph_matrix_rotate(&mat, &mat, _vglyph_degree_to_radians(angle));
+    }
+
+    if (origin)
+    {
+        _vglyph_matrix_translate(&mat, 
+                                 &mat, 
+                                 -origin->x * surface->width  * multisampling / size_glyph / scale_x, 
+                                 -origin->y * surface->height * multisampling / size_glyph / scale_y);
+    }
+
+    _vglyph_matrix_translate(&mat, &mat, -glyph->bearing_x * width, -glyph->bearing_y * height);
+
+    return _vglyph_data_surface_draw_glyph_matrix(surface,
+                                                  glyph,
+                                                  color,
+                                                  &mat);
 }
 
 vglyph_bool_t
@@ -1204,6 +1270,7 @@ const vglyph_surface_backend_t vglyph_data_surface_backend = {
     _vglyph_data_surface_fill,
     _vglyph_data_surface_get_pixel,
     _vglyph_data_surface_set_pixel,
+    _vglyph_data_surface_get_dpi,
     _vglyph_data_surface_draw_glyph,
     _vglyph_data_surface_draw_glyph_viewport,
     _vglyph_data_surface_draw_glyph_transform

@@ -15,7 +15,7 @@ vglyph_uint_t
 _vglyph_get_device_dpi(void)
 {
     HDC hDC = GetDC(NULL);
-    vglyph_uint_t dpi = (vglyph_uint_t)GetDeviceCaps(hDC, LOGPIXELSX);
+    vglyph_uint_t dpi = (vglyph_uint_t)GetDeviceCaps(hDC, LOGPIXELSY);
     ReleaseDC(NULL, hDC);
 
     return dpi;

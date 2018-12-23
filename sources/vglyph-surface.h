@@ -35,6 +35,7 @@ typedef struct _vglyph_surface_backend
                       vglyph_sint32_t x,
                       vglyph_sint32_t y,
                       const vglyph_color_t* color);
+    vglyph_uint_t (*get_dpi)(vglyph_surface_t* surface);
     vglyph_bool_t (*draw_glyph)(vglyph_surface_t* surface,
                                 vglyph_glyph_t* glyph,
                                 vglyph_float32_t pt,
