@@ -179,6 +179,9 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
 
         return _vglyph_data_surface_lineto(surface, &line_segment, matrix, relative, points, prev_point);
     }
+    
+    const vglyph_float32_t width  = (vglyph_float32_t)(surface->base.width  << surface->shift_mulitsampling);
+    const vglyph_float32_t height = (vglyph_float32_t)(surface->base.height << surface->shift_mulitsampling);
 
     vglyph_state_t state = VGLYPH_STATE_SUCCESS;
 
@@ -195,8 +198,11 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
     _vglyph_data_surface_offset_point(&end, surface, relative, prev_point);
     *prev_point = end;
 
-    radius.x = segment->radius.x * (surface->base.width  << surface->shift_mulitsampling);
-    radius.y = segment->radius.y * (surface->base.height << surface->shift_mulitsampling);
+    start.x /= width;
+    start.y /= height;
+
+    end.x /= width;
+    end.y /= height;
 
     _vglyph_figure_get_arc_params(&radius, 
                                   &center, 
@@ -206,13 +212,19 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
                                   &theta_d,
                                   &start, 
                                   &end, 
-                                  &radius, 
+                                  &segment->radius,
                                   _vglyph_degree_to_radians(segment->angle),
                                   segment->large_arc_flag,
                                   segment->sweep_flag);
 
-    const vglyph_float32_t length = _vglyph_figure_get_arc_length(&radius, 
-                                                                  &center, 
+    vglyph_point_t radius_screen = radius;
+    vglyph_point_t center_screen = center;
+
+    _vglyph_point_from_coord(&radius_screen, radius.x * width, radius.y * height);
+    _vglyph_point_from_coord(&center_screen, center.x * width, center.y * height);
+
+    const vglyph_float32_t length = _vglyph_figure_get_arc_length(&radius_screen,
+                                                                  &center_screen,
                                                                   cos_fi, 
                                                                   sin_fi, 
                                                                   theta_0, 
@@ -230,13 +242,16 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
 
         _vglyph_figure_arc(&point, &radius, &center, cos_fi, sin_fi, theta);
 
+        point.x *= width;
+        point.y *= height;
+
         state = _vglyph_data_surface_add_point(points, matrix, &point);
 
         if (state != VGLYPH_STATE_SUCCESS)
             return state;
     }
 
-    state = _vglyph_data_surface_add_point(points, matrix, &end);
+    state = _vglyph_data_surface_add_point(points, matrix, prev_point);
     return state;
 }
 
@@ -631,12 +646,11 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
             if (end_y > height)
                 end_y = height;
 
-            vglyph_float64_t t;
-            vglyph_float64_t inv_d = 1.0 / v.y;
+            vglyph_float32_t t;
 
             for (vglyph_sint_t y = start_y; y < end_y; ++y)
             {
-                t = y * inv_d - start_point.y * inv_d;
+                t = (y - start_point.y) / v.y;
 
                 if (t >= 0.0 && t < 1.0)
                 {

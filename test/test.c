@@ -524,6 +524,7 @@ int main(int argc, char* argv[])
     //vglyph_float32_t h = vglyph_glyph_get_height(glyph);
     //
     vglyph_point_t pos = { 0.0f, 20.0f };
+    vglyph_point_t scale = { 2.0f, 2.0f };
     vglyph_point_t viewport = { 200.0f, 200.0f };
 
     vglyph_surface_t* surface = vglyph_surface_create(format, 200, 200, VGLYPH_ALIGNMENT_4);
@@ -539,6 +540,7 @@ int main(int argc, char* argv[])
     glyph_color.alpha = 1.0;
     vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_32);
     vglyph_surface_fill(surface, 0, 0, 200, 200, &fill_color);
+    //vglyph_surface_draw_glyph(surface, glyph, 70.0f, &glyph_color, &pos, 0, 0, 0.0f);
     vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color, &pos, &viewport, 0, 0, 0.0f);
 
     bitmap_save(surface, path);
