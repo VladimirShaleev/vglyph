@@ -1149,6 +1149,9 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     if (position)
         _vglyph_matrix_translate(&mat, &mat, position->x * multisampling, -position->y * multisampling);
 
+    if (angle != 0.0f)
+        _vglyph_matrix_rotate(&mat, &mat, -_vglyph_degree_to_radians(angle));
+
     _vglyph_matrix_scale(&mat, &mat, size_glyph / surface->width, -size_glyph / surface->height);
 
     if (scale)
@@ -1160,11 +1163,6 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
             return TRUE;
 
         _vglyph_matrix_scale(&mat, &mat, scale->x, scale->y);
-    }
-
-    if (angle != 0.0f)
-    {
-        _vglyph_matrix_rotate(&mat, &mat, _vglyph_degree_to_radians(angle));
     }
 
     if (origin)
@@ -1209,20 +1207,20 @@ _vglyph_data_surface_draw_glyph_viewport(vglyph_surface_t* surface,
     _vglyph_matrix_init_translate(&mat, 0.0f, height);
     _vglyph_matrix_scale(&mat, &mat, 1.0f / glyph_width, -1.0f / glyph_height);
 
+    if (position)
+        _vglyph_matrix_translate(&mat, &mat, position->x * multisampling, position->y * multisampling);
+
+    if (origin)
+        _vglyph_matrix_translate(&mat, &mat, -origin->x * multisampling, -origin->y * multisampling);
+
+    if (angle != 0.0f)
+        _vglyph_matrix_rotate(&mat, &mat, _vglyph_degree_to_radians(angle));
+
     if (viewport)
         _vglyph_matrix_scale(&mat, &mat, viewport->x / surface->width, viewport->y / surface->height);
 
     if (scale)
         _vglyph_matrix_scale(&mat, &mat, scale->x, scale->y);
-
-    if (position)
-        _vglyph_matrix_translate(&mat, &mat, position->x * multisampling, position->y * multisampling);
-
-    if (angle != 0.0f)
-        _vglyph_matrix_rotate(&mat, &mat, _vglyph_degree_to_radians(angle));
-
-    if (origin)
-        _vglyph_matrix_translate(&mat, &mat, -origin->x * multisampling, -origin->y * multisampling);
 
     _vglyph_matrix_translate(&mat, &mat, -glyph->bearing_x * width, -glyph->bearing_y * height);
 
