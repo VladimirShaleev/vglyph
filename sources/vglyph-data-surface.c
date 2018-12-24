@@ -236,16 +236,16 @@ _vglyph_data_surface_arc(vglyph_data_surface_t* surface,
     vglyph_float32_t theta;
     vglyph_point_t   point;
 
+    vglyph_matrix_t transform;
+    _vglyph_matrix_scale(&transform, matrix, width, height);
+
     for (vglyph_uint32_t part = 1; part < count_part; ++part)
     {
         theta = theta_0 + dt * part;
 
         _vglyph_figure_arc(&point, &radius, &center, cos_fi, sin_fi, theta);
 
-        point.x *= width;
-        point.y *= height;
-
-        state = _vglyph_data_surface_add_point(points, matrix, &point);
+        state = _vglyph_data_surface_add_point(points, &transform, &point);
 
         if (state != VGLYPH_STATE_SUCCESS)
             return state;
