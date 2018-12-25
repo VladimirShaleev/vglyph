@@ -572,8 +572,8 @@ int main(int argc, char* argv[])
     show_object_type(vglyph_glyph_to_object(glyph));
 
     vglyph_glyph_set_advance(glyph, vglyph_glyph_get_width(glyph));
-    //vglyph_glyph_set_bearing_x(glyph, point6.x);
-    //vglyph_glyph_set_bearing_y(glyph, point6.y);
+    vglyph_glyph_set_bearing_x(glyph, 0.0f);
+    vglyph_glyph_set_bearing_y(glyph, p5.y);
 
     vglyph_packaging_bytes_t packaging_bytes;
     packaging_bytes.byte_count = 4;
@@ -603,7 +603,7 @@ int main(int argc, char* argv[])
     //vglyph_float32_t w = vglyph_glyph_get_width(glyph);
     //vglyph_float32_t h = vglyph_glyph_get_height(glyph);
     //
-    vglyph_point_t pos = { 0.0f, 50.0f };
+    vglyph_point_t pos = { 0.0f, 0.0f };
     vglyph_point_t pos2 = { 100.0f, 50.0f };
     vglyph_point_t pos3 = { 250.0f, 50.0f };
     vglyph_point_t scale = { 2.0f, 2.0f };
@@ -620,9 +620,9 @@ int main(int argc, char* argv[])
     glyph_color.green = 0.0;
     glyph_color.blue  = 0.0;
     glyph_color.alpha = 1.0;
-    vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_1);
+    vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_32);
     vglyph_surface_fill(surface, 0, 0, 200, 200, &fill_color);
-    vglyph_surface_draw_glyph(surface, glyph, 70.0f, &glyph_color, &pos, 0, 0, 0.0f);
+    vglyph_surface_draw_glyph(surface, glyph, 24.0f, &glyph_color, &pos, 0, 0, 0.0f);
     //vglyph_surface_draw_glyph(surface, glyph, 120.0f, &glyph_color, &pos2, 0, 0, 0.0f);
     //vglyph_surface_draw_glyph(surface, glyph, 200.0f, &glyph_color, &pos3, 0, 0, 0.0f);
     //vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color, &pos, &viewport, 0, 0, 0.0f);
