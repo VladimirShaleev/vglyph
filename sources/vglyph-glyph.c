@@ -15,10 +15,13 @@ _vglyph_glyph_init(vglyph_glyph_t* glyph,
 {
     _vglyph_object_init(&glyph->object, object_backend);
 
-    glyph->figure    = _vglyph_figure_reference(figure);
-    glyph->bearing_x = 0.0f;
-    glyph->bearing_y = 0.0f;
-    glyph->advance   = 0.0f;
+    glyph->figure               = _vglyph_figure_reference(figure);
+    glyph->horizontal_bearing_x = 0.0f;
+    glyph->horizontal_bearing_y = 0.0f;
+    glyph->horizontal_advance   = 0.0f;
+    glyph->vertical_bearing_x   = 0.0f;
+    glyph->vertical_bearing_y   = 0.0f;
+    glyph->vertical_advance     = 0.0f;
 }
 
 static void
@@ -122,46 +125,91 @@ vglyph_glyph_get_height(vglyph_glyph_t* glyph)
 }
 
 vglyph_float32_t
-vglyph_glyph_get_bearing_x(vglyph_glyph_t* glyph)
+vglyph_glyph_get_horizontal_bearing_x(vglyph_glyph_t* glyph)
 {
     assert(glyph);
-    return glyph->bearing_x;
+    return glyph->horizontal_bearing_x;
 }
 
 void
-vglyph_glyph_set_bearing_x(vglyph_glyph_t* glyph,
-                           vglyph_float32_t bearing_x)
+vglyph_glyph_set_horizontal_bearing_x(vglyph_glyph_t* glyph,
+                                      vglyph_float32_t bearing_x)
 {
     assert(glyph);
-    glyph->bearing_x = bearing_x;
+    glyph->horizontal_bearing_x = bearing_x;
 }
 
 vglyph_float32_t
-vglyph_glyph_get_bearing_y(vglyph_glyph_t* glyph)
+vglyph_glyph_get_horizontal_bearing_y(vglyph_glyph_t* glyph)
 {
     assert(glyph);
-    return glyph->bearing_y;
+    return glyph->horizontal_bearing_y;
 }
 
 void
-vglyph_glyph_set_bearing_y(vglyph_glyph_t* glyph,
-                           vglyph_float32_t bearing_y)
+vglyph_glyph_set_horizontal_bearing_y(vglyph_glyph_t* glyph,
+                                      vglyph_float32_t bearing_y)
 {
     assert(glyph);
-    glyph->bearing_y = bearing_y;
+    glyph->horizontal_bearing_y = bearing_y;
 }
 
 vglyph_float32_t
-vglyph_glyph_get_advance(vglyph_glyph_t* glyph)
+vglyph_glyph_get_horizontal_advance(vglyph_glyph_t* glyph)
 {
     assert(glyph);
-    return glyph->advance;
+    return glyph->horizontal_advance;
 }
 
 void
-vglyph_glyph_set_advance(vglyph_glyph_t* glyph,
-                         vglyph_float32_t advance)
+vglyph_glyph_set_horizontal_advance(vglyph_glyph_t* glyph,
+                                    vglyph_float32_t advance)
 {
     assert(glyph);
-    glyph->advance = advance;
+    glyph->horizontal_advance = advance;
+}
+
+vglyph_float32_t
+vglyph_glyph_get_vertical_bearing_x(vglyph_glyph_t* glyph)
+{
+    assert(glyph);
+    return glyph->vertical_bearing_x;
+}
+
+void
+vglyph_glyph_set_vertical_bearing_x(vglyph_glyph_t* glyph,
+                                    vglyph_float32_t bearing_x)
+{
+    assert(glyph);
+    glyph->vertical_bearing_x = bearing_x;
+}
+
+vglyph_float32_t
+vglyph_glyph_get_vertical_bearing_y(vglyph_glyph_t* glyph)
+{
+    assert(glyph);
+    return glyph->vertical_bearing_y;
+}
+
+void
+vglyph_glyph_set_vertical_bearing_y(vglyph_glyph_t* glyph,
+                                    vglyph_float32_t bearing_y)
+{
+    assert(glyph);
+    glyph->vertical_bearing_y = bearing_y;
+}
+
+vglyph_float32_t
+vglyph_glyph_get_vertical_advance(vglyph_glyph_t* glyph)
+{
+    assert(glyph);
+    return glyph->vertical_advance;
+}
+
+void
+vglyph_glyph_set_vertical_advance(vglyph_glyph_t* glyph,
+                                  vglyph_float32_t advance)
+{
+    assert(glyph);
+    glyph->vertical_advance = advance;
 }

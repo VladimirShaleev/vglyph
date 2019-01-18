@@ -372,25 +372,46 @@ vglyph_public vglyph_float32_t
 vglyph_glyph_get_height(vglyph_glyph_t* glyph);
 
 vglyph_public vglyph_float32_t
-vglyph_glyph_get_bearing_x(vglyph_glyph_t* glyph);
+vglyph_glyph_get_horizontal_bearing_x(vglyph_glyph_t* glyph);
 
 vglyph_public void
-vglyph_glyph_set_bearing_x(vglyph_glyph_t* glyph,
-                           vglyph_float32_t bearing_x);
+vglyph_glyph_set_horizontal_bearing_x(vglyph_glyph_t* glyph,
+                                      vglyph_float32_t bearing_x);
 
 vglyph_public vglyph_float32_t
-vglyph_glyph_get_bearing_y(vglyph_glyph_t* glyph);
+vglyph_glyph_get_horizontal_bearing_y(vglyph_glyph_t* glyph);
 
 vglyph_public void
-vglyph_glyph_set_bearing_y(vglyph_glyph_t* glyph,
-                           vglyph_float32_t bearing_y);
+vglyph_glyph_set_horizontal_bearing_y(vglyph_glyph_t* glyph,
+                                      vglyph_float32_t bearing_y);
 
 vglyph_public vglyph_float32_t
-vglyph_glyph_get_advance(vglyph_glyph_t* glyph);
+vglyph_glyph_get_horizontal_advance(vglyph_glyph_t* glyph);
 
 vglyph_public void
-vglyph_glyph_set_advance(vglyph_glyph_t* glyph,
-                         vglyph_float32_t advance);
+vglyph_glyph_set_horizontal_advance(vglyph_glyph_t* glyph,
+                                    vglyph_float32_t advance);
+
+vglyph_public vglyph_float32_t
+vglyph_glyph_get_vertical_bearing_x(vglyph_glyph_t* glyph);
+
+vglyph_public void
+vglyph_glyph_set_vertical_bearing_x(vglyph_glyph_t* glyph,
+                                    vglyph_float32_t bearing_x);
+
+vglyph_public vglyph_float32_t
+vglyph_glyph_get_vertical_bearing_y(vglyph_glyph_t* glyph);
+
+vglyph_public void
+vglyph_glyph_set_vertical_bearing_y(vglyph_glyph_t* glyph,
+                                    vglyph_float32_t bearing_y);
+
+vglyph_public vglyph_float32_t
+vglyph_glyph_get_vertical_advance(vglyph_glyph_t* glyph);
+
+vglyph_public void
+vglyph_glyph_set_vertical_advance(vglyph_glyph_t* glyph,
+                                  vglyph_float32_t advance);
 
 //vglyph_public vglyph_format_t*
 //vglyph_format_create(const char* format);

@@ -13,9 +13,12 @@ struct _vglyph_glyph
 {
     vglyph_object_t  object;
     vglyph_figure_t* figure;
-    vglyph_float32_t bearing_x;
-    vglyph_float32_t bearing_y;
-    vglyph_float32_t advance;
+    vglyph_float32_t horizontal_bearing_x;
+    vglyph_float32_t horizontal_bearing_y;
+    vglyph_float32_t horizontal_advance;
+    vglyph_float32_t vertical_bearing_x;
+    vglyph_float32_t vertical_bearing_y;
+    vglyph_float32_t vertical_advance;
 };
 
 static inline vglyph_glyph_t*

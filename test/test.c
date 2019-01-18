@@ -507,21 +507,21 @@ int main(int argc, char* argv[])
     vglyph_point_t p29 = {  0.6759122120264749f,      1.0f - 0.13379571610814267f      };
     vglyph_point_t p30 = {  0.6759122120264749f,      1.0f - 0.8566155047802226f       };
     vglyph_point_t p31 = {  0.5813305592383244f,      1.0f - 0.8566155047802226f       };
-    vglyph_point_t p32 = { 0.2929715206285266f,       1.0f - 0.7666474660879885f       };
-    vglyph_point_t p33 = { 0.4798281523424208f,       1.0f - 0.7012861239587664f       };
-    vglyph_point_t p34 = { 0.412159903276077f,        1.0f - 0.7666474660879885f       };
-    vglyph_point_t p35 = { 0.5482653148938255f,       1.0f - 0.5182742927448913f       };
-    vglyph_point_t p36 = { 0.5482653148938255f,       1.0f - 0.6359246486439929f       };
-    vglyph_point_t p37 = { 0.5482653148938255f,       1.0f - 0.44214752919344846f      };
-    vglyph_point_t p38 = { 0.42061841776117603f,      1.0f - 0.44753028984914067f      };
-    vglyph_point_t p39 = { 0.20069665824014038f,      1.0f - 0.49520558963394024f      };
-    vglyph_point_t p40 = { 0.2683648573619024f,       1.0f - 0.45291298391205714f      };
-    vglyph_point_t p41 = { 0.13379739757573006f,      1.0f - 0.6251593271109357f       };
-    vglyph_point_t p42 = { 0.13379739757573006f,      1.0f - 0.5367293151671504f       };
-    vglyph_point_t p43 = { 0.17532106484026144f,      1.0f - 0.7305065012104706f       };
-    vglyph_point_t p44 = { 0.13379739757573006f,      1.0f - 0.6943654697401769f       };
-    vglyph_point_t p45 = { 0.2929715206285266f,       1.0f - 0.7666474660879885f       };
-    vglyph_point_t p46 = { 0.21761368721033847f,      1.0f - 0.7666474660879885f       };
+    vglyph_point_t p32 = {  0.2929715206285266f,      1.0f - 0.7666474660879885f       };
+    vglyph_point_t p33 = {  0.4798281523424208f,      1.0f - 0.7012861239587664f       };
+    vglyph_point_t p34 = {  0.412159903276077f,       1.0f - 0.7666474660879885f       };
+    vglyph_point_t p35 = {  0.5482653148938255f,      1.0f - 0.5182742927448913f       };
+    vglyph_point_t p36 = {  0.5482653148938255f,      1.0f - 0.6359246486439929f       };
+    vglyph_point_t p37 = {  0.5482653148938255f,      1.0f - 0.44214752919344846f      };
+    vglyph_point_t p38 = {  0.42061841776117603f,     1.0f - 0.44753028984914067f      };
+    vglyph_point_t p39 = {  0.20069665824014038f,     1.0f - 0.49520558963394024f      };
+    vglyph_point_t p40 = {  0.2683648573619024f,      1.0f - 0.45291298391205714f      };
+    vglyph_point_t p41 = {  0.13379739757573006f,     1.0f - 0.6251593271109357f       };
+    vglyph_point_t p42 = {  0.13379739757573006f,     1.0f - 0.5367293151671504f       };
+    vglyph_point_t p43 = {  0.17532106484026144f,     1.0f - 0.7305065012104706f       };
+    vglyph_point_t p44 = {  0.13379739757573006f,     1.0f - 0.6943654697401769f       };
+    vglyph_point_t p45 = {  0.2929715206285266f,      1.0f - 0.7666474660879885f       };
+    vglyph_point_t p46 = {  0.21761368721033847f,     1.0f - 0.7666474660879885f       };
      
     vglyph_figure_draw_moveto(figure, VGLYPH_COORDINATE_ABSOLUTE, &p0);
     vglyph_figure_draw_lineto(figure, VGLYPH_COORDINATE_ABSOLUTE, &p1);
@@ -571,9 +571,9 @@ int main(int argc, char* argv[])
     vglyph_object_destroy(vglyph_figure_to_object(figure));
     show_object_type(vglyph_glyph_to_object(glyph));
 
-    vglyph_glyph_set_advance(glyph, vglyph_glyph_get_width(glyph));
-    vglyph_glyph_set_bearing_x(glyph, 0.0f);
-    vglyph_glyph_set_bearing_y(glyph, p5.y);
+    vglyph_glyph_set_horizontal_advance(glyph, vglyph_glyph_get_width(glyph));
+    vglyph_glyph_set_horizontal_bearing_x(glyph, 0.0f);
+    vglyph_glyph_set_horizontal_bearing_y(glyph, p5.y);
 
     vglyph_packaging_bytes_t packaging_bytes;
     packaging_bytes.byte_count = 4;
