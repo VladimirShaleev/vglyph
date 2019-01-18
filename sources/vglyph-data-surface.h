@@ -130,6 +130,14 @@ _vglyph_data_surface_is_valid(vglyph_data_surface_t* surface)
     return _vglyph_surface_is_valid(&surface->base);
 }
 
+static inline vglyph_float32_t
+_vglyph_data_surface_pt_to_px(vglyph_data_surface_t* surface,
+                              vglyph_float32_t pt)
+{
+    assert(surface);
+    return pt * surface->base.backend->get_dpi(&surface->base) / 72.0f;
+}
+
 static inline vglyph_state_t
 _vglyph_data_surface_add_point(vglyph_vector_t* points, 
                                const vglyph_matrix_t* matrix,

@@ -620,34 +620,34 @@ int main(int argc, char* argv[])
     vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_32);
     vglyph_surface_fill(surface, 0, 0, 800, 200, &fill_color);
 
-    for (int i = 0; i < 9; ++i)
-    {
-        vglyph_point_t pos = { i * 80.0f, 150.0f };
-        vglyph_surface_draw_glyph(surface, glyph, i * 5.0f, &glyph_color, &pos, 0, 0, 0.0f);
-    }
+    //// for (int i = 0; i < 9; ++i)
+    //// {
+    ////     vglyph_point_t pos = { i * 80.0f, 150.0f };
+    ////     vglyph_surface_draw_glyph(surface, glyph, i * 5.0f, &glyph_color, &pos, 0, 0, 0.0f);
+    //// }
+    //// 
+    //// for (int i = 0; i < 9; ++i)
+    //// {
+    ////     vglyph_point_t pos = { i * 80.0f + 70.0f, 20.0f };
+    ////     vglyph_point_t origin = { 10.0f, 10.0f };
+    ////     vglyph_surface_draw_glyph(surface, glyph, 24.0f, &glyph_color, &pos, &origin, 0, i * 40.0f);
+    //// }
+    //// 
+    //// vglyph_point_t pos1 = { 350.0f, 50.0f };
+    //// vglyph_surface_draw_glyph(surface, glyph, 70.0f, &glyph_color, &pos1, 0, 0, 0.0f);
+    //// 
+    //// vglyph_point_t pos2 = { 30.0f, 50.0f };
+    //// vglyph_point_t pos3 = { 40.0f, 50.0f };
+    //// vglyph_color_t red = { 1.0, 0.5, 0.0, 0.5 };
+    //// vglyph_color_t green = { 0.5, 1.0, 0.0, 0.5 };
+    //// vglyph_surface_draw_glyph(surface, glyph, 70.0f, &red, &pos2, 0, 0, 0.0f);
+    //// vglyph_surface_draw_glyph(surface, glyph, 70.0f, &green, &pos3, 0, 0, 0.0f);
+    //// 
+    //// vglyph_point_t pos4 = { 700.0f, 50.0f };
+    //// vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_1);
+    //// vglyph_surface_draw_glyph(surface, glyph, 70.0f, &glyph_color, &pos4, 0, 0, 0.0f);
 
-    for (int i = 0; i < 9; ++i)
-    {
-        vglyph_point_t pos = { i * 80.0f + 70.0f, 20.0f };
-        vglyph_point_t origin = { 10.0f, 10.0f };
-        vglyph_surface_draw_glyph(surface, glyph, 24.0f, &glyph_color, &pos, &origin, 0, i * 40.0f);
-    }
-
-    vglyph_point_t pos1 = { 350.0f, 50.0f };
-    vglyph_surface_draw_glyph(surface, glyph, 70.0f, &glyph_color, &pos1, 0, 0, 0.0f);
-
-    vglyph_point_t pos2 = { 30.0f, 50.0f };
-    vglyph_point_t pos3 = { 40.0f, 50.0f };
-    vglyph_color_t red = { 1.0, 0.5, 0.0, 0.5 };
-    vglyph_color_t green = { 0.5, 1.0, 0.0, 0.5 };
-    vglyph_surface_draw_glyph(surface, glyph, 70.0f, &red, &pos2, 0, 0, 0.0f);
-    vglyph_surface_draw_glyph(surface, glyph, 70.0f, &green, &pos3, 0, 0, 0.0f);
-
-    vglyph_point_t pos4 = { 700.0f, 50.0f };
-    vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_1);
-    vglyph_surface_draw_glyph(surface, glyph, 70.0f, &glyph_color, &pos4, 0, 0, 0.0f);
-
-    //vglyph_surface_draw_glyph(surface, glyph, 120.0f, &glyph_color, &pos2, 0, 0, 0.0f);
+    vglyph_surface_draw_glyph(surface, glyph, 120.0f, &glyph_color, 0, 0, 0, 0.0f);
     //vglyph_surface_draw_glyph(surface, glyph, 200.0f, &glyph_color, &pos3, 0, 0, 0.0f);
     //vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color, &pos, &viewport, 0, 0, 0.0f);
 

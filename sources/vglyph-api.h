@@ -32,6 +32,8 @@
 #define VGLYPH_MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define VGLYPH_MIN(a, b) (((a) < (b)) ? (a) : (b))
 
+#define VGLYPH_CAST(_object, _result) memcpy(&_result, &_object, sizeof(&_result))
+
 vglyph_uint_t
 _vglyph_get_device_dpi(void);
 

@@ -1120,7 +1120,10 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
                                 const vglyph_point_t* scale,
                                 vglyph_float32_t angle)
 {
-    const vglyph_float32_t size_glyph = pt * surface->backend->get_dpi(surface) / 72.0f;
+    vglyph_data_surface_t* data_surface;
+    VGLYPH_CAST(surface, data_surface);
+
+    const vglyph_float32_t size_glyph = _vglyph_data_surface_pt_to_px(data_surface, pt); 
 
     if (size_glyph == 0.0f)
         return TRUE;
