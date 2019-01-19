@@ -278,7 +278,6 @@ vglyph_surface_draw_glyph_viewport(vglyph_surface_t* surface,
                                    const vglyph_point_t* position,
                                    const vglyph_point_t* viewport,
                                    const vglyph_point_t* origin,
-                                   const vglyph_point_t* scale,
                                    vglyph_float32_t angle)
 {
     assert(surface);
@@ -293,7 +292,6 @@ vglyph_surface_draw_glyph_viewport(vglyph_surface_t* surface,
                                                      position,
                                                      viewport,
                                                      origin,
-                                                     scale,
                                                      angle);
     }
 
