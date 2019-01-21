@@ -1143,9 +1143,6 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     if (glyph_width == 0.0f || glyph_height == 0.0f)
         return TRUE;
 
-    vglyph_float32_t scale_x = 1.0f;
-    vglyph_float32_t scale_y = 1.0f;
-
     vglyph_matrix_t mat;
     _vglyph_matrix_init_translate(&mat, 0.0f, height);
 
@@ -1159,10 +1156,7 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
 
     if (scale)
     {
-        scale_x = scale->x;
-        scale_y = scale->y;
-
-        if (scale_x == 0.0f || scale_y == 0.0f)
+        if (scale->x == 0.0f || scale->y == 0.0f)
             return TRUE;
 
         _vglyph_matrix_scale(&mat, &mat, scale->x, scale->y);
@@ -1172,8 +1166,8 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     {
         _vglyph_matrix_translate(&mat, 
                                  &mat, 
-                                 -origin->x * surface->width  * multisampling / size_glyph / scale_x, 
-                                 -origin->y * surface->height * multisampling / size_glyph / scale_y);
+                                 -origin->x * surface->width  * multisampling / size_glyph, 
+                                 -origin->y * surface->height * multisampling / size_glyph);
     }
 
     _vglyph_matrix_translate(&mat, &mat, -glyph->horizontal_bearing_x * width, -glyph->horizontal_bearing_y * height);
