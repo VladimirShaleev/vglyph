@@ -584,8 +584,7 @@ int main(int argc, char* argv[])
 
     vglyph_glyph_set_horizontal_advance(glyph, vglyph_glyph_get_width(glyph));
     vglyph_glyph_set_horizontal_bearing_x(glyph, 0.0f);
-    //vglyph_glyph_set_horizontal_bearing_y(glyph, p5.y);
-    vglyph_glyph_set_horizontal_bearing_y(glyph, 0.0f);
+    vglyph_glyph_set_horizontal_bearing_y(glyph, p5.y);
 
     vglyph_packaging_bytes_t packaging_bytes;
     packaging_bytes.byte_count = 4;
@@ -671,10 +670,10 @@ int main(int argc, char* argv[])
     vglyph_color_t glyph_color_blue = { 0.0f, 1.0f, 1.0f, 1.0f };
     vglyph_color_t glyph_color_red = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color, &pos0, &viewport, 0, 0.0f);
-    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_green, &pos1, &viewport, 0, 0.0f);
-    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_blue, &pos2, &viewport, 0, 0.0f);
-    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_red, &pos3, &viewport, 0, 0.0f);
+    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color, &pos0, &viewport, 0, 0.0f, 1);
+    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_green, &pos1, &viewport, 0, 0.0f, 1);
+    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_blue, &pos2, &viewport, 0, 0.0f, 1);
+    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_red, &pos3, &viewport, 0, 0.0f, 1);
 
     bitmap_save(surface, path);
 

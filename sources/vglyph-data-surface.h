@@ -97,7 +97,8 @@ _vglyph_data_surface_draw_glyph_viewport(vglyph_surface_t* surface,
                                          const vglyph_point_t* position,
                                          const vglyph_point_t* viewport,
                                          const vglyph_point_t* origin,
-                                         vglyph_float32_t angle);
+                                         vglyph_float32_t angle,
+                                         vglyph_bool_t fit_to_viewport);
 
 vglyph_bool_t
 _vglyph_data_surface_draw_glyph_transform(vglyph_surface_t* surface,

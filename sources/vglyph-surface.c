@@ -278,7 +278,8 @@ vglyph_surface_draw_glyph_viewport(vglyph_surface_t* surface,
                                    const vglyph_point_t* position,
                                    const vglyph_point_t* viewport,
                                    const vglyph_point_t* origin,
-                                   vglyph_float32_t angle)
+                                   vglyph_float32_t angle,
+                                   vglyph_bool_t fit_to_viewport)
 {
     assert(surface);
     assert(glyph);
@@ -292,7 +293,8 @@ vglyph_surface_draw_glyph_viewport(vglyph_surface_t* surface,
                                                      position,
                                                      viewport,
                                                      origin,
-                                                     angle);
+                                                     angle,
+                                                     fit_to_viewport);
     }
 
     return FALSE;

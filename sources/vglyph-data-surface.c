@@ -1191,7 +1191,8 @@ _vglyph_data_surface_draw_glyph_viewport(vglyph_surface_t* surface,
                                          const vglyph_point_t* position,
                                          const vglyph_point_t* viewport,
                                          const vglyph_point_t* origin,
-                                         vglyph_float32_t angle)
+                                         vglyph_float32_t angle,
+                                         vglyph_bool_t fit_to_viewport)
 {
     const vglyph_sint_t multisampling =
         (vglyph_sint_t)(((vglyph_data_surface_t*)surface)->base.multisampling);
@@ -1241,8 +1242,15 @@ _vglyph_data_surface_draw_glyph_viewport(vglyph_surface_t* surface,
         _vglyph_matrix_scale(&mat, &mat, viewport->x / surface->width, viewport->y / surface->height);
     }
 
-    _vglyph_matrix_scale(&mat, &mat, 1.0f / glyph_width, -1.0f / glyph_height);
-    _vglyph_matrix_translate(&mat, &mat, -glyph_bound.left * width, -glyph_bound.top * height);
+    if (fit_to_viewport)
+    {
+        _vglyph_matrix_scale(&mat, &mat, 1.0f / glyph_width, -1.0f / glyph_height);
+        _vglyph_matrix_translate(&mat, &mat, -glyph_bound.left * width, -glyph_bound.top * height);
+    }
+    else
+    {
+        _vglyph_matrix_scale(&mat, &mat, 1.0f, -1.0f);
+    }
 
     return _vglyph_data_surface_draw_glyph_matrix(surface,
                                                   glyph,
