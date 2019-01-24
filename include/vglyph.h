@@ -34,6 +34,7 @@ typedef struct _vglyph_object            vglyph_object_t;
 typedef struct _vglyph_type              vglyph_type_t;
 typedef struct _vglyph_figure            vglyph_figure_t;
 typedef struct _vglyph_glyph             vglyph_glyph_t;
+typedef struct _vglyph_face              vglyph_face_t;
 typedef struct _vglyph_format            vglyph_format_t;
 typedef struct _vglyph_rgba_uint_format  vglyph_rgba_uint_format_t;
 typedef struct _vglyph_rgba_float_format vglyph_rgba_float_format_t;
@@ -224,6 +225,9 @@ vglyph_public vglyph_type_t*
 vglyph_get_glyph_type(void);
 
 vglyph_public vglyph_type_t*
+vglyph_get_face_type(void);
+
+vglyph_public vglyph_type_t*
 vglyph_get_format_type(void);
 
 vglyph_public vglyph_type_t*
@@ -268,6 +272,9 @@ vglyph_object_to_figure(vglyph_object_t* object);
 
 vglyph_public vglyph_glyph_t*
 vglyph_object_to_glyph(vglyph_object_t* object);
+
+vglyph_public vglyph_face_t*
+vglyph_object_to_face(vglyph_object_t* object);
 
 vglyph_public vglyph_format_t*
 vglyph_object_to_format(vglyph_object_t* object);
@@ -412,6 +419,25 @@ vglyph_glyph_get_vertical_advance(vglyph_glyph_t* glyph);
 vglyph_public void
 vglyph_glyph_set_vertical_advance(vglyph_glyph_t* glyph,
                                   vglyph_float32_t advance);
+
+vglyph_public vglyph_face_t*
+vglyph_face_create(void);
+
+vglyph_public vglyph_object_t*
+vglyph_face_to_object(vglyph_face_t* face);
+
+vglyph_public vglyph_glyph_t*
+vglyph_face_get_glyph(vglyph_face_t* face,
+                      vglyph_uint32_t char_code);
+
+vglyph_public void
+vglyph_face_add_glyph(vglyph_face_t* face,
+                      vglyph_glyph_t* glyph,
+                      vglyph_uint32_t char_code);
+
+vglyph_public vglyph_bool_t
+vglyph_face_remove_glyph(vglyph_face_t* face,
+                         vglyph_uint32_t char_code);
 
 //vglyph_public vglyph_format_t*
 //vglyph_format_create(const char* format);
@@ -592,6 +618,17 @@ vglyph_surface_draw_glyph_transform(vglyph_surface_t* surface,
                                     vglyph_glyph_t* glyph,
                                     const vglyph_color_t* color,
                                     const vglyph_transform_t* transform);
+
+vglyph_public vglyph_bool_t
+vglyph_surface_draw_text(vglyph_surface_t* surface,
+                         vglyph_face_t* face,
+                         vglyph_float32_t pt,
+                         const char* text,
+                         const vglyph_color_t* color,
+                         const vglyph_point_t* position,
+                         const vglyph_point_t* origin,
+                         const vglyph_point_t* scale,
+                         vglyph_float32_t angle);
 
 VGLYPH_END
 

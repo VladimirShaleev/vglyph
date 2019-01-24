@@ -320,3 +320,16 @@ vglyph_surface_draw_glyph_transform(vglyph_surface_t* surface,
 
     return FALSE;
 }
+
+vglyph_bool_t
+vglyph_surface_draw_text(vglyph_surface_t* surface,
+                         vglyph_face_t* face,
+                         vglyph_float32_t pt,
+                         const char* text,
+                         const vglyph_color_t* color,
+                         const vglyph_point_t* position,
+                         const vglyph_point_t* origin,
+                         const vglyph_point_t* scale,
+                         vglyph_float32_t angle)
+{
+}
