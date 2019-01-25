@@ -31,6 +31,7 @@ _vglyph_face_ctor(vglyph_face_t* face)
 static void
 _vglyph_face_dtor(vglyph_face_t* face)
 {
+    // Add destroy glyphs
     _vglyph_vector_destroy(face->charmap);
 }
 
@@ -194,10 +195,13 @@ vglyph_face_remove_glyph(vglyph_face_t* face,
     if (_vglyph_face_is_valid(face))
     {
         vglyph_uint_t offset;
+        vglyph_glyph_t* glyph = _vglyph_face_find_glyph(face, char_code, &offset);
 
-        if (_vglyph_face_find_glyph(face, char_code, &offset))
+        if (glyph)
         {
             _vglyph_vector_remove(face->charmap, sizeof(vglyph_charmap_t), offset);
+            _vglyph_glyph_destroy(glyph);
+
             return TRUE;
         }
     }
