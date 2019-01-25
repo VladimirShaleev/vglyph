@@ -8,10 +8,19 @@
 #define VGLYPH_FACE_H
 
 #include "vglyph-object.h"
+#include "vglyph-vector.h"
+#include "vglyph-glyph.h"
+
+typedef struct _vglyph_charmap
+{
+    vglyph_glyph_t* glyph;
+    vglyph_uint32_t char_code;
+} vglyph_charmap_t;
 
 struct _vglyph_face
 {
-    vglyph_object_t object;
+    vglyph_object_t  object;
+    vglyph_vector_t* charmap;
 };
 
 static inline vglyph_face_t*

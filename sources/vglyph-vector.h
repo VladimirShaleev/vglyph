@@ -174,7 +174,7 @@ _vglyph_vector_add(vglyph_vector_t* vector,
     return state;
 }
 
-static inline vglyph_uint_t
+static inline vglyph_state_t
 _vglyph_vector_insert(vglyph_vector_t* vector,
                       const vglyph_uint8_t* data,
                       vglyph_uint_t bytes,
@@ -204,6 +204,19 @@ _vglyph_vector_insert(vglyph_vector_t* vector,
         memcpy(vector->data + offset, data, (size_t)bytes);
 
     return state;
+}
+
+static inline void
+_vglyph_vector_remove(vglyph_vector_t* vector,
+                      vglyph_uint_t bytes,
+                      vglyph_uint_t offset)
+{
+    assert(vector);
+    assert(_vglyph_vector_is_valid(vector));
+    assert(offset + bytes <= vector->count_bytes);
+
+    vector->count_bytes -= bytes;
+    memmove(vector->data + offset, vector->data + offset + bytes, vector->count_bytes - offset);
 }
 
 static inline void*
