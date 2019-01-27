@@ -1118,7 +1118,8 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
                                 const vglyph_point_t* position,
                                 const vglyph_point_t* origin,
                                 const vglyph_point_t* scale,
-                                vglyph_float32_t angle)
+                                vglyph_float32_t angle,
+                                vglyph_point_t* next_position)
 {
     vglyph_data_surface_t* data_surface;
     VGLYPH_CAST(surface, data_surface);
@@ -1137,7 +1138,7 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     if (width == 0.0f || height == 0.0f)
         return TRUE;
 
-    const vglyph_float32_t glyph_width = vglyph_glyph_get_width(glyph);
+    const vglyph_float32_t glyph_width  = vglyph_glyph_get_width(glyph);
     const vglyph_float32_t glyph_height = vglyph_glyph_get_height(glyph);
 
     if (glyph_width == 0.0f || glyph_height == 0.0f)
@@ -1171,6 +1172,17 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     }
 
     _vglyph_matrix_translate(&mat, &mat, -glyph->horizontal_bearing_x * width, -glyph->horizontal_bearing_y * height);
+
+    if (next_position)
+    {
+        next_position->x = (glyph->horizontal_advance - glyph->horizontal_bearing_x) * surface->width * multisampling;
+        next_position->y = glyph->horizontal_bearing_y * surface->height * multisampling;
+
+        _vglyph_matrix_transform_point(next_position, &mat, next_position);
+
+        next_position->x = next_position->x / multisampling;
+        next_position->y = surface->height - next_position->y / multisampling;
+    }
 
     return _vglyph_data_surface_draw_glyph_matrix(surface,
                                                   glyph,

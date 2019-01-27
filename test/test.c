@@ -582,7 +582,7 @@ int main(int argc, char* argv[])
     vglyph_object_destroy(vglyph_figure_to_object(figure));
     show_object_type(vglyph_glyph_to_object(glyph));
 
-    vglyph_glyph_set_horizontal_advance(glyph, vglyph_glyph_get_width(glyph));
+    vglyph_glyph_set_horizontal_advance(glyph, 0.8f);
     vglyph_glyph_set_horizontal_bearing_x(glyph, 0.0f);
     vglyph_glyph_set_horizontal_bearing_y(glyph, p5.y);
 
@@ -628,7 +628,7 @@ int main(int argc, char* argv[])
     glyph_color.green = 0.0;
     glyph_color.blue  = 0.0;
     glyph_color.alpha = 1.0;
-    vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_32);
+    vglyph_surface_set_multisampling(surface, VGLYPH_MULTISAMPLING_16);
     vglyph_surface_fill(surface, 0, 0, 800, 200, &fill_color);
 
     //// for (int i = 0; i < 9; ++i)
@@ -660,20 +660,30 @@ int main(int argc, char* argv[])
 
     //vglyph_surface_draw_glyph(surface, glyph, 120.0f, &glyph_color, 0, 0, 0, 0.0f);
     //vglyph_surface_draw_glyph(surface, glyph, 200.0f, &glyph_color, &pos3, 0, 0, 0.0f);
-    vglyph_point_t pos0 = { 0.0f, 0.0f };
-    vglyph_point_t pos1 = { 0.0f, 100.0f };
+    vglyph_point_t pos0 = { 10.0f, 10.0f };
+    vglyph_point_t pos1 = { 10.0f, 50.0f };
     vglyph_point_t pos2 = { 100.0f, 0.0f };
     vglyph_point_t pos3 = { 100.0f, 100.0f };
     vglyph_point_t viewport = { 100.0f, 100.0f };
+    vglyph_point_t s = { 1.5f, 0.5f };
 
     vglyph_color_t glyph_color_green = { 0.0f, 1.0f, 0.0f, 1.0f };
     vglyph_color_t glyph_color_blue = { 0.0f, 1.0f, 1.0f, 1.0f };
     vglyph_color_t glyph_color_red = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color, &pos0, &viewport, 0, 0.0f, 1);
-    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_green, &pos1, &viewport, 0, 0.0f, 1);
-    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_blue, &pos2, &viewport, 0, 0.0f, 1);
-    vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_red, &pos3, &viewport, 0, 0.0f, 1);
+    //vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color, &pos0, &viewport, 0, 0.0f, 1);
+    //vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_green, &pos1, &viewport, 0, 0.0f, 1);
+    //vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_blue, &pos2, &viewport, 0, 0.0f, 1);
+    //vglyph_surface_draw_glyph_viewport(surface, glyph, &glyph_color_red, &pos3, &viewport, 0, 0.0f, 1);
+
+    vglyph_face_t* face = vglyph_face_create();
+    show_object_type(vglyph_face_to_object(face));
+    vglyph_face_add_glyph(face, glyph, 'a');
+
+    vglyph_surface_draw_text(surface, face, 14, "aaaaa", &glyph_color, &pos0, 0, &s, 40);
+    vglyph_surface_draw_text(surface, face, 30, "aaaaa", &glyph_color, &pos1, 0, &s, 40);
+
+    vglyph_object_destroy(vglyph_face_to_object(face));
 
     bitmap_save(surface, path);
 

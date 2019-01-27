@@ -63,43 +63,6 @@ _vglyph_face_destroy_callback(vglyph_object_t* object)
     free(face);
 }
 
-static vglyph_glyph_t*
-_vglyph_face_find_glyph(vglyph_face_t* face,
-                        vglyph_uint32_t char_code,
-                        vglyph_uint_t* offset)
-{
-    vglyph_vector_t*  charmap = face->charmap;
-    vglyph_charmap_t* current;
-
-    vglyph_sint64_t left  = -1;
-    vglyph_sint64_t right = (vglyph_sint64_t)_vglyph_vector_size_in_bytes(charmap) / sizeof(vglyph_charmap_t);
-    vglyph_sint64_t middle;
-    vglyph_uint_t   find_offset;
-
-    while (left < right - 1)
-    {
-        middle      = (left + right) >> 1;
-        find_offset = (vglyph_uint_t)middle * sizeof(vglyph_charmap_t);
-
-        current = (vglyph_charmap_t*)_vglyph_vector_at(charmap, find_offset);
-
-        if (current->char_code == char_code)
-        {
-            if (offset)
-                *offset = find_offset;
-
-            return current->glyph;
-        }
-
-        if (current->char_code < char_code)
-            left = middle;
-        else
-            right = middle;
-    }
-
-    return NULL;
-}
-
 static const vglyph_object_backend_t vglyph_face_object_backend = {
     vglyph_get_face_type,
     _vglyph_face_is_cast,

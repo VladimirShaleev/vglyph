@@ -5,6 +5,7 @@
  */
 
 #include "vglyph-surface.h"
+#include "vglyph-face.h"
 #include "vglyph-type.h"
 
 void
@@ -265,7 +266,8 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                                             position,
                                             origin,
                                             scale,
-                                            angle);
+                                            angle,
+                                            NULL);
     }
 
     return FALSE;
@@ -332,4 +334,59 @@ vglyph_surface_draw_text(vglyph_surface_t* surface,
                          const vglyph_point_t* scale,
                          vglyph_float32_t angle)
 {
+    assert(surface);
+    assert(face);
+    assert(color);
+    assert(text);
+
+    if (_vglyph_surface_is_valid(surface))
+    {
+        vglyph_point_t offset;
+
+        vglyph_point_t prev_positon;
+        prev_positon.x = 0.0f;
+        prev_positon.y = 0.0f;
+
+        vglyph_point_t current_position;
+        current_position.x = 0.0f;
+        current_position.y = 0.0f;
+
+        vglyph_point_t current_origin;
+        current_origin.x = 0.0f;
+        current_origin.y = 0.0f;
+        
+        if (position)
+        {
+            prev_positon     = *position;
+            current_position = *position;
+        }
+
+        if (origin)
+        {
+            current_origin = *origin;
+            _vglyph_point_sub(&current_position, &current_position, &current_origin);
+        }
+
+        while (*text != '\0')
+        {
+            vglyph_glyph_t* glyph = _vglyph_face_find_glyph(face, *text, NULL);
+
+            if (glyph)
+            {
+                surface->backend->draw_glyph(surface, 
+                                             glyph, 
+                                             pt, 
+                                             color, 
+                                             &current_position, 
+                                             0,
+                                             scale, 
+                                             angle, 
+                                             &current_position);
+            }
+
+            ++text;
+        }
+    }
+
+    return FALSE;
 }
