@@ -89,6 +89,7 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
                                 const vglyph_point_t* origin,
                                 const vglyph_point_t* scale,
                                 vglyph_float32_t angle,
+                                vglyph_bool_t vertical_layout,
                                 vglyph_point_t* next_position);
 
 vglyph_bool_t

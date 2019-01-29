@@ -251,7 +251,8 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                           const vglyph_point_t* position,
                           const vglyph_point_t* origin,
                           const vglyph_point_t* scale,
-                          vglyph_float32_t angle)
+                          vglyph_float32_t angle,
+                          vglyph_bool_t vertical_layout)
 {
     assert(surface);
     assert(glyph);
@@ -267,6 +268,7 @@ vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                                             origin,
                                             scale,
                                             angle,
+                                            vertical_layout,
                                             NULL);
     }
 
@@ -332,7 +334,8 @@ vglyph_surface_draw_text(vglyph_surface_t* surface,
                          const vglyph_point_t* position,
                          const vglyph_point_t* origin,
                          const vglyph_point_t* scale,
-                         vglyph_float32_t angle)
+                         vglyph_float32_t angle,
+                         vglyph_bool_t vertical_layout)
 {
     assert(surface);
     assert(face);
@@ -341,31 +344,15 @@ vglyph_surface_draw_text(vglyph_surface_t* surface,
 
     if (_vglyph_surface_is_valid(surface))
     {
-        vglyph_point_t offset;
-
-        vglyph_point_t prev_positon;
-        prev_positon.x = 0.0f;
-        prev_positon.y = 0.0f;
-
         vglyph_point_t current_position;
         current_position.x = 0.0f;
         current_position.y = 0.0f;
 
-        vglyph_point_t current_origin;
-        current_origin.x = 0.0f;
-        current_origin.y = 0.0f;
-        
         if (position)
-        {
-            prev_positon     = *position;
             current_position = *position;
-        }
 
         if (origin)
-        {
-            current_origin = *origin;
-            _vglyph_point_sub(&current_position, &current_position, &current_origin);
-        }
+            _vglyph_point_sub(&current_position, &current_position, origin);
 
         while (*text != '\0')
         {
@@ -381,6 +368,7 @@ vglyph_surface_draw_text(vglyph_surface_t* surface,
                                              0,
                                              scale, 
                                              angle, 
+                                             vertical_layout,
                                              &current_position);
             }
 

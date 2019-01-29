@@ -680,8 +680,8 @@ int main(int argc, char* argv[])
     show_object_type(vglyph_face_to_object(face));
     vglyph_face_add_glyph(face, glyph, 'a');
 
-    vglyph_surface_draw_text(surface, face, 14, "aaaaa", &glyph_color, &pos0, 0, &s, 40);
-    vglyph_surface_draw_text(surface, face, 30, "aaaaa", &glyph_color, &pos1, 0, &s, 40);
+    vglyph_surface_draw_text(surface, face, 14, "aaaaa", &glyph_color, &pos0, 0, &s, 40, 0);
+    vglyph_surface_draw_text(surface, face, 30, "aaaaa", &glyph_color, &pos1, 0, &s, 40, 0);
 
     vglyph_object_destroy(vglyph_face_to_object(face));
 
