@@ -147,6 +147,7 @@ _vglyph_vector_push(vglyph_vector_t* vector,
         if (!data)
         {
             _vglyph_vector_set_state(vector, VGLYPH_STATE_OUT_OF_MEMORY);
+            _vglyph_object_set_state_not_fatal(&vector->object);
             return 0;
         }
 

@@ -158,6 +158,8 @@ vglyph_face_add_glyph(vglyph_face_t* face,
         {
             _vglyph_face_set_state(face, state);
             _vglyph_object_set_state_not_fatal(&face->object);
+
+            vglyph_object_reset_state(&charmap->object);
         }
     }
 }

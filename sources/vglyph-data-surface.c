@@ -687,6 +687,12 @@ _vglyph_data_surface_compute_intersections(vglyph_data_surface_t* surface,
                                           (vglyph_uint8_t*)&intersection_x,
                                           sizeof(vglyph_float32_t),
                                           find_offset);
+
+                    if (!_vglyph_vector_is_valid(intersections[y]))
+                    {
+                        *state = _vglyph_vector_get_state(intersections[y]);
+                        return intersections;
+                    }
                 }
             }
         }
