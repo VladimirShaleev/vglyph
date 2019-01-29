@@ -9,10 +9,20 @@
     <Company></Company>
     <Copyright>Vladimir Shaleev</Copyright>
     <PackageProjectUrl>https://github.com/VladimirShaleev/vglyph</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/VladimirShaleev/vglyph/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/VladimirShaleev/vglyph</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>vglyph, glyph, vector, rasterization, sdf, psdf, msdf, xamarin, windows, ios, android, xamarin.forms</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DocumentationFile>bin\Release\VGlyph.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\VGlyph.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>
