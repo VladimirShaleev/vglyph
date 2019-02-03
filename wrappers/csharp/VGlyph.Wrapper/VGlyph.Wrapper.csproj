@@ -23,6 +23,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>vglyph;glyph;vector;rasterization;sdf;psdf;msdf;xamarin;windows;ios;android;xamarin.forms</PackageTags>
 
+        <NoWarn>$(NoWarn);NU5118</NoWarn>
         <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
         <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
         <ExtrasBuildEachRuntimeIdentifier>true</ExtrasBuildEachRuntimeIdentifier>
@@ -47,18 +48,22 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\..\..\build\Windows\vs14\Debug\x64\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x64.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-            <Link>%(RecursiveDir)Native\Win\%(Filename)-x64%(Extension)</Link>
+        <None Include="..\..\..\build\Windows\vs14\Debug\x64\vglyph.dll" PackagePath="runtimes\win\native\x64\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+            <Link>%(RecursiveDir)Native\Win\x64\%(Filename)%(Extension)</Link>
         </None>
-        <None Include="..\..\..\build\Windows\vs14\Debug\x86\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x86.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-            <Link>%(RecursiveDir)Native\Win\%(Filename)-x86%(Extension)</Link>
+        <None Include="..\..\..\build\Windows\vs14\Debug\x86\vglyph.dll" PackagePath="runtimes\win\native\x86\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+            <Link>%(RecursiveDir)Native\Win\x86\%(Filename)%(Extension)</Link>
         </None>
-        <None Include="..\..\..\build\Windows\vs14\Release\x64\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x64.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-            <Link>%(RecursiveDir)Native\Win\%(Filename)-x64%(Extension)</Link>
+        <None Include="..\..\..\build\Windows\vs14\Release\x64\vglyph.dll" PackagePath="runtimes\win\native\x64\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+            <Link>%(RecursiveDir)Native\Win\x64\%(Filename)%(Extension)</Link>
         </None>
-        <None Include="..\..\..\build\Windows\vs14\Release\x86\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x86.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-            <Link>%(RecursiveDir)Native\Win\%(Filename)-x86%(Extension)</Link>
+        <None Include="..\..\..\build\Windows\vs14\Release\x86\vglyph.dll" PackagePath="runtimes\win\native\x86\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+            <Link>%(RecursiveDir)Native\Win\x86\%(Filename)%(Extension)</Link>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Build\VGlyph.Wrapper.targets" PackagePath="build" Pack="true" />
     </ItemGroup>
     
     <Target Name="GetRefsForPackage" BeforeTargets="_GetPackageFiles">

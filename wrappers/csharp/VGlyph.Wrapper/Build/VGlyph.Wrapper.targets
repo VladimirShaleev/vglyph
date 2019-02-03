@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <Content Include="$(MSBuildThisFileDirectory)..\runtimes\win\native\x64\vglyph.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>x64\vglyph.dll</Link>
+        </Content>
+        <Content Include="$(MSBuildThisFileDirectory)..\runtimes\win\native\x86\vglyph.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>x86\vglyph.dll</Link>
+        </Content>
+    </ItemGroup>
+</Project>
