@@ -48,16 +48,16 @@
 
     <ItemGroup>
         <None Include="..\..\..\build\Windows\vs14\Debug\x64\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x64.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-            <Link>%(RecursiveDir)native\win\%(Filename)-x64%(Extension)</Link>
+            <Link>%(RecursiveDir)Native\Win\%(Filename)-x64%(Extension)</Link>
         </None>
         <None Include="..\..\..\build\Windows\vs14\Debug\x86\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x86.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-            <Link>%(RecursiveDir)native\win\%(Filename)-x86%(Extension)</Link>
+            <Link>%(RecursiveDir)Native\Win\%(Filename)-x86%(Extension)</Link>
         </None>
         <None Include="..\..\..\build\Windows\vs14\Release\x64\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x64.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-            <Link>%(RecursiveDir)native\win\%(Filename)-x64%(Extension)</Link>
+            <Link>%(RecursiveDir)Native\Win\%(Filename)-x64%(Extension)</Link>
         </None>
         <None Include="..\..\..\build\Windows\vs14\Release\x86\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x86.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-            <Link>%(RecursiveDir)native\win\%(Filename)-x86%(Extension)</Link>
+            <Link>%(RecursiveDir)Native\Win\%(Filename)-x86%(Extension)</Link>
         </None>
     </ItemGroup>
 
