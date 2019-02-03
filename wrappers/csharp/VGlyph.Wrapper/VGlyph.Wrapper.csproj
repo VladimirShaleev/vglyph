@@ -63,9 +63,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="Build\VGlyph.Wrapper.targets" PackagePath="build" Pack="true" />
+        <None Include="Build\VGlyph.Wrapper.targets" PackagePath="build" Pack="true" />
     </ItemGroup>
-    
+
     <Target Name="GetRefsForPackage" BeforeTargets="_GetPackageFiles">
         <MSBuild Projects="$(MSBuildThisFileDirectory)..\refs\$(MSBuildProjectName).Ref.csproj" Targets="_GetTargetFrameworksOutput">
             <Output TaskParameter="TargetOutputs" ItemName="_RefTargetFrameworks" />
