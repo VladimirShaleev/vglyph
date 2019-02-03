@@ -60,11 +60,18 @@
             <Link>%(RecursiveDir)Native\Win\%(Filename)-x86%(Extension)</Link>
         </None>
     </ItemGroup>
+    
+    <Target Name="GetRefsForPackage" BeforeTargets="_GetPackageFiles">
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\refs\$(MSBuildProjectName).Ref.csproj" Targets="_GetTargetFrameworksOutput">
+            <Output TaskParameter="TargetOutputs" ItemName="_RefTargetFrameworks" />
+        </MSBuild>
 
-    <Target Name="_GetReferenceAssemblies" DependsOnTargets="Build" Returns="@(ReferenceAssembliesOutput)">
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\refs\$(MSBuildProjectName).Ref.csproj" Targets="_GetReferenceAssemblies" Properties="TargetFramework=%(_RefTargetFrameworks.Identity)">
+            <Output TaskParameter="TargetOutputs" ItemName="_refAssms" />
+        </MSBuild>
+
         <ItemGroup>
-            <ReferenceAssembliesOutput Include="@(IntermediateRefAssembly->'%(FullPath)')" TargetFramework="$(TargetFramework)" />
-            <ReferenceAssembliesOutput Include="@(DocumentationProjectOutputGroupOutput->'%(FullPath)')" TargetFramework="$(TargetFramework)" />
+            <None Include="@(_refAssms)" PackagePath="ref/%(_refAssms.TargetFramework)" Pack="true" />
         </ItemGroup>
     </Target>
 

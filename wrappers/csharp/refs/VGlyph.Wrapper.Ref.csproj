@@ -8,7 +8,6 @@
         <RootNamespace>VGlyph</RootNamespace>
         <PackageId>VGlyph.Wrapper</PackageId>
 
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <NeutralLanguage>en-US</NeutralLanguage>
         <Authors>Vladimir Shaleev</Authors>
         <Copyright>Copyright (C) 2019 $(Authors)</Copyright>
@@ -21,6 +20,15 @@
         <RepositoryUrl>https://github.com/VladimirShaleev/vglyph</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>vglyph;glyph;vector;rasterization;sdf;psdf;msdf;xamarin;windows;ios;android;xamarin.forms</PackageTags>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- This is here so we can create a fake .NET Standard 2.1 facade -->
+        <NETStandardMaximumVersion>2.1</NETStandardMaximumVersion>
+        <DefineConstants>$(DefineConstants);REF_ASSM</DefineConstants>
+        <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+        <Deterministic>true</Deterministic>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -36,5 +44,12 @@
     <ItemGroup>
         <Compile Include="..\VGlyph.Wrapper\**\*.cs" Exclude="..\VGlyph.Wrapper\**\obj\**" />
     </ItemGroup>
+
+    <Target Name="_GetReferenceAssemblies" DependsOnTargets="Build" Returns="@(ReferenceAssembliesOutput)">
+        <ItemGroup>
+            <ReferenceAssembliesOutput Include="@(IntermediateRefAssembly->'%(FullPath)')" TargetFramework="$(TargetFramework)" />
+            <ReferenceAssembliesOutput Include="@(DocumentationProjectOutputGroupOutput->'%(FullPath)')" TargetFramework="$(TargetFramework)" />
+        </ItemGroup>
+    </Target>
 
 </Project>
