@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace VGlyph
 {
@@ -7,10 +6,7 @@ namespace VGlyph
     {
         [DllImport(_library, EntryPoint = "vglyph_version")]
         public static extern uint Version();
-
-        [DllImport(_library, EntryPoint = "vglyph_version_string")]
-        public static extern IntPtr VersionString();
-
+        
         [DllImport(_library, EntryPoint = "vglyph_is_version_compatible")]
         public static extern bool IsVersionCompatible(uint compileVersion);
         

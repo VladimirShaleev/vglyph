@@ -91,7 +91,7 @@ namespace VGlyph
         /// </summary>
         /// <param name="version">Compare version</param> 
         /// <returns>Compare result</returns>
-        /// <exception cref="System.ArgumentException">Argument <paramref name="version"/> is not a <see cref="Version"/></exception>
+        /// <exception cref="ArgumentException">Argument <paramref name="version"/> is not a <see cref="Version"/></exception>
         public int CompareTo(object version)
         {
             if (version == null)
