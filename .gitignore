@@ -20,5 +20,7 @@
 /build/Windows/vs14/vglyph-test-static/Release
 
 /wrappers/csharp/.vs
-/wrappers/csharp/bin
-/wrappers/csharp/obj
+/wrappers/csharp/refs/bin
+/wrappers/csharp/refs/obj
+/wrappers/csharp/VGlyph.Wrapper/bin
+/wrappers/csharp/VGlyph.Wrapper/obj

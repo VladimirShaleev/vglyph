@@ -1,0 +1,40 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.61">
+
+    <PropertyGroup>
+        <MinClientVersion>2.5</MinClientVersion>
+        <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+
+        <AssemblyName>VGlyph.Wrapper</AssemblyName>
+        <RootNamespace>VGlyph</RootNamespace>
+        <PackageId>VGlyph.Wrapper</PackageId>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <Authors>Vladimir Shaleev</Authors>
+        <Copyright>Copyright (C) 2019 $(Authors)</Copyright>
+        <Title>$(AssemblyName)</Title>
+        <Summary>$(AssemblyName) - library for visualize glyphs</Summary>
+        <Description>$(AssemblyName) - library for visualize glyphs</Description>
+        <Company></Company>
+        <PackageProjectUrl>https://github.com/VladimirShaleev/vglyph</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/VladimirShaleev/vglyph</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>vglyph;glyph;vector;rasterization;sdf;psdf;msdf;xamarin;windows;ios;android;xamarin.forms</PackageTags>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>none</DebugType>
+        <DebugSymbols>false</DebugSymbols>
+        <DocumentationFile>bin\Release\VGlyph.Wrapper.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DocumentationFile>bin\Debug\VGlyph.Wrapper.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="..\VGlyph.Wrapper\**\*.cs" Exclude="..\VGlyph.Wrapper\**\obj\**" />
+    </ItemGroup>
+
+</Project>

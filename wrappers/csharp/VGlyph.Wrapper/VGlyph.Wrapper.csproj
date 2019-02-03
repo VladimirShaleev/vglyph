@@ -1,0 +1,71 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.61">
+
+    <PropertyGroup>
+        <MinClientVersion>2.5</MinClientVersion>
+        <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+        <RuntimeIdentifiers>win</RuntimeIdentifiers>
+
+        <AssemblyName>VGlyph.Wrapper</AssemblyName>
+        <RootNamespace>VGlyph</RootNamespace>
+        <PackageId>VGlyph.Wrapper</PackageId>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <Authors>Vladimir Shaleev</Authors>
+        <Copyright>Copyright (C) 2019 $(Authors)</Copyright>
+        <Title>$(AssemblyName)</Title>
+        <Summary>$(AssemblyName) - library for visualize glyphs</Summary>
+        <Description>$(AssemblyName) - library for visualize glyphs</Description>
+        <Company></Company>
+        <PackageProjectUrl>https://github.com/VladimirShaleev/vglyph</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/VladimirShaleev/vglyph</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>vglyph;glyph;vector;rasterization;sdf;psdf;msdf;xamarin;windows;ios;android;xamarin.forms</PackageTags>
+
+        <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+        <ExtrasBuildEachRuntimeIdentifier>true</ExtrasBuildEachRuntimeIdentifier>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>none</DebugType>
+        <DebugSymbols>false</DebugSymbols>
+        <DocumentationFile>bin\Release\VGlyph.Wrapper.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DocumentationFile>bin\Debug\VGlyph.Wrapper.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ReferenceAssemblyProjectReference Include="..\refs\VGlyph.Wrapper.Ref.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="**\*.cs" Exclude="**\obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\..\build\Windows\vs14\Debug\x64\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x64.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+            <Link>%(RecursiveDir)native\win\%(Filename)-x64%(Extension)</Link>
+        </None>
+        <None Include="..\..\..\build\Windows\vs14\Debug\x86\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x86.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+            <Link>%(RecursiveDir)native\win\%(Filename)-x86%(Extension)</Link>
+        </None>
+        <None Include="..\..\..\build\Windows\vs14\Release\x64\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x64.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+            <Link>%(RecursiveDir)native\win\%(Filename)-x64%(Extension)</Link>
+        </None>
+        <None Include="..\..\..\build\Windows\vs14\Release\x86\vglyph.dll" PackagePath="runtimes\win\native\vglyph-x86.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+            <Link>%(RecursiveDir)native\win\%(Filename)-x86%(Extension)</Link>
+        </None>
+    </ItemGroup>
+
+    <Target Name="_GetReferenceAssemblies" DependsOnTargets="Build" Returns="@(ReferenceAssembliesOutput)">
+        <ItemGroup>
+            <ReferenceAssembliesOutput Include="@(IntermediateRefAssembly->'%(FullPath)')" TargetFramework="$(TargetFramework)" />
+            <ReferenceAssembliesOutput Include="@(DocumentationProjectOutputGroupOutput->'%(FullPath)')" TargetFramework="$(TargetFramework)" />
+        </ItemGroup>
+    </Target>
+
+</Project>
