@@ -1,4 +1,4 @@
-﻿#if WIN
+﻿#if (WIN || WIN_X64 || WIN_X86)
 
 using System;
 using System.IO;

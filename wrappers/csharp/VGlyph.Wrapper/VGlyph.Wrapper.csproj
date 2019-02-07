@@ -3,7 +3,7 @@
     <PropertyGroup>
         <MinClientVersion>2.5</MinClientVersion>
         <TargetFrameworks>netstandard2.0;netcoreapp2.1;net45</TargetFrameworks>
-        <RuntimeIdentifiers>win</RuntimeIdentifiers>
+        <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
 
         <AssemblyName>VGlyph.Wrapper</AssemblyName>
         <RootNamespace>VGlyph</RootNamespace>
@@ -48,16 +48,25 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\..\..\build\Windows\vs14\Debug\x64\vglyph.dll" PackagePath="runtimes\win\native\x64\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <None Include="bin\Debug\net45\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\net45\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+        <None Include="bin\Debug\netcoreapp2.1\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\netcoreapp2.1\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+        <None Include="bin\Debug\netstandard2.0\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\netstandard2.0\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+        <None Include="bin\Release\net45\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\net45\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+        <None Include="bin\Release\netcoreapp2.1\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\netcoreapp2.1\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+        <None Include="bin\Release\netstandard2.0\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\netstandard2.0\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\..\build\Windows\vs14\Debug\x64\vglyph.dll" PackagePath="runtimes\win-x64\native\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
             <Link>%(RecursiveDir)Native\Win\x64\%(Filename)%(Extension)</Link>
         </None>
-        <None Include="..\..\..\build\Windows\vs14\Debug\x86\vglyph.dll" PackagePath="runtimes\win\native\x86\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <None Include="..\..\..\build\Windows\vs14\Debug\x86\vglyph.dll" PackagePath="runtimes\win-x86\native\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
             <Link>%(RecursiveDir)Native\Win\x86\%(Filename)%(Extension)</Link>
         </None>
-        <None Include="..\..\..\build\Windows\vs14\Release\x64\vglyph.dll" PackagePath="runtimes\win\native\x64\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <None Include="..\..\..\build\Windows\vs14\Release\x64\vglyph.dll" PackagePath="runtimes\win-x64\native\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
             <Link>%(RecursiveDir)Native\Win\x64\%(Filename)%(Extension)</Link>
         </None>
-        <None Include="..\..\..\build\Windows\vs14\Release\x86\vglyph.dll" PackagePath="runtimes\win\native\x86\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <None Include="..\..\..\build\Windows\vs14\Release\x86\vglyph.dll" PackagePath="runtimes\win-x86\native\vglyph.dll" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
             <Link>%(RecursiveDir)Native\Win\x86\%(Filename)%(Extension)</Link>
         </None>
     </ItemGroup>

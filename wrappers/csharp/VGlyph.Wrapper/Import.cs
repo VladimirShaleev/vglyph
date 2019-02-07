@@ -11,7 +11,7 @@ namespace VGlyph
         public static extern bool IsVersionCompatible(uint compileVersion);
         
         private const string _library =
-#if WIN
+#if (WIN || WIN_X64 || WIN_X86)
             "vglyph.dll";
 #else
             " ";
