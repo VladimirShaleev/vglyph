@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace VGlyph
 {
@@ -21,7 +22,7 @@ namespace VGlyph
         /// Micro version
         /// </summary>
         public byte Micro { get; set; }
-        
+
         internal uint Version32
         {
             get
@@ -96,7 +97,7 @@ namespace VGlyph
         {
             if (version == null)
                 return 1;
-            
+
             if (version is Version v)
                 return CompareTo(v);
 
@@ -176,6 +177,52 @@ namespace VGlyph
         }
 
         /// <summary>
+        /// Parse string to <see cref="Version"/>
+        /// </summary>
+        /// <param name="input">string with version</param> 
+        /// <returns>Result of parse string</returns>
+        /// <exception cref="ArgumentNullException">Argument <paramref name="input"/> is null</exception>
+        /// <exception cref="ArgumentException">Argument <paramref name="input"/> has an incorrect format</exception>
+        /// <exception cref="FormatException">Argument <paramref name="input"/> has an incorrect format of component</exception>
+        /// <exception cref="OverflowException">Component of argument <paramref name="input"/> out of range 0-255</exception>
+        public static Version Parse(string input)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            var result = new VersionResult();
+            result.Init(nameof(input));
+
+            if (!TryParseVersion(input, ref result))
+                throw result.GetException();
+
+            return result.Result;
+        }
+
+        /// <summary>
+        /// Try parse string to <see cref="Version"/>
+        /// </summary>
+        /// <param name="input">string with version</param> 
+        /// <param name="result">result of parse string to <see cref="Version"/></param> 
+        /// <returns>Result of parse string</returns>
+        public static bool TryParse(string input, out Version result)
+        {
+            if (input == null)
+            {
+                result = null;
+                return false;
+            }
+
+            var tryResult = new VersionResult();
+            tryResult.Init(nameof(input));
+
+            var success = TryParseVersion(input, ref tryResult);
+            result = tryResult.Result;
+
+            return success;
+        }
+
+        /// <summary>
         /// Compare two <see cref="Version"/>'s on equality
         /// </summary>
         /// <param name="v1">Version left param</param> 
@@ -246,6 +293,112 @@ namespace VGlyph
         public static bool operator >=(Version v1, Version v2)
         {
             return v2 <= v1;
+        }
+        
+        private static bool TryParseVersion(string version, ref VersionResult result)
+        {
+            var components = version.Split('.');
+            var componentsCount = components.Length;
+
+            if (componentsCount < 2 || componentsCount > 3)
+            {
+                result.SetFailure(ParseFailureType.ArgumentException);
+                return false;
+            }
+            
+            if (!TryParseComponent(components[0], nameof(Major), ref result, out var major))
+                return false;
+
+            if (!TryParseComponent(components[1], nameof(Minor), ref result, out var minor))
+                return false;
+
+            componentsCount -= 2;
+
+            if (componentsCount > 0)
+            {
+                if (!TryParseComponent(components[2], nameof(Micro), ref result, out var micro))
+                    return false;
+
+                result.Result = new Version(major, minor, micro);
+            }
+            else
+            {
+                result.Result = new Version(major, minor);
+            }
+
+            return true;
+        }
+
+        private static bool TryParseComponent(string component, string componentName, ref VersionResult result, out byte parsedComponent)
+        {
+            if (!byte.TryParse(component, NumberStyles.Integer, CultureInfo.InvariantCulture, out parsedComponent))
+            {
+                result.SetFailure(ParseFailureType.FormatException, componentName, component);
+                return false;
+            }
+
+            return true;
+        }
+        
+        private struct VersionResult
+        {
+            internal string _errorComponentName;
+            internal string _errorComponentValue;
+            internal string _argumentName;
+            internal ParseFailureType _failure;
+
+            public Version Result;
+
+            public void Init(string argumentName)
+            {
+                _argumentName = argumentName;
+            }
+
+            public void SetFailure(ParseFailureType failure)
+            {
+                SetFailure(failure, null, null);
+            }
+            
+            public void SetFailure(ParseFailureType failure, string errorComponentName, string errorComponentValue)
+            {
+                _failure = failure;
+                _errorComponentName = errorComponentName;
+                _errorComponentValue = errorComponentValue;
+            }
+
+            public Exception GetException()
+            {
+                switch (_failure)
+                {
+                    case ParseFailureType.ArgumentException:
+                        return new ArgumentException("Parsing failed", _argumentName);
+
+                    case ParseFailureType.FormatException:
+                        try
+                        {
+                            byte.Parse(_errorComponentValue, CultureInfo.InvariantCulture);
+                        }
+                        catch (FormatException)
+                        {
+                            // return new FormatException
+                        }
+                        catch (OverflowException)
+                        {
+                            return new OverflowException($"The component '{_errorComponentName}' out of range (0-255): {_errorComponentValue} - of argument '{_argumentName}'");
+                        }
+
+                        return new FormatException($"The component '{_errorComponentName}' has an incorrect format '{_errorComponentValue}' - of argument '{_argumentName}'.");
+
+                    default:
+                        return new ArgumentException($"Parsing failed of argument '{_argumentName}'");
+                }
+            }
+        }
+
+        private enum ParseFailureType
+        {
+            ArgumentException,
+            FormatException
         }
     }
 }
