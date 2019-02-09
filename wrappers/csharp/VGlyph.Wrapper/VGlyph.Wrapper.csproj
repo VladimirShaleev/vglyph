@@ -40,6 +40,9 @@
 
     <ItemGroup>
         <ReferenceAssemblyProjectReference Include="..\refs\VGlyph.Wrapper.Ref.csproj" />
+        <ProjectReference Include="..\runtimes\$(MSBuildProjectName).Runtimes.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        </ProjectReference>
     </ItemGroup>
 
     <ItemGroup>
