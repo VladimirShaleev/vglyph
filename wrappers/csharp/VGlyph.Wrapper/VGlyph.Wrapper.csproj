@@ -88,6 +88,8 @@
             <Output ItemName="_SdkTargetsWithRids" TaskParameter="TargetOutputs" />
         </MSBuild>
 
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\runtimes\$(MSBuildProjectName).Runtimes.csproj" Properties="Configuration=$(Configuration);Platform=$(Platform)" Targets="Build" />
+
         <MSBuild Projects="$(MSBuildThisFileDirectory)..\runtimes\$(MSBuildProjectName).Runtimes.csproj" Targets="_SdkGetBuildOutputFilesWithTfm" Properties="TargetFramework=%(_SdkTargetsWithRids.Identity);RuntimeIdentifier=%(_SdkTargetsWithRids.Rid)" Condition="%(_SdkTargetsWithRids.Identity) != '' AND %(_SdkTargetsWithRids.Rid) != ''">
             <Output TaskParameter="TargetOutputs" ItemName="_BuildOutputRuntimes" />
         </MSBuild>
