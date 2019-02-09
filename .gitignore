@@ -22,6 +22,8 @@
 /wrappers/csharp/.vs
 /wrappers/csharp/refs/bin
 /wrappers/csharp/refs/obj
+/wrappers/csharp/runtimes/bin
+/wrappers/csharp/runtimes/obj
 /wrappers/csharp/VGlyph.Wrapper/bin
 /wrappers/csharp/VGlyph.Wrapper/obj
 /wrappers/csharp/VGlyph.Wrapper.Test/bin

@@ -3,7 +3,6 @@
     <PropertyGroup>
         <MinClientVersion>2.5</MinClientVersion>
         <TargetFrameworks>netstandard2.0;netcoreapp2.1;net45</TargetFrameworks>
-        <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
 
         <AssemblyName>VGlyph.Wrapper</AssemblyName>
         <RootNamespace>VGlyph</RootNamespace>
@@ -26,7 +25,7 @@
         <NoWarn>$(NoWarn);NU5118</NoWarn>
         <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
         <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-        <ExtrasBuildEachRuntimeIdentifier>true</ExtrasBuildEachRuntimeIdentifier>
+        <DefineConstants>WIN</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -45,15 +44,6 @@
 
     <ItemGroup>
         <Compile Include="**\*.cs" Exclude="**\obj\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="bin\Debug\net45\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\net45\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
-        <None Include="bin\Debug\netcoreapp2.1\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\netcoreapp2.1\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
-        <None Include="bin\Debug\netstandard2.0\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\netstandard2.0\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
-        <None Include="bin\Release\net45\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\net45\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-        <None Include="bin\Release\netcoreapp2.1\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\netcoreapp2.1\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-        <None Include="bin\Release\netstandard2.0\win-x64\*.*" Exclude="**\*.json" PackagePath="runtimes\win\lib\netstandard2.0\" Pack="true" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
     </ItemGroup>
 
     <ItemGroup>
@@ -86,6 +76,26 @@
 
         <ItemGroup>
             <None Include="@(_refAssms)" PackagePath="ref/%(_refAssms.TargetFramework)" Pack="true" />
+        </ItemGroup>
+    </Target>
+
+    <Target Name="GetRuntimesForPackage" BeforeTargets="_GetPackageFiles">
+        <ItemGroup>
+            <_TargetFramework Include="$(TargetFrameworks)" />
+        </ItemGroup>
+
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\runtimes\$(MSBuildProjectName).Runtimes.csproj" Properties="TargetFramework=%(_TargetFramework.Identity)" Targets="_SdkGetRidsPerTargetFramework">
+            <Output ItemName="_SdkTargetsWithRids" TaskParameter="TargetOutputs" />
+        </MSBuild>
+
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\runtimes\$(MSBuildProjectName).Runtimes.csproj" Targets="_SdkGetBuildOutputFilesWithTfm" Properties="TargetFramework=%(_SdkTargetsWithRids.Identity);RuntimeIdentifier=%(_SdkTargetsWithRids.Rid)" Condition="%(_SdkTargetsWithRids.Identity) != '' AND %(_SdkTargetsWithRids.Rid) != ''">
+            <Output TaskParameter="TargetOutputs" ItemName="_BuildOutputRuntimes" />
+        </MSBuild>
+
+        <ItemGroup>
+            <None Include="$(MSBuildThisFileDirectory)..\runtimes\bin\$(Configuration)\%(_BuildOutputRuntimes.TargetFramework)\%(_BuildOutputRuntimes.Rid)\*.dll" PackagePath="runtimes/%(_BuildOutputRuntimes.Rid)/lib/%(_BuildOutputRuntimes.TargetFramework)\" Pack="true" />
+            <None Include="$(MSBuildThisFileDirectory)..\runtimes\bin\$(Configuration)\%(_BuildOutputRuntimes.TargetFramework)\%(_BuildOutputRuntimes.Rid)\*.pdb" PackagePath="runtimes/%(_BuildOutputRuntimes.Rid)/lib/%(_BuildOutputRuntimes.TargetFramework)\" Pack="true" />
+            <None Include="$(MSBuildThisFileDirectory)..\runtimes\bin\$(Configuration)\%(_BuildOutputRuntimes.TargetFramework)\%(_BuildOutputRuntimes.Rid)\*.xml" PackagePath="runtimes/%(_BuildOutputRuntimes.Rid)/lib/%(_BuildOutputRuntimes.TargetFramework)\" Pack="true" />
         </ItemGroup>
     </Target>
 
