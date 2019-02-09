@@ -720,4 +720,106 @@ public class VersionTest
             Assert.Equal(ver, version);
         }
     }
+
+    public class ParseFromString
+    {
+        [Theory]
+        [InlineData("0.0", 0, 0, 0)]
+        [InlineData("2.7", 2, 7, 0)]
+        [InlineData("5.255", 5, 255, 0)]
+        [InlineData("0.0.0", 0, 0, 0)]
+        [InlineData("2.5.3", 2, 5, 3)]
+        [InlineData("10.255.0", 10, 255, 0)]
+        [InlineData("255.255.255", 255, 255, 255)]
+        [InlineData("3  . 5. 30", 3, 5, 30)]
+        [InlineData("  2  . -00. 000", 2, 0, 0)]
+        public void Parse(string ver, byte major, byte minor, byte micro)
+        {
+            var version = Version.Parse(ver);
+
+            Assert.Equal(major, version.Major);
+            Assert.Equal(minor, version.Minor);
+            Assert.Equal(micro, version.Micro);
+        }
+
+        [Fact]
+        public void ParseArgumentNullException()
+        {
+            Assert.Throws<System.ArgumentNullException>(() => Version.Parse(null));
+        }
+
+        [Theory]
+        [InlineData("0")]
+        [InlineData("0.0.0.0")]
+        [InlineData("1")]
+        [InlineData("2.5.3.0")]
+        [InlineData("2.5.3.")]
+        [InlineData(".2.5.3")]
+        [InlineData("2,5,3")]
+        public void ParseArgumentException(string ver)
+        {
+            Assert.Throws<System.ArgumentException>(() => Version.Parse(ver));
+        }
+
+        [Theory]
+        [InlineData("2.a.c")]
+        [InlineData("2.2 55.4")]
+        [InlineData("3.4,5.255")]
+        public void ParseFormatException(string ver)
+        {
+            Assert.Throws<System.FormatException>(() => Version.Parse(ver));
+        }
+
+        [Theory]
+        [InlineData("2.256.1")]
+        [InlineData("-2.5.4")]
+        [InlineData("2.-5.124")]
+        [InlineData("2.500.270")]
+        public void ParseOverflowException(string ver)
+        {
+            Assert.Throws<System.OverflowException>(() => Version.Parse(ver));
+        }
+
+        [Theory]
+        [InlineData("0.0", 0, 0, 0)]
+        [InlineData("2.7", 2, 7, 0)]
+        [InlineData("5.255", 5, 255, 0)]
+        [InlineData("0.0.0", 0, 0, 0)]
+        [InlineData("2.5.3", 2, 5, 3)]
+        [InlineData("10.255.0", 10, 255, 0)]
+        [InlineData("255.255.255", 255, 255, 255)]
+        [InlineData("3  . 5. 30", 3, 5, 30)]
+        [InlineData("  2  . -00. 000", 2, 0, 0)]
+        public void TryParseTrue(string ver, byte major, byte minor, byte micro)
+        {
+            var result = Version.TryParse(ver, out var version);
+
+            Assert.True(result);
+            Assert.Equal(major, version.Major);
+            Assert.Equal(minor, version.Minor);
+            Assert.Equal(micro, version.Micro);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("0")]
+        [InlineData("0.0.0.0")]
+        [InlineData("1")]
+        [InlineData("2.5.3.0")]
+        [InlineData("2.5.3.")]
+        [InlineData(".2.5.3")]
+        [InlineData("2,5,3")]
+        [InlineData("2.a.c")]
+        [InlineData("2.2 55.4")]
+        [InlineData("3.4,5.255")]
+        [InlineData("2.256.1")]
+        [InlineData("-2.5.4")]
+        [InlineData("2.-5.124")]
+        [InlineData("2.500.270")]
+        public void TryParseFalse(string ver)
+        {
+            var result = Version.TryParse(ver, out var version);
+            Assert.False(result);
+        }
+    }
 }
