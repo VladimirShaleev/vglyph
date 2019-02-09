@@ -25,6 +25,7 @@
         <NoWarn>$(NoWarn);NU5118</NoWarn>
         <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
         <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+        <BuildInParallel>false</BuildInParallel>
         <DefineConstants>WIN</DefineConstants>
     </PropertyGroup>
 
@@ -69,11 +70,11 @@
     </ItemGroup>
 
     <Target Name="GetRefsForPackage" BeforeTargets="_GetPackageFiles">
-        <MSBuild Projects="$(MSBuildThisFileDirectory)..\refs\$(MSBuildProjectName).Ref.csproj" Targets="_GetTargetFrameworksOutput">
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\refs\$(MSBuildProjectName).Ref.csproj" Targets="_GetTargetFrameworksOutput" BuildInParallel="false">
             <Output TaskParameter="TargetOutputs" ItemName="_RefTargetFrameworks" />
         </MSBuild>
 
-        <MSBuild Projects="$(MSBuildThisFileDirectory)..\refs\$(MSBuildProjectName).Ref.csproj" Targets="_GetReferenceAssemblies" Properties="TargetFramework=%(_RefTargetFrameworks.Identity)">
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\refs\$(MSBuildProjectName).Ref.csproj" Targets="_GetReferenceAssemblies" Properties="TargetFramework=%(_RefTargetFrameworks.Identity)" BuildInParallel="false">
             <Output TaskParameter="TargetOutputs" ItemName="_refAssms" />
         </MSBuild>
 
@@ -87,13 +88,13 @@
             <_TargetFramework Include="$(TargetFrameworks)" />
         </ItemGroup>
 
-        <MSBuild Projects="$(MSBuildThisFileDirectory)..\runtimes\$(MSBuildProjectName).Runtimes.csproj" Properties="TargetFramework=%(_TargetFramework.Identity)" Targets="_SdkGetRidsPerTargetFramework">
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\runtimes\$(MSBuildProjectName).Runtimes.csproj" Properties="TargetFramework=%(_TargetFramework.Identity)" Targets="_SdkGetRidsPerTargetFramework" BuildInParallel="false">
             <Output ItemName="_SdkTargetsWithRids" TaskParameter="TargetOutputs" />
         </MSBuild>
 
-        <MSBuild Projects="$(MSBuildThisFileDirectory)..\runtimes\$(MSBuildProjectName).Runtimes.csproj" Properties="Configuration=$(Configuration);Platform=$(Platform)" Targets="Build" />
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\runtimes\$(MSBuildProjectName).Runtimes.csproj" Properties="Configuration=$(Configuration);Platform=$(Platform)" Targets="Build" BuildInParallel="false" />
 
-        <MSBuild Projects="$(MSBuildThisFileDirectory)..\runtimes\$(MSBuildProjectName).Runtimes.csproj" Targets="_SdkGetBuildOutputFilesWithTfm" Properties="TargetFramework=%(_SdkTargetsWithRids.Identity);RuntimeIdentifier=%(_SdkTargetsWithRids.Rid)" Condition="%(_SdkTargetsWithRids.Identity) != '' AND %(_SdkTargetsWithRids.Rid) != ''">
+        <MSBuild Projects="$(MSBuildThisFileDirectory)..\runtimes\$(MSBuildProjectName).Runtimes.csproj" Targets="_SdkGetBuildOutputFilesWithTfm" Properties="TargetFramework=%(_SdkTargetsWithRids.Identity);RuntimeIdentifier=%(_SdkTargetsWithRids.Rid)" Condition="%(_SdkTargetsWithRids.Identity) != '' AND %(_SdkTargetsWithRids.Rid) != ''" BuildInParallel="false">
             <Output TaskParameter="TargetOutputs" ItemName="_BuildOutputRuntimes" />
         </MSBuild>
 
