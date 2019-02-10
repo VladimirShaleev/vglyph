@@ -76,6 +76,33 @@ namespace VGlyph.Import
         
         [DllImport(_library, EntryPoint = "vglyph_figure_draw_closepath", CallingConvention = _callingConvention)]
         public static extern bool FigureDrawClosepath(ObjectHandle figure);
+        
+        [DllImport(_library, EntryPoint = "vglyph_figure_draw_moveto", CallingConvention = _callingConvention)]
+        public static extern bool FigureDrawMoveto(ObjectHandle figure, Coordinate coordinate, ref Point point);
+        
+        [DllImport(_library, EntryPoint = "vglyph_figure_draw_lineto", CallingConvention = _callingConvention)]
+        public static extern bool FigureDrawLineto(ObjectHandle figure, Coordinate coordinate, ref Point point);
+        
+        [DllImport(_library, EntryPoint = "vglyph_figure_draw_curveto_cubic", CallingConvention = _callingConvention)]
+        public static extern bool FigureDrawCurvetoCubic(ObjectHandle figure, Coordinate coordinate, ref Point point, ref Point point1, ref Point point2);
+        
+        [DllImport(_library, EntryPoint = "vglyph_figure_draw_curveto_quadratic", CallingConvention = _callingConvention)]
+        public static extern bool FigureDrawCurvetoQuadratic(ObjectHandle figure, Coordinate coordinate, ref Point point, ref Point point1);
+        
+        [DllImport(_library, EntryPoint = "vglyph_figure_draw_arc", CallingConvention = _callingConvention)]
+        public static extern bool FigureDrawArc(ObjectHandle figure, Coordinate coordinate, ref Point point, ref Point radius, float angle, bool largeArcFlag, bool sweepFlag);
+        
+        [DllImport(_library, EntryPoint = "vglyph_figure_draw_lineto_horizontal", CallingConvention = _callingConvention)]
+        public static extern bool FigureDrawLinetoHorizontal(ObjectHandle figure, Coordinate coordinate, float x);
+        
+        [DllImport(_library, EntryPoint = "vglyph_figure_draw_lineto_vertical", CallingConvention = _callingConvention)]
+        public static extern bool FigureDrawLinetoVertical(ObjectHandle figure, Coordinate coordinate, float y);
+        
+        [DllImport(_library, EntryPoint = "vglyph_figure_draw_curveto_cubic_smooth", CallingConvention = _callingConvention)]
+        public static extern bool FigureDrawCurvetoCubicSmooth(ObjectHandle figure, Coordinate coordinate, ref Point point, ref Point point2);
+        
+        [DllImport(_library, EntryPoint = "vglyph_figure_draw_curveto_quadratic_smooth", CallingConvention = _callingConvention)]
+        public static extern bool FigureDrawCurvetoQuadraticSmooth(ObjectHandle figure, Coordinate coordinate, ref Point point);
 
         private const string _library =
 #if (WIN || WIN_X64 || WIN_X86)
