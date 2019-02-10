@@ -15,6 +15,9 @@ namespace VGlyph
 
         internal ObjectHandle Object { get; private set; }
 
+        internal ObjectHandle ThrowOrObject 
+            => Object.IsInvalid ? throw new NullReferenceException() : Object;
+
         internal static ObjectHandle Type
             => Api.GetFigureType();
 
