@@ -157,6 +157,15 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_format_get_packaging_bytes", CallingConvention = _callingConvention)]
         public static extern void FormatGetPackagingBytes(ObjectHandle format, out PackagingBytes packagingBytes);
+
+        [DllImport(_library, EntryPoint = "vglyph_rgba_uint_format_create", CallingConvention = _callingConvention)]
+        public static extern ObjectHandle RgbaUintFormatCreate(ref PackagingBytes packagingBytes, ref RgbaComponents components, ref RgbaUintBitCount bitCount);
+
+        [DllImport(_library, EntryPoint = "vglyph_rgba_uint_format_get_components", CallingConvention = _callingConvention)]
+        public static extern void RgbaUintFormatGetComponents(ObjectHandle format, out RgbaComponents components);
+
+        [DllImport(_library, EntryPoint = "vglyph_rgba_uint_format_get_bit_count", CallingConvention = _callingConvention)]
+        public static extern void RgbaUintFormatGetBitCount(ObjectHandle format, out RgbaUintBitCount bitCount);
         
         private const string _library =
 #if (WIN || WIN_X64 || WIN_X86)
