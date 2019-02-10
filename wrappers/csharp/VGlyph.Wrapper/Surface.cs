@@ -31,7 +31,7 @@ namespace VGlyph
         /// <exception cref="ArgumentNullException"><paramref name="format"/> is null</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="width"/> or <paramref name="height"/> less than zero</exception>
         /// <exception cref="ObjectDisposedException">Object disposed</exception>   
-        public Surface(Format format, int width, int height, Alignment rowAlignment) 
+        public Surface(Format format, int width, int height, Alignment rowAlignment)
             : this(Create(format, width, height, rowAlignment))
         {
         }
@@ -117,6 +117,28 @@ namespace VGlyph
                 Object.CheckState();
 
                 return (int)result;
+            }
+        }
+
+        /// <summary>
+        /// Number of samples per pixel
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">Object disposed</exception>
+        public Multisampling Multisampling
+        {
+            get
+            {
+                CheckDisposed();
+                var result = Api.SurfaceGetMultisampling(Object);
+                Object.CheckState();
+
+                return (Multisampling)result;
+            }
+            set
+            {
+                CheckDisposed();
+                Api.SurfaceSetMultisampling(Object, value.GetUnmanagedMultisampling());
+                Object.CheckState();
             }
         }
 

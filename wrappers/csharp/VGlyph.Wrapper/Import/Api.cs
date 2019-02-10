@@ -226,14 +226,13 @@ namespace VGlyph.Import
         
         [DllImport(_library, EntryPoint = "vglyph_surface_get_pitch", CallingConvention = _callingConvention)]
         public static extern uint SurfaceGetPitch(ObjectHandle surface);
+        
+        [DllImport(_library, EntryPoint = "vglyph_surface_get_multisampling", CallingConvention = _callingConvention)]
+        public static extern Multisampling SurfaceGetMultisampling(ObjectHandle surface);
 
-        //vglyph_public vglyph_multisampling_t
-        //vglyph_surface_get_multisampling(vglyph_surface_t* surface);
-
-        //vglyph_public void
-        //vglyph_surface_set_multisampling(vglyph_surface_t* surface,
-        //                                 vglyph_multisampling_t quality);
-
+        [DllImport(_library, EntryPoint = "vglyph_surface_set_multisampling", CallingConvention = _callingConvention)]
+        public static extern void SurfaceSetMultisampling(ObjectHandle surface, Multisampling quality);
+        
         private const string _library =
 #if (WIN || WIN_X64 || WIN_X86)
             "vglyph.dll";
