@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using VGlyph.Import;
 
 [assembly: CLSCompliant(true)]
 [assembly: InternalsVisibleTo("VGlyph.Wrapper.Test")]
@@ -14,7 +15,7 @@ namespace VGlyph
         /// <summary>
         /// Version of library
         /// </summary>
-        public static Version Version => new Version(Import.Version());
+        public static Version Version => new Version(Api.Version());
 
         /// <summary>
         /// Check of compatible library
@@ -27,7 +28,7 @@ namespace VGlyph
             if (version == null)
                 throw new ArgumentNullException(nameof(version));
 
-            return Import.IsVersionCompatible(version.Version32);
+            return Api.IsVersionCompatible(version.Version32);
         }
     }
 }

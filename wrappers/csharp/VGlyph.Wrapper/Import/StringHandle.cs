@@ -3,7 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace VGlyph
+namespace VGlyph.Import
 {
     internal class StringHandle : SafeHandleZeroOrMinusOneIsInvalid
     {

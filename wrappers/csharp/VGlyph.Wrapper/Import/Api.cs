@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace VGlyph
+namespace VGlyph.Import
 {
-    enum State
-    {
-        Success = 0,
-        OutOfMemory = 1,
-        InvalidCast = 2,
-        InvalidFormat = 3
-    }
-
-    internal static partial class Import
+    internal static partial class Api
     {
         [DllImport(_library, EntryPoint = "vglyph_version")]
         public static extern uint Version();
@@ -75,7 +67,16 @@ namespace VGlyph
 
         [DllImport(_library, EntryPoint = "vglyph_type_is_type")]
         public static extern bool TypeIsType(ObjectHandle type, ObjectHandle equalType);
+
+        [DllImport(_library, EntryPoint = "vglyph_figure_create")]
+        public static extern ObjectHandle FigureCreate();
         
+        [DllImport(_library, EntryPoint = "vglyph_figure_draw_clear")]
+        public static extern bool FigureDrawClear(ObjectHandle figure);
+        
+        [DllImport(_library, EntryPoint = "vglyph_figure_draw_closepath")]
+        public static extern bool FigureDrawClosepath(ObjectHandle figure);
+
         private const string _library =
 #if (WIN || WIN_X64 || WIN_X86)
             "vglyph.dll";
