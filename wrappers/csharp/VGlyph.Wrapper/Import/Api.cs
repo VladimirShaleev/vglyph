@@ -151,6 +151,12 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_glyph_set_vertical_advance", CallingConvention = _callingConvention)]
         public static extern void GlyphSetVerticalAdvance(ObjectHandle glyph, float advance);
+
+        [DllImport(_library, EntryPoint = "vglyph_format_get_bits_per_pixel", CallingConvention = _callingConvention)]
+        public static extern uint FormatGetBitsPerPixel(ObjectHandle format);
+
+        [DllImport(_library, EntryPoint = "vglyph_format_get_packaging_bytes", CallingConvention = _callingConvention)]
+        public static extern void FormatGetPackagingBytes(ObjectHandle format, out PackagingBytes packagingBytes);
         
         private const string _library =
 #if (WIN || WIN_X64 || WIN_X86)
