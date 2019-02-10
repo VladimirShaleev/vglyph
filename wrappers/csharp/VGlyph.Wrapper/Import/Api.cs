@@ -63,7 +63,7 @@ namespace VGlyph.Import
         public static extern ObjectHandle ObjectGetType(ObjectHandle obj);
 
         [DllImport(_library, EntryPoint = "vglyph_object_is_cast", CallingConvention = _callingConvention)]
-        public static extern void ObjectIsCast(ObjectHandle obj, ObjectHandle type);
+        public static extern bool ObjectIsCast(ObjectHandle obj, ObjectHandle type);
 
         [DllImport(_library, EntryPoint = "vglyph_type_is_type", CallingConvention = _callingConvention)]
         public static extern bool TypeIsType(ObjectHandle type, ObjectHandle equalType);
@@ -103,7 +103,7 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_figure_draw_curveto_quadratic_smooth", CallingConvention = _callingConvention)]
         public static extern bool FigureDrawCurvetoQuadraticSmooth(ObjectHandle figure, Coordinate coordinate, ref Point point);
-        
+
         [DllImport(_library, EntryPoint = "vglyph_glyph_create", CallingConvention = _callingConvention)]
         public static extern ObjectHandle GlyphCreate(ObjectHandle figure);
 
@@ -166,7 +166,74 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_rgba_uint_format_get_bit_count", CallingConvention = _callingConvention)]
         public static extern void RgbaUintFormatGetBitCount(ObjectHandle format, out RgbaUintBitCount bitCount);
+
+        //vglyph_public vglyph_transform_t*
+        //vglyph_transform_create();
+
+        //vglyph_public vglyph_transform_t*
+        //vglyph_transform_create_copy(vglyph_transform_t* transform);
+
+        //vglyph_public vglyph_object_t*
+        //vglyph_transform_to_object(vglyph_transform_t* transform);
+
+        //vglyph_public void
+        //vglyph_transform_clear(vglyph_transform_t* transform);
+
+        //vglyph_public void
+        //vglyph_transform_combine(vglyph_transform_t* transform,
+        //                         vglyph_transform_t* value);
+
+        //vglyph_public void
+        //vglyph_transform_translate(vglyph_transform_t* transform,
+        //                           vglyph_float32_t x,
+        //                           vglyph_float32_t y);
+
+        //vglyph_public void
+        //vglyph_transform_scale(vglyph_transform_t* transform,
+        //                       vglyph_float32_t sx,
+        //                       vglyph_float32_t sy);
+
+        //vglyph_public void
+        //vglyph_transform_rotate(vglyph_transform_t* transform,
+        //                        vglyph_float32_t angle);
+
+        //vglyph_public void
+        //vglyph_transform_transform_point(vglyph_transform_t* transform,
+        //                                 vglyph_point_t* point);
+
+        [DllImport(_library, EntryPoint = "vglyph_surface_get_data_size", CallingConvention = _callingConvention)]
+        public static extern uint SurfaceGetDataSize(ObjectHandle format, uint width, uint height, Alignment rowAlignment);
         
+        [DllImport(_library, EntryPoint = "vglyph_surface_create", CallingConvention = _callingConvention)]
+        public static extern ObjectHandle SurfaceCreate(ObjectHandle format, uint width, uint height, Alignment rowAlignment);
+
+        //vglyph_public vglyph_surface_t*
+        //vglyph_surface_create_for_data(vglyph_uint8_t* data,
+        //                               vglyph_uint32_t data_size,
+        //                               vglyph_format_t* format,
+        //                               vglyph_uint32_t width,
+        //                               vglyph_uint32_t height,
+        //                               vglyph_alignment_t row_alignment);
+        
+        [DllImport(_library, EntryPoint = "vglyph_surface_get_format", CallingConvention = _callingConvention)]
+        public static extern ObjectHandle SurfaceGetFormat(ObjectHandle surface);
+        
+        [DllImport(_library, EntryPoint = "vglyph_surface_get_width", CallingConvention = _callingConvention)]
+        public static extern uint SurfaceGetWidth(ObjectHandle surface);
+        
+        [DllImport(_library, EntryPoint = "vglyph_surface_get_height", CallingConvention = _callingConvention)]
+        public static extern uint SurfaceGetHeight(ObjectHandle surface);
+        
+        [DllImport(_library, EntryPoint = "vglyph_surface_get_pitch", CallingConvention = _callingConvention)]
+        public static extern uint SurfaceGetPitch(ObjectHandle surface);
+
+        //vglyph_public vglyph_multisampling_t
+        //vglyph_surface_get_multisampling(vglyph_surface_t* surface);
+
+        //vglyph_public void
+        //vglyph_surface_set_multisampling(vglyph_surface_t* surface,
+        //                                 vglyph_multisampling_t quality);
+
         private const string _library =
 #if (WIN || WIN_X64 || WIN_X86)
             "vglyph.dll";

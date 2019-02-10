@@ -30,5 +30,47 @@ namespace VGlyph
 
             return Api.IsVersionCompatible(version.Version32);
         }
+
+        internal static object CreateObjectFromHandle(ObjectHandle handle)
+        {
+            if (handle == null)
+                throw new ArgumentNullException(nameof(handle));
+
+            using (var type = Surface.Type)
+            {
+                if (handle.IsCast(type))
+                    return new Surface(handle);
+            }
+
+            using (var type = RgbaUintFormat.Type)
+            {
+                if (handle.IsCast(type))
+                    return new RgbaUintFormat(handle);
+            }
+
+            using (var type = Glyph.Type)
+            {
+                if (handle.IsCast(type))
+                    return new Glyph(handle);
+            }
+
+            using (var type = Figure.Type)
+            {
+                if (handle.IsCast(type))
+                    return new Figure(handle);
+            }
+
+            throw new InvalidOperationException();
+        }
+
+        internal static T CreateObjectFromHandle<T>(ObjectHandle handle) where T : class
+        {
+            var obj = CreateObjectFromHandle(handle);
+
+            if (!(obj is T result))
+                throw new InvalidCastException();
+
+            return result;
+        }
     }
 }

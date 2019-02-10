@@ -44,6 +44,11 @@ namespace VGlyph.Import
             }
         }
 
+        public bool IsCast(ObjectHandle type)
+        {
+            return Api.ObjectIsCast(this, type);
+        }
+
         public void CheckDisposed(string objectName)
         {
             if (IsClosed)

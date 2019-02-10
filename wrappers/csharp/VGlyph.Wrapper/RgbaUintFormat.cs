@@ -6,7 +6,7 @@ namespace VGlyph
     /// <summary>
     /// Format of <see cref="Surface"/>
     /// </summary>
-    public abstract class RgbaUintFormat : Format
+    public class RgbaUintFormat : Format
     {
         internal static new ObjectHandle Type
             => Api.GetRgbaUintFormatType();
