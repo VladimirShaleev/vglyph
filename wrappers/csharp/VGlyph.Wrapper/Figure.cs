@@ -83,6 +83,15 @@ namespace VGlyph
         public void DrawMoveto(Coordinate coordinate, Point point)
         {
             CheckDisposed();
+
+            var unmanagedPoint = new Import.Point
+            {
+                x = point.X,
+                y = point.Y
+            };
+
+            Api.FigureDrawMoveto(Object, coordinate.GetUnmanagedCoordinate(), ref unmanagedPoint);
+            Object.CheckState();
         }
 
         /// <summary>
@@ -94,6 +103,15 @@ namespace VGlyph
         public void DrawLineto(Coordinate coordinate, Point point)
         {
             CheckDisposed();
+
+            var unmanagedPoint = new Import.Point
+            {
+                x = point.X,
+                y = point.Y
+            };
+
+            Api.FigureDrawLineto(Object, coordinate.GetUnmanagedCoordinate(), ref unmanagedPoint);
+            Object.CheckState();
         }
 
         /// <summary>
@@ -107,6 +125,27 @@ namespace VGlyph
         public void DrawCurvetoCubic(Coordinate coordinate, Point point, Point point1, Point point2)
         {
             CheckDisposed();
+
+            var unmanagedPoint = new Import.Point
+            {
+                x = point.X,
+                y = point.Y
+            };
+
+            var unmanagedPoint1 = new Import.Point
+            {
+                x = point1.X,
+                y = point1.Y
+            };
+
+            var unmanagedPoint2 = new Import.Point
+            {
+                x = point2.X,
+                y = point2.Y
+            };
+
+            Api.FigureDrawCurvetoCubic(Object, coordinate.GetUnmanagedCoordinate(), ref unmanagedPoint, ref unmanagedPoint1, ref unmanagedPoint2);
+            Object.CheckState();
         }
 
         /// <summary>
@@ -119,6 +158,21 @@ namespace VGlyph
         public void DrawCurvetoQuadratic(Coordinate coordinate, Point point, Point point1)
         {
             CheckDisposed();
+
+            var unmanagedPoint = new Import.Point
+            {
+                x = point.X,
+                y = point.Y
+            };
+
+            var unmanagedPoint1 = new Import.Point
+            {
+                x = point1.X,
+                y = point1.Y
+            };
+
+            Api.FigureDrawCurvetoQuadratic(Object, coordinate.GetUnmanagedCoordinate(), ref unmanagedPoint, ref unmanagedPoint1);
+            Object.CheckState();
         }
 
         /// <summary>
@@ -145,6 +199,21 @@ namespace VGlyph
         public void DrawArc(Coordinate coordinate, Point point, Point radius, float angle, bool largeArcFlag, bool sweepFlag)
         {
             CheckDisposed();
+
+            var unmanagedPoint = new Import.Point
+            {
+                x = point.X,
+                y = point.Y
+            };
+
+            var unmanagedRadius = new Import.Point
+            {
+                x = radius.X,
+                y = radius.Y
+            };
+
+            Api.FigureDrawArc(Object, coordinate.GetUnmanagedCoordinate(), ref unmanagedPoint, ref unmanagedRadius, angle, largeArcFlag, sweepFlag);
+            Object.CheckState();
         }
 
         /// <summary>
@@ -156,6 +225,9 @@ namespace VGlyph
         public void DrawLinetoHorizontal(Coordinate coordinate, float x)
         {
             CheckDisposed();
+            
+            Api.FigureDrawLinetoHorizontal(Object, coordinate.GetUnmanagedCoordinate(), x);
+            Object.CheckState();
         }
 
         /// <summary>
@@ -167,6 +239,9 @@ namespace VGlyph
         public void DrawLinetoVertical(Coordinate coordinate, float y)
         {
             CheckDisposed();
+
+            Api.FigureDrawLinetoVertical(Object, coordinate.GetUnmanagedCoordinate(), y);
+            Object.CheckState();
         }
 
         /// <summary>
@@ -179,6 +254,21 @@ namespace VGlyph
         public void DrawCurvetoCubicSmooth(Coordinate coordinate, Point point, Point point2)
         {
             CheckDisposed();
+
+            var unmanagedPoint = new Import.Point
+            {
+                x = point.X,
+                y = point.Y
+            };
+
+            var unmanagedPoint2 = new Import.Point
+            {
+                x = point2.X,
+                y = point2.Y
+            };
+
+            Api.FigureDrawCurvetoCubicSmooth(Object, coordinate.GetUnmanagedCoordinate(), ref unmanagedPoint, ref unmanagedPoint2);
+            Object.CheckState();
         }
 
         /// <summary>
@@ -190,6 +280,15 @@ namespace VGlyph
         public void DrawCurvetoQuadraticSmooth(Coordinate coordinate, Point point)
         {
             CheckDisposed();
+
+            var unmanagedPoint = new Import.Point
+            {
+                x = point.X,
+                y = point.Y
+            };
+            
+            Api.FigureDrawCurvetoQuadraticSmooth(Object, coordinate.GetUnmanagedCoordinate(), ref unmanagedPoint);
+            Object.CheckState();
         }
 
         /// <summary>

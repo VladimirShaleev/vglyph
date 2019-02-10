@@ -16,4 +16,10 @@
         /// </summary>
         Relative
     }
+
+    internal static class CoordinateExtensions
+    {
+        public static Import.Coordinate GetUnmanagedCoordinate(this Coordinate coordinate)
+            => (Import.Coordinate)coordinate;
+    }
 }
