@@ -50,6 +50,11 @@ namespace VGlyph
             Object.CheckState();
         }
 
+        ~Glyph()
+        {
+            Dispose(false);
+        }
+
         /// <summary>
         /// Get <see cref="Figure"/>
         /// </summary>

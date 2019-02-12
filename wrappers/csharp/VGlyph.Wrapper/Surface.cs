@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using VGlyph.Import;
 
 namespace VGlyph
@@ -53,6 +54,11 @@ namespace VGlyph
                 throw new ArgumentException();
 
             Object.CheckState();
+        }
+
+        ~Surface()
+        {
+            Dispose(false);
         }
 
         /// <summary>
@@ -143,6 +149,47 @@ namespace VGlyph
         }
 
         /// <summary>
+        /// Capture stream bytes of surface
+        /// </summary>
+        /// <param name="x">left bound to lock</param>
+        /// <param name="y">top bound to lock</param>
+        /// <param name="width">width lock</param>
+        /// <param name="height">height lock</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="width"/> or <paramref name="height"/> less than zero</exception>
+        /// <exception cref="ObjectDisposedException">Object disposed</exception>
+        /// <returns>Stream bytes</returns>
+        public Stream CaptureStream(int x, int y, int width, int height)
+        {
+            if (x < 0)
+                throw new ArgumentOutOfRangeException(nameof(x), "x must not be less than zero");
+
+            if (y < 0)
+                throw new ArgumentOutOfRangeException(nameof(y), "y must not be less than zero");
+
+            if (width < 0)
+                throw new ArgumentOutOfRangeException(nameof(width), "width must not be less than zero");
+
+            if (height < 0)
+                throw new ArgumentOutOfRangeException(nameof(height), "height must not be less than zero");
+
+            CheckDisposed();
+
+            try
+            {
+                var ptr = Api.SurfaceLock(Object, (uint)x, (uint)y, (uint)width, (uint)height);
+                Object.CheckState();
+
+                return null; // new SurfaceStream(Object, ptr, (uint)x, (uint)y, (uint)width, (uint)height);
+            }
+            catch
+            {
+                Api.SurfaceUnlock(Object);
+                Object.CheckState();
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Compute size of data surface in bytes
         /// </summary>
         /// <param name="format">Format of <see cref="Surface"/></param>
@@ -151,7 +198,6 @@ namespace VGlyph
         /// <param name="rowAlignment">Bytes aligment for row <see cref="Surface"/></param>
         /// <exception cref="ArgumentNullException"><paramref name="format"/> is null</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="width"/> or <paramref name="height"/> less than zero</exception>
-        /// <exception cref="ObjectDisposedException">Object disposed</exception>
         /// <returns>Size of data in bytes</returns>
         public static int GetDataSize(Format format, int width, int height, Alignment rowAlignment)
         {

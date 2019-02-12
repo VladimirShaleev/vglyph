@@ -43,6 +43,11 @@ namespace VGlyph
             Object.CheckState();
         }
 
+        ~Format()
+        {
+            Dispose(false);
+        }
+
         /// <summary>
         /// Get bits per pixel
         /// </summary>

@@ -53,6 +53,11 @@ namespace VGlyph
             Object.CheckState();
         }
 
+        ~Figure()
+        {
+            Dispose(false);
+        }
+
         /// <summary>
         /// Clear path figure
         /// </summary>
