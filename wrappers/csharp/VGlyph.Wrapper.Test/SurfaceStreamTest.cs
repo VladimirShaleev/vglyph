@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
@@ -101,6 +102,42 @@ public class SurfaceStreamTest
         [Fact]
         public void ReadWrite()
         {
+            var buffer = Enumerable.Range(1, 20).Select(i => (byte)i).ToArray();
+            var size = (int)SurfaceStream.Length;
+
+            Assert.Equal(0, SurfaceStream.Position);
+
+            SurfaceStream.WriteByte(5);
+            Assert.Equal(1, SurfaceStream.Position);
+
+            SurfaceStream.Seek(2, SeekOrigin.Begin);
+            Assert.Equal(2, SurfaceStream.Position);
+
+            SurfaceStream.Write(buffer, 4, 5);
+            Assert.Equal(7, SurfaceStream.Position);
+
+            SurfaceStream.Seek(0, SeekOrigin.End);
+            Assert.Equal(size, SurfaceStream.Position);
+
+            SurfaceStream.Seek(-10, SeekOrigin.Current);
+            Assert.Equal(size - 10, SurfaceStream.Position);
+
+            SurfaceStream.Write(buffer, 10, 10);
+            Assert.Equal(size, SurfaceStream.Position);
+
+            SurfaceStream.Position = 0;
+
+            var readBuffer = new byte[size];
+            var testBuffer = new byte[]
+            {
+                5, 0, 5, 6, 7, 8, 9, 0, 0,
+                0, 0, 0, 0, 0, 11, 12, 13,
+                14, 15, 16, 17, 18, 19, 20
+            };
+
+            Assert.Equal(size, SurfaceStream.Read(readBuffer, 0, size));
+            Assert.Equal(size, SurfaceStream.Position);
+            Assert.Equal(testBuffer, readBuffer);
         }
     }
 }

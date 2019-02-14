@@ -56,6 +56,8 @@ namespace VGlyph
                 return 0;
 
             Marshal.Copy(_ptr + _position, buffer, offset, bytes);
+            _position += bytes;
+
             return bytes;
         }
 
