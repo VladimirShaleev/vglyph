@@ -139,5 +139,23 @@ public class SurfaceStreamTest
             Assert.Equal(size, SurfaceStream.Position);
             Assert.Equal(testBuffer, readBuffer);
         }
+
+        [Fact]
+        public void SeekArgumentOutOfRangeException()
+        {
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(()
+                => SurfaceStream.Seek(SurfaceStream.Length + 1, SeekOrigin.Begin));
+
+            Assert.Equal("offset", exception.ParamName);
+        }
+
+        [Fact]
+        public void SeekIOException()
+        {
+            SurfaceStream.Seek(SurfaceStream.Length / 2, SeekOrigin.Begin);
+
+            Assert.Throws<IOException>(() => SurfaceStream.Seek(SurfaceStream.Length, SeekOrigin.Current));
+            Assert.Throws<IOException>(() => SurfaceStream.Seek(-SurfaceStream.Length, SeekOrigin.Current));
+        }
     }
 }
