@@ -98,7 +98,7 @@ namespace VGlyph
                     break;
 
                 case SeekOrigin.End:
-                    newPosition = Length;
+                    newPosition = Length + offset;
                     break;
             }
 

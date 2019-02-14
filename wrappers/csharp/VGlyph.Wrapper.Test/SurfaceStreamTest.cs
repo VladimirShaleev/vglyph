@@ -152,8 +152,10 @@ public class SurfaceStreamTest
         [Fact]
         public void SeekIOException()
         {
-            SurfaceStream.Seek(SurfaceStream.Length / 2, SeekOrigin.Begin);
+            Assert.Throws<IOException>(() => SurfaceStream.Seek(-1, SeekOrigin.Begin));
+            Assert.Throws<IOException>(() => SurfaceStream.Seek(1, SeekOrigin.End));
 
+            SurfaceStream.Seek(SurfaceStream.Length / 2, SeekOrigin.Begin);
             Assert.Throws<IOException>(() => SurfaceStream.Seek(SurfaceStream.Length, SeekOrigin.Current));
             Assert.Throws<IOException>(() => SurfaceStream.Seek(-SurfaceStream.Length, SeekOrigin.Current));
         }
@@ -184,6 +186,15 @@ public class SurfaceStreamTest
             Assert.Throws<ArgumentException>(() => SurfaceStream.Read(buffer, 3, 3));
             Assert.Throws<ArgumentException>(() => SurfaceStream.Write(buffer, 0, 6));
             Assert.Throws<ArgumentException>(() => SurfaceStream.Write(buffer, 3, 3));
+        }
+
+        [Fact]
+        public void WriteIOException()
+        {
+            var buffer = new byte[] { 1, 2, 3, 4, 5 };
+
+            SurfaceStream.Seek(-4, SeekOrigin.End);
+            Assert.Throws<IOException>(() => SurfaceStream.Write(buffer, 0, buffer.Length));
         }
     }
 }
