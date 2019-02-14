@@ -196,5 +196,22 @@ public class SurfaceStreamTest
             SurfaceStream.Seek(-4, SeekOrigin.End);
             Assert.Throws<IOException>(() => SurfaceStream.Write(buffer, 0, buffer.Length));
         }
+
+        [Fact]
+        public void ReadEnd()
+        {
+            var testBuffer = new byte[] { 4, 5 };
+
+            var writeBuffer = new byte[] { 1, 2, 3, 4, 5 };
+            var readBuffer = new byte[5];
+
+            SurfaceStream.Seek(-5, SeekOrigin.End);
+            SurfaceStream.Write(writeBuffer, 0, writeBuffer.Length);
+
+            SurfaceStream.Seek(-2, SeekOrigin.End);
+            Assert.Equal(2, SurfaceStream.Read(readBuffer, 0, readBuffer.Length));
+            Assert.Equal(testBuffer, readBuffer.Take(2));
+            Assert.Equal(0, SurfaceStream.Read(readBuffer, 0, readBuffer.Length));
+        }
     }
 }
