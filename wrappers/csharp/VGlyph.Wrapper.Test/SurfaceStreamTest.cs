@@ -157,5 +157,33 @@ public class SurfaceStreamTest
             Assert.Throws<IOException>(() => SurfaceStream.Seek(SurfaceStream.Length, SeekOrigin.Current));
             Assert.Throws<IOException>(() => SurfaceStream.Seek(-SurfaceStream.Length, SeekOrigin.Current));
         }
+
+        [Fact]
+        public void ReadWriteArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => SurfaceStream.Read(null, 0, 0));
+            Assert.Throws<ArgumentNullException>(() => SurfaceStream.Write(null, 0, 0));
+        }
+
+        [Fact]
+        public void ReadWriteArgumentOutOfRangeException()
+        {
+            var buffer = new byte[] { 1 };
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => SurfaceStream.Read(buffer, -1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => SurfaceStream.Read(buffer, 0, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => SurfaceStream.Write(buffer, -1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => SurfaceStream.Write(buffer, 0, -1));
+        }
+
+        [Fact]
+        public void ReadWriteArgumentException()
+        {
+            var buffer = new byte[] { 5 };
+            Assert.Throws<ArgumentException>(() => SurfaceStream.Read(buffer, 0, 6));
+            Assert.Throws<ArgumentException>(() => SurfaceStream.Read(buffer, 3, 3));
+            Assert.Throws<ArgumentException>(() => SurfaceStream.Write(buffer, 0, 6));
+            Assert.Throws<ArgumentException>(() => SurfaceStream.Write(buffer, 3, 3));
+        }
     }
 }
