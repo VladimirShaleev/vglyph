@@ -5,9 +5,9 @@ namespace VGlyph.Import
     [StructLayout(LayoutKind.Sequential)]
     internal struct Color
     {
-        public double Red;
-        public double Green;
-        public double Blue;
-        public double Alpha;
+        public double red;
+        public double green;
+        public double blue;
+        public double alpha;
     }
 }

@@ -204,6 +204,7 @@ namespace VGlyph
         /// <param name="color">Solid color to fill</param>
         /// <exception cref="ArgumentOutOfRangeException">Width and height can not be negative</exception>
         /// <exception cref="ArgumentNullException">Color is null</exception>
+        /// <exception cref="ObjectDisposedException">Object disposed</exception>
         public void Fill(int x, int y, int width, int height, Color color)
         {
             CheckDisposed();
@@ -225,21 +226,22 @@ namespace VGlyph
 
             var unmanagedColor = new Import.Color
             {
-                Red = color.Red,
-                Green = color.Green,
-                Blue = color.Blue,
-                Alpha = color.Alpha
+                red = color.Red,
+                green = color.Green,
+                blue = color.Blue,
+                alpha = color.Alpha
             };
 
             Api.SurfaceFill(Object, (uint)x, (uint)y, (uint)width, (uint)height, ref unmanagedColor);
             Object.CheckState();
         }
-        
+
         /// <summary>
         /// Get <see cref="Color"/> of pixel
         /// </summary>
         /// <param name="x">X position</param>
         /// <param name="y">Y position</param>
+        /// <exception cref="ObjectDisposedException">Object disposed</exception>
         /// <returns><see cref="Color"/> of pixel</returns>
         public Color GetPixel(int x, int y)
         {
@@ -248,7 +250,7 @@ namespace VGlyph
             Api.SurfaceGetPixel(Object, x, y, out var color);
             Object.CheckState();
 
-            return new Color(color.Red, color.Green, color.Blue, color.Alpha);
+            return new Color(color.red, color.green, color.blue, color.alpha);
         }
 
         /// <summary>
@@ -257,19 +259,77 @@ namespace VGlyph
         /// <param name="x">X position</param>
         /// <param name="y">Y position</param>
         /// <param name="color"><see cref="Color"/> of pixel</param>
+        /// <exception cref="ObjectDisposedException">Object disposed</exception>
         public void SetPixel(int x, int y, Color color)
         {
             CheckDisposed();
 
             var unmanagedColor = new Import.Color
             {
-                Red = color.Red,
-                Green = color.Green,
-                Blue = color.Blue,
-                Alpha = color.Alpha
+                red = color.Red,
+                green = color.Green,
+                blue = color.Blue,
+                alpha = color.Alpha
             };
 
             Api.SurfaceSetPixel(Object, x, y, ref unmanagedColor);
+            Object.CheckState();
+        }
+
+        /// <summary>
+        /// Draw glyph on surface
+        /// </summary>
+        /// <param name="glyph">Draw <see cref="Glyph"/></param>
+        /// <param name="pt">Size glyph in punkt</param>
+        /// <param name="color"><see cref="Color"/> of <see cref="Glyph"/></param>
+        /// <param name="position">Position to draw on <see cref="Surface"/></param>
+        /// <param name="origin">Origin of <see cref="Glyph"/></param>
+        /// <param name="scale">Scale of <see cref="Glyph"/></param>
+        /// <param name="angle">Rotation of <see cref="Glyph"/></param>
+        /// <param name="verticalLayout"><see cref="Glyph"/> orientation</param>
+        /// <exception cref="ArgumentNullException">parameter is null</exception>
+        /// <exception cref="ArgumentException">glyph handle is invalid</exception>
+        /// <exception cref="ObjectDisposedException">Object disposed</exception>
+        public void DrawGlyph(Glyph glyph, float pt, Color color, Point position, Point origin, Point scale, float angle, bool verticalLayout)
+        {
+            CheckDisposed();
+
+            if (glyph == null)
+                throw new ArgumentNullException(nameof(glyph));
+
+            if (glyph.Object.IsInvalid)
+                throw new ArgumentException("glyph invalid", nameof(glyph));
+
+            if (color == null)
+                throw new ArgumentNullException(nameof(color));
+            
+            var unmanagedColor = new Import.Color
+            {
+                red = color.Red,
+                green = color.Green,
+                blue = color.Blue,
+                alpha = color.Alpha
+            };
+
+            var unmanagedPosition = new Import.Point
+            {
+                x = position.X,
+                y = position.Y
+            };
+
+            var unmanagedOrigin = new Import.Point
+            {
+                x = origin.X,
+                y = origin.Y
+            };
+
+            var unmanagedScale = new Import.Point
+            {
+                x = scale.X,
+                y = scale.Y
+            };
+
+            Api.SurfaceDrawGlyph(Object, glyph.Object, pt, ref unmanagedColor, ref unmanagedPosition, ref unmanagedOrigin, ref unmanagedScale, angle, verticalLayout);
             Object.CheckState();
         }
 

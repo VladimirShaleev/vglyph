@@ -247,18 +247,10 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_surface_set_pixel", CallingConvention = _callingConvention)]
         public static extern void SurfaceSetPixel(ObjectHandle surface, int x, int y, ref Color color);
-        
-        //vglyph_public vglyph_bool_t
-        //vglyph_surface_draw_glyph(vglyph_surface_t* surface,
-        //                          vglyph_glyph_t* glyph,
-        //                          vglyph_float32_t pt,
-        //                          const vglyph_color_t* color,
-        //                          const vglyph_point_t* position,
-        //                          const vglyph_point_t* origin,
-        //                          const vglyph_point_t* scale,
-        //                          vglyph_float32_t angle,
-        //                          vglyph_bool_t vertical_layout);
 
+        [DllImport(_library, EntryPoint = "vglyph_surface_draw_glyph", CallingConvention = _callingConvention)]
+        public static extern void SurfaceDrawGlyph(ObjectHandle surface, ObjectHandle glyph, float pt, ref Color color, ref Point position, ref Point origin, ref Point scale, float angle, bool verticalLayout);
+        
         //vglyph_public vglyph_bool_t
         //vglyph_surface_draw_glyph_viewport(vglyph_surface_t* surface,
         //                                   vglyph_glyph_t* glyph,
