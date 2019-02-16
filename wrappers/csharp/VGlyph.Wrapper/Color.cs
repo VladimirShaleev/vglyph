@@ -57,7 +57,8 @@ namespace VGlyph
         /// </remarks>
         /// <param name="grayscale">Initialize components <see cref="Red"/>, <see cref="Green"/>
         /// , <see cref="Blue"/> to <paramref name="grayscale"/>.</param>
-        public Color(byte grayscale) : this(grayscale, grayscale, grayscale)
+        public Color(byte grayscale)
+            : this(grayscale, grayscale, grayscale)
         {
         }
 
@@ -67,7 +68,8 @@ namespace VGlyph
         /// <param name="grayscale">Initialize components <see cref="Red"/>, <see cref="Green"/>
         /// , <see cref="Blue"/> to <paramref name="grayscale"/>.</param>
         /// <param name="alpha">Initialize <see cref="Alpha"/> component to <paramref name="alpha"/></param>
-        public Color(byte grayscale, byte alpha) : this(grayscale, grayscale, grayscale, alpha)
+        public Color(byte grayscale, byte alpha)
+            : this(grayscale, grayscale, grayscale, alpha)
         {
         }
 
@@ -80,7 +82,8 @@ namespace VGlyph
         /// <param name="red"><see cref="Red"/> component of <see cref="Color"/></param>
         /// <param name="green"><see cref="Green"/> component of <see cref="Color"/></param>
         /// <param name="blue"><see cref="Blue"/> component of <see cref="Color"/></param>
-        public Color(byte red, byte green, byte blue) : this(red, green, blue, byte.MaxValue)
+        public Color(byte red, byte green, byte blue)
+            : this(red, green, blue, byte.MaxValue)
         {
         }
 
@@ -91,7 +94,8 @@ namespace VGlyph
         /// <param name="green"><see cref="Green"/> component of <see cref="Color"/></param>
         /// <param name="blue"><see cref="Blue"/> component of <see cref="Color"/></param>
         /// <param name="alpha"><see cref="Alpha"/> component of <see cref="Color"/></param>
-        public Color(byte red, byte green, byte blue, byte alpha) : this(red / 255.0, green / 255.0, blue / 255.0, alpha / 255.0)
+        public Color(byte red, byte green, byte blue, byte alpha)
+            : this(red / 255.0, green / 255.0, blue / 255.0, alpha / 255.0)
         {
         }
 
@@ -103,7 +107,8 @@ namespace VGlyph
         /// </remarks>
         /// <param name="grayscale">Initialize components <see cref="Red"/>, <see cref="Green"/>
         /// , <see cref="Blue"/> to <paramref name="grayscale"/>.</param>
-        public Color(double grayscale) : this(grayscale, grayscale, grayscale)
+        public Color(double grayscale) 
+            : this(grayscale, grayscale, grayscale)
         {
         }
 
@@ -113,7 +118,8 @@ namespace VGlyph
         /// <param name="grayscale">Initialize components <see cref="Red"/>, <see cref="Green"/>
         /// , <see cref="Blue"/> to <paramref name="grayscale"/>.</param>
         /// <param name="alpha">Initialize <see cref="Alpha"/> component to <paramref name="alpha"/></param>
-        public Color(double grayscale, double alpha) : this(grayscale, grayscale, grayscale, alpha)
+        public Color(double grayscale, double alpha)
+            : this(grayscale, grayscale, grayscale, alpha)
         {
         }
 
@@ -126,7 +132,8 @@ namespace VGlyph
         /// <param name="red"><see cref="Red"/> component of <see cref="Color"/></param>
         /// <param name="green"><see cref="Green"/> component of <see cref="Color"/></param>
         /// <param name="blue"><see cref="Blue"/> component of <see cref="Color"/></param>
-        public Color(double red, double green, double blue) : this(red, green, blue, 1.0)
+        public Color(double red, double green, double blue)
+            : this(red, green, blue, 1.0)
         {
         }
 

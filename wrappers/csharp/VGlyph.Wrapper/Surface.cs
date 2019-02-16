@@ -206,6 +206,8 @@ namespace VGlyph
         /// <exception cref="ArgumentNullException">Color is null</exception>
         public void Fill(int x, int y, int width, int height, Color color)
         {
+            CheckDisposed();
+
             if (x < 0)
                 x = 0;
 
@@ -220,6 +222,55 @@ namespace VGlyph
 
             if (color == null)
                 new ArgumentNullException(nameof(color), "Color is null");
+
+            var unmanagedColor = new Import.Color
+            {
+                Red = color.Red,
+                Green = color.Green,
+                Blue = color.Blue,
+                Alpha = color.Alpha
+            };
+
+            Api.SurfaceFill(Object, (uint)x, (uint)y, (uint)width, (uint)height, ref unmanagedColor);
+            Object.CheckState();
+        }
+        
+        /// <summary>
+        /// Get <see cref="Color"/> of pixel
+        /// </summary>
+        /// <param name="x">X position</param>
+        /// <param name="y">Y position</param>
+        /// <returns><see cref="Color"/> of pixel</returns>
+        public Color GetPixel(int x, int y)
+        {
+            CheckDisposed();
+
+            Api.SurfaceGetPixel(Object, x, y, out var color);
+            Object.CheckState();
+
+            return new Color(color.Red, color.Green, color.Blue, color.Alpha);
+        }
+
+        /// <summary>
+        /// Set <see cref="Color"/> of pixel
+        /// </summary>
+        /// <param name="x">X position</param>
+        /// <param name="y">Y position</param>
+        /// <param name="color"><see cref="Color"/> of pixel</param>
+        public void SetPixel(int x, int y, Color color)
+        {
+            CheckDisposed();
+
+            var unmanagedColor = new Import.Color
+            {
+                Red = color.Red,
+                Green = color.Green,
+                Blue = color.Blue,
+                Alpha = color.Alpha
+            };
+
+            Api.SurfaceSetPixel(Object, x, y, ref unmanagedColor);
+            Object.CheckState();
         }
 
         /// <summary>
