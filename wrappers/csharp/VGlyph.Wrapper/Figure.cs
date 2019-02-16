@@ -53,6 +53,9 @@ namespace VGlyph
             Object.CheckState();
         }
 
+        /// <summary>
+        /// Free resources and perform other cleanup operations
+        /// </summary>
         ~Figure()
         {
             Dispose(false);
