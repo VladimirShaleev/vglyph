@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using VGlyph;
+using VGlyph.Import;
 using Xunit;
 
 public class SurfaceStreamTest
@@ -64,8 +65,8 @@ public class SurfaceStreamTest
             var fieldPtr = SurfaceStream.GetType().GetField("_ptr", BindingFlags.Instance | BindingFlags.NonPublic);
             var fieldLength = SurfaceStream.GetType().GetField("_length", BindingFlags.Instance | BindingFlags.NonPublic);
             var fieldSurface = SurfaceStream.GetType().GetField("_surface", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            var surface = FormatterServices.GetUninitializedObject(typeof(Surface)) as Surface;
+            
+            var handle = new ObjectHandle();
             var data = Marshal.AllocHGlobal(size);
 
             for (var i = 0; i < size; ++i)
@@ -73,7 +74,7 @@ public class SurfaceStreamTest
 
             fieldPtr.SetValue(SurfaceStream, data);
             fieldLength.SetValue(SurfaceStream, size);
-            fieldSurface.SetValue(SurfaceStream, surface);
+            fieldSurface.SetValue(SurfaceStream, handle);
         }
 
         public void Dispose()
@@ -84,7 +85,7 @@ public class SurfaceStreamTest
                 var fieldLength = SurfaceStream.GetType().GetField("_length", BindingFlags.Instance | BindingFlags.NonPublic);
                 var fieldSurface = SurfaceStream.GetType().GetField("_surface", BindingFlags.Instance | BindingFlags.NonPublic);
 
-                (fieldSurface.GetValue(SurfaceStream) as Surface)?.Dispose();
+                (fieldSurface.GetValue(SurfaceStream) as ObjectHandle)?.Dispose();
 
                 var data = (IntPtr)fieldPtr.GetValue(SurfaceStream);
 
@@ -92,8 +93,8 @@ public class SurfaceStreamTest
                     Marshal.FreeHGlobal(data);
 
                 fieldSurface.SetValue(SurfaceStream, null);
-                fieldLength?.SetValue(SurfaceStream, 0);
-                fieldPtr?.SetValue(SurfaceStream, IntPtr.Zero);
+                fieldLength.SetValue(SurfaceStream, 0);
+                fieldPtr.SetValue(SurfaceStream, IntPtr.Zero);
 
                 SurfaceStream = null;
             }
@@ -212,6 +213,22 @@ public class SurfaceStreamTest
             Assert.Equal(2, SurfaceStream.Read(readBuffer, 0, readBuffer.Length));
             Assert.Equal(testBuffer, readBuffer.Take(2));
             Assert.Equal(0, SurfaceStream.Read(readBuffer, 0, readBuffer.Length));
+        }
+
+        [Fact]
+        public void SetLength()
+        {
+            var length = SurfaceStream.Length;
+
+            SurfaceStream.SetLength(length);
+            Assert.Equal(length, SurfaceStream.Length);
+        }
+
+        [Fact]
+        public void SetLengthArgumentOutOfRangeException()
+        {
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => SurfaceStream.SetLength(SurfaceStream.Length * 2));
+            Assert.Equal("value", exception.ParamName);
         }
     }
 }

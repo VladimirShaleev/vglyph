@@ -160,6 +160,8 @@ namespace VGlyph
         /// <returns>Stream bytes</returns>
         public Stream CaptureStream(int x, int y, int width, int height)
         {
+            CheckDisposed();
+
             if (x < 0)
                 throw new ArgumentOutOfRangeException(nameof(x), "x must not be less than zero");
 
@@ -172,14 +174,12 @@ namespace VGlyph
             if (height < 0)
                 throw new ArgumentOutOfRangeException(nameof(height), "height must not be less than zero");
 
-            CheckDisposed();
+            IntPtr ptr;
 
             try
             {
-                var ptr = Api.SurfaceLock(Object, (uint)x, (uint)y, (uint)width, (uint)height);
+                ptr = Api.SurfaceLock(Object, (uint)x, (uint)y, (uint)width, (uint)height);
                 Object.CheckState();
-
-                return null; // new SurfaceStream(Object, ptr, (uint)x, (uint)y, (uint)width, (uint)height);
             }
             catch
             {
@@ -187,6 +187,8 @@ namespace VGlyph
                 Object.CheckState();
                 throw;
             }
+
+            return new SurfaceStream(this, ptr);
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace VGlyph
 {
     internal class SurfaceStream : Stream
     {
-        private Surface _surface;
+        private ObjectHandle _surface;
         private IntPtr _ptr;
         private int _position;
         private int _length;
@@ -31,7 +31,10 @@ namespace VGlyph
             if (ptr == IntPtr.Zero)
                 throw new ArgumentNullException(nameof(ptr), "Pointer to data is null");
 
-            _surface = surface ?? throw new ArgumentNullException(nameof(surface), "Surface is null");
+            if (surface == null)
+                throw new ArgumentNullException(nameof(surface), "Surface is null");
+
+            _surface = Api.ObjectReference(surface.Object);
 
             _ptr = ptr;
             _length = surface.Pitch * surface.Height;
@@ -121,7 +124,8 @@ namespace VGlyph
         {
             if (_ptr != IntPtr.Zero)
             {
-                Api.SurfaceUnlock(_surface.Object);
+                Api.SurfaceUnlock(_surface);
+                Api.ObjectDestroy(_surface.DangerousGetHandle());
 
                 _surface = null;
                 _ptr = IntPtr.Zero;
