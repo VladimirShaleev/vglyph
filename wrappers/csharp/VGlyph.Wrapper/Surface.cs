@@ -195,6 +195,34 @@ namespace VGlyph
         }
 
         /// <summary>
+        /// Fills the surface with a solid color.
+        /// </summary>
+        /// <param name="x">Starting horizontal position to fill</param>
+        /// <param name="y">Starting vertical position to fill</param>
+        /// <param name="width">Width to fill</param>
+        /// <param name="height">Height to fill</param>
+        /// <param name="color">Solid color to fill</param>
+        /// <exception cref="ArgumentOutOfRangeException">Width and height can not be negative</exception>
+        /// <exception cref="ArgumentNullException">Color is null</exception>
+        public void Fill(int x, int y, int width, int height, Color color)
+        {
+            if (x < 0)
+                x = 0;
+
+            if (y < 0)
+                y = 0;
+
+            if (width < 0)
+                new ArgumentOutOfRangeException(nameof(width), "Width can not be negative");
+
+            if (height < 0)
+                new ArgumentOutOfRangeException(nameof(height), "Height can not be negative");
+
+            if (color == null)
+                new ArgumentNullException(nameof(color), "Color is null");
+        }
+
+        /// <summary>
         /// Compute size of data surface in bytes
         /// </summary>
         /// <param name="format">Format of <see cref="Surface"/></param>
