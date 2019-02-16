@@ -6,22 +6,39 @@ namespace VGlyph
     /// <summary>
     /// Version
     /// </summary>
+    [Serializable]
     public sealed class Version : ICloneable, IComparable, IComparable<Version>, IEquatable<Version>
     {
+        [Explicit] private byte _major { get; set; }
+        [Explicit] private byte _minor { get; set; }
+        [Explicit] private byte _micro { get; set; }
+
         /// <summary>
         /// Major version
         /// </summary>
-        public byte Major { get; set; }
+        public byte Major
+        {
+            get => _major;
+            set => _major = value;
+        }
 
         /// <summary>
         /// Minor version
         /// </summary>
-        public byte Minor { get; set; }
+        public byte Minor
+        {
+            get => _minor;
+            set => _minor = value;
+        }
 
         /// <summary>
         /// Micro version
         /// </summary>
-        public byte Micro { get; set; }
+        public byte Micro
+        {
+            get => _micro;
+            set => _micro = value;
+        }
 
         internal uint Version32
         {

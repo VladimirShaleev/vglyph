@@ -239,14 +239,9 @@ namespace VGlyph.Import
         [DllImport(_library, EntryPoint = "vglyph_surface_unlock", CallingConvention = _callingConvention)]
         public static extern void SurfaceUnlock(ObjectHandle surface);
 
-        //vglyph_public void
-        //vglyph_surface_fill(vglyph_surface_t* surface,
-        //                    vglyph_uint32_t x,
-        //                    vglyph_uint32_t y,
-        //                    vglyph_uint32_t width,
-        //                    vglyph_uint32_t height,
-        //                    const vglyph_color_t* color);
-
+        [DllImport(_library, EntryPoint = "vglyph_surface_fill", CallingConvention = _callingConvention)]
+        public static extern void SurfaceFill(ObjectHandle surface, uint x, uint y, uint width, uint height, ref Color color);
+        
         //vglyph_public void
         //vglyph_surface_get_pixel(vglyph_surface_t* surface,
         //                         vglyph_sint32_t x,

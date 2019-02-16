@@ -40,9 +40,4 @@ namespace VGlyph
             _y = y;
         }
     }
-
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = false)]
-    internal class ExplicitAttribute : Attribute
-    {
-    }
 }
