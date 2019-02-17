@@ -16,7 +16,8 @@ Packaging bytes</td></tr><tr><td>![Public class](media/pubclass.gif "Public clas
 Map RGBA components</td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_RgbaUintBitCount.md">RgbaUintBitCount</a></td><td>
 Defines bits per channel</td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_RgbaUintFormat.md">RgbaUintFormat</a></td><td>
 Format of <a href="T_VGlyph_Surface.md">Surface</a></td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_Surface.md">Surface</a></td><td>
-Surface</td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_Version.md">Version</a></td><td>
+Surface</td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_Transform.md">Transform</a></td><td>
+Transform</td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_Version.md">Version</a></td><td>
 Version</td></tr></table>
 
 ## Structures

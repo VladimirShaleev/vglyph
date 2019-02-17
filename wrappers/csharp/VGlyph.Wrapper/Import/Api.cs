@@ -178,9 +178,9 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_rgba_uint_format_get_bit_count", CallingConvention = _callingConvention)]
         public static extern void RgbaUintFormatGetBitCount(ObjectHandle format, out RgbaUintBitCount bitCount);
-
-        //vglyph_public vglyph_transform_t*
-        //vglyph_transform_create();
+        
+        [DllImport(_library, EntryPoint = "vglyph_transform_create", CallingConvention = _callingConvention)]
+        public static extern ObjectHandle TransformCreate();
 
         //vglyph_public vglyph_transform_t*
         //vglyph_transform_create_copy(vglyph_transform_t* transform);
@@ -218,15 +218,7 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_surface_create", CallingConvention = _callingConvention)]
         public static extern ObjectHandle SurfaceCreate(ObjectHandle format, uint width, uint height, Alignment rowAlignment);
-
-        //vglyph_public vglyph_surface_t*
-        //vglyph_surface_create_for_data(vglyph_uint8_t* data,
-        //                               vglyph_uint32_t data_size,
-        //                               vglyph_format_t* format,
-        //                               vglyph_uint32_t width,
-        //                               vglyph_uint32_t height,
-        //                               vglyph_alignment_t row_alignment);
-
+        
         [DllImport(_library, EntryPoint = "vglyph_surface_get_format", CallingConvention = _callingConvention)]
         public static extern ObjectHandle SurfaceGetFormat(ObjectHandle surface);
 
@@ -265,12 +257,9 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_surface_draw_glyph_viewport", CallingConvention = _callingConvention)]
         public static extern void SurfaceDrawGlyphViewport(ObjectHandle surface, ObjectHandle glyph, ref Color color, ref Point position, ref Point viewport, ref Point origin, float angle, bool fitToViewport);
-
-        //vglyph_public vglyph_bool_t
-        //vglyph_surface_draw_glyph_transform(vglyph_surface_t* surface,
-        //                                    vglyph_glyph_t* glyph,
-        //                                    const vglyph_color_t* color,
-        //                                    const vglyph_transform_t* transform);
+        
+        [DllImport(_library, EntryPoint = "vglyph_surface_draw_glyph_transform", CallingConvention = _callingConvention)]
+        public static extern void SurfaceDrawGlyphTransform(ObjectHandle surface, ObjectHandle glyph, ref Color color, ObjectHandle transform);
 
         [DllImport(_library, EntryPoint = "vglyph_surface_draw_text", CallingConvention = _callingConvention)]
         public static extern void SurfaceDrawText(ObjectHandle surface, ObjectHandle face, float pt, StringHandle text, ref Color color, ref Point position, ref Point origin, ref Point scale, float angle, bool verticalLayout);

@@ -390,6 +390,46 @@ namespace VGlyph
         }
 
         /// <summary>
+        /// Draw glyph on surface
+        /// </summary>
+        /// <param name="glyph">Draw <see cref="Glyph"/></param>
+        /// <param name="color"><see cref="Color"/> of <see cref="Glyph"/></param>
+        /// <param name="transform"><see cref="Transform"/> on <see cref="Glyph"/></param>
+        /// <exception cref="ArgumentNullException">parameter is null</exception>
+        /// <exception cref="ArgumentException">glyph and/or transform handle is invalid</exception>
+        /// <exception cref="ObjectDisposedException">Object disposed</exception>
+        public void DrawGlyphTransform(Glyph glyph, Color color, Transform transform)
+        {
+            CheckDisposed();
+
+            if (glyph == null)
+                throw new ArgumentNullException(nameof(glyph));
+
+            if (glyph.Object.IsInvalid)
+                throw new ArgumentException("glyph invalid", nameof(glyph));
+
+            if (transform == null)
+                throw new ArgumentNullException(nameof(transform));
+
+            if (transform.Object.IsInvalid)
+                throw new ArgumentException("transform invalid", nameof(transform));
+
+            if (color == null)
+                throw new ArgumentNullException(nameof(color));
+
+            var unmanagedColor = new Import.Color
+            {
+                red = color.Red,
+                green = color.Green,
+                blue = color.Blue,
+                alpha = color.Alpha
+            };
+
+            Api.SurfaceDrawGlyphTransform(Object, glyph.Object, ref unmanagedColor, transform.Object);
+            Object.CheckState();
+        }
+
+        /// <summary>
         /// Draw text on surface
         /// </summary>
         /// <param name="face">Draw glyphs in <see cref="Face"/></param>
