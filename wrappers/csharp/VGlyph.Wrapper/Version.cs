@@ -267,6 +267,8 @@ namespace VGlyph
         /// <summary>
         /// Compare two <see cref="Version"/>'s on less
         /// </summary>
+        /// <param name="v1">Version left param</param> 
+        /// <param name="v2">Version right param</param> 
         /// <returns>Result of compare</returns>
         public static bool operator <(Version v1, Version v2)
         {

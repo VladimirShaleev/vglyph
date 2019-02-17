@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "VGlyph.Wrapper.Docs", "VGlyph.Wrapper.Docs.shfbproj", "{F24AFBCE-855B-4CBD-97F8-57237BE8C94C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F24AFBCE-855B-4CBD-97F8-57237BE8C94C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F24AFBCE-855B-4CBD-97F8-57237BE8C94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F24AFBCE-855B-4CBD-97F8-57237BE8C94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F24AFBCE-855B-4CBD-97F8-57237BE8C94C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B74B1501-C655-4718-9BD4-76DA6A82F811}
+	EndGlobalSection
+EndGlobal
