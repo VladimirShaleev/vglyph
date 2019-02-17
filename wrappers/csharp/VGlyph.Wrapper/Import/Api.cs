@@ -250,17 +250,10 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_surface_draw_glyph", CallingConvention = _callingConvention)]
         public static extern void SurfaceDrawGlyph(ObjectHandle surface, ObjectHandle glyph, float pt, ref Color color, ref Point position, ref Point origin, ref Point scale, float angle, bool verticalLayout);
-        
-        //vglyph_public vglyph_bool_t
-        //vglyph_surface_draw_glyph_viewport(vglyph_surface_t* surface,
-        //                                   vglyph_glyph_t* glyph,
-        //                                   const vglyph_color_t* color,
-        //                                   const vglyph_point_t* position,
-        //                                   const vglyph_point_t* viewport,
-        //                                   const vglyph_point_t* origin,
-        //                                   vglyph_float32_t angle,
-        //                                   vglyph_bool_t fit_to_viewport);
 
+        [DllImport(_library, EntryPoint = "vglyph_surface_draw_glyph_viewport", CallingConvention = _callingConvention)]
+        public static extern void SurfaceDrawGlyphViewport(ObjectHandle surface, ObjectHandle glyph, ref Color color, ref Point position, ref Point viewport, ref Point origin, float angle, bool fitToViewport);
+        
         private const string _library =
 #if (WIN || WIN_X64 || WIN_X86)
             "vglyph.dll";

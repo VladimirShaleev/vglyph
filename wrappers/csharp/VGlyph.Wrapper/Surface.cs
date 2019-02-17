@@ -334,6 +334,62 @@ namespace VGlyph
         }
 
         /// <summary>
+        /// Draw glyph on surface to viewport
+        /// </summary>
+        /// <param name="glyph">Draw <see cref="Glyph"/></param>
+        /// <param name="color"><see cref="Color"/> of <see cref="Glyph"/></param>
+        /// <param name="position">Position to draw on <see cref="Surface"/></param>
+        /// <param name="viewport">Viewport for glyph</param>
+        /// <param name="origin">Origin of <see cref="Glyph"/></param>
+        /// <param name="angle">Rotation of <see cref="Glyph"/></param>
+        /// <param name="fitToViewport">Fit glyph to viewport without bearing</param>
+        /// <exception cref="ArgumentNullException">parameter is null</exception>
+        /// <exception cref="ArgumentException">glyph handle is invalid</exception>
+        /// <exception cref="ObjectDisposedException">Object disposed</exception>
+        public void DrawGlyphViewport(Glyph glyph, Color color, Point position, Point viewport, Point origin, float angle, bool fitToViewport)
+        {
+            CheckDisposed();
+
+            if (glyph == null)
+                throw new ArgumentNullException(nameof(glyph));
+
+            if (glyph.Object.IsInvalid)
+                throw new ArgumentException("glyph invalid", nameof(glyph));
+
+            if (color == null)
+                throw new ArgumentNullException(nameof(color));
+
+            var unmanagedColor = new Import.Color
+            {
+                red = color.Red,
+                green = color.Green,
+                blue = color.Blue,
+                alpha = color.Alpha
+            };
+
+            var unmanagedPosition = new Import.Point
+            {
+                x = position.X,
+                y = position.Y
+            };
+
+            var unmanagedViewport = new Import.Point
+            {
+                x = viewport.X,
+                y = viewport.Y
+            };
+
+            var unmanagedOrigin = new Import.Point
+            {
+                x = origin.X,
+                y = origin.Y
+            };
+            
+            Api.SurfaceDrawGlyphViewport(Object, glyph.Object, ref unmanagedColor, ref unmanagedPosition, ref unmanagedViewport, ref unmanagedOrigin, angle, fitToViewport);
+            Object.CheckState();
+        }
+
+        /// <summary>
         /// Compute size of data surface in bytes
         /// </summary>
         /// <param name="format">Format of <see cref="Surface"/></param>

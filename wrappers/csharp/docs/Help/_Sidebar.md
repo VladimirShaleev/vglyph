@@ -139,6 +139,7 @@
           - [Surface.Dispose Method](M_VGlyph_Surface_Dispose.md)
           - [Surface.Dispose Method (Boolean)](M_VGlyph_Surface_Dispose_1.md)
         - [Surface.DrawGlyph Method](M_VGlyph_Surface_DrawGlyph.md)
+        - [Surface.DrawGlyphViewport Method](M_VGlyph_Surface_DrawGlyphViewport.md)
         - [Surface.Fill Method](M_VGlyph_Surface_Fill.md)
         - [Surface.Finalize Method](M_VGlyph_Surface_Finalize.md)
         - [Surface.GetDataSize Method](M_VGlyph_Surface_GetDataSize.md)
