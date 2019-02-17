@@ -1,4 +1,5 @@
-﻿using VGlyph;
+﻿using System;
+using VGlyph;
 using Xunit;
 
 public class ColorTest
@@ -80,7 +81,7 @@ public class ColorTest
             Assert.Equal(blue / 255.0, color.Blue);
             Assert.Equal(alpha / 255.0, color.Alpha);
         }
-        
+
         [Theory]
         [InlineData(-0.2)]
         [InlineData(0.0)]
@@ -147,6 +148,139 @@ public class ColorTest
             Assert.Equal(green, color.Green);
             Assert.Equal(blue, color.Blue);
             Assert.Equal(alpha, color.Alpha);
+        }
+    }
+    
+    public class Properties
+    {
+        [Theory]
+        [InlineData(-0.2, 0.0, 0.0, 2.0)]
+        [InlineData(0.0, 0.0, 0.0, 0.0)]
+        [InlineData(0.4, 0.1, 0.5, -0.4)]
+        [InlineData(0.8, 0.0, 0.5, 0.7)]
+        [InlineData(1.0, 0.0, 0.0, 1.0)]
+        [InlineData(1.5, 1.0, 1.0, 0.5)]
+        public void Setters(double red, double green, double blue, double alpha)
+        {
+            var color = new Color
+            {
+                Red = red,
+                Green = green,
+                Blue = blue,
+                Alpha = alpha
+            };
+
+            Assert.Equal(red, color.Red);
+            Assert.Equal(green, color.Green);
+            Assert.Equal(blue, color.Blue);
+            Assert.Equal(alpha, color.Alpha);
+        }
+    }
+
+    public class Cloneable
+    {
+        [Theory]
+        [InlineData(-0.2, 0.0, 0.0, 2.0)]
+        [InlineData(0.0, 0.0, 0.0, 0.0)]
+        [InlineData(0.4, 0.1, 0.5, -0.4)]
+        [InlineData(0.8, 0.0, 0.5, 0.7)]
+        [InlineData(1.0, 0.0, 0.0, 1.0)]
+        [InlineData(1.5, 1.0, 1.0, 0.5)]
+        public void Clone(double red, double green, double blue, double alpha)
+        {
+            var color = new Color(red, green, blue, alpha);
+
+            var cloneColor = color.Clone() as Color;
+
+            Assert.Equal(color.Red, cloneColor.Red);
+            Assert.Equal(color.Green, cloneColor.Green);
+            Assert.Equal(color.Blue, cloneColor.Blue);
+            Assert.Equal(color.Alpha, cloneColor.Alpha);
+        }
+    }
+
+    public class Comparator
+    {
+        [Theory]
+        [InlineData(true, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)]
+        [InlineData(true, 1.0, 0.5, 2.0, 0.2, 1.0, 0.5, 2.0, 0.2)]
+        [InlineData(false, 1.0, 0.7, 2.0, 0.2, 1.0, 0.5, 2.0, 0.2)]
+        [InlineData(false, 1.0, 0.5, 2.0, 0.2, 0.0, 0.5, 2.0, 0.2)]
+        [InlineData(false, 1.0, 0.5, 2.0, 0.2, 1.0, 0.0, 2.0, 0.2)]
+        [InlineData(false, 1.0, 0.5, 2.0, 0.2, 1.0, 0.5, 0.0, 0.2)]
+        [InlineData(false, 1.0, 0.5, 2.0, 0.2, 1.0, 0.5, 2.0, 0.0)]
+        public void EqualsObject(bool equal, double red1, double green1, double blue1, double alpha1, double red2, double green2, double blue2, double alpha2)
+        {
+            var color1 = new Color(red1, green1, blue1, alpha1) as object;
+            var color2 = new Color(red2, green2, blue2, alpha2);
+
+            var result = color1.Equals(color2);
+
+            Assert.Equal(equal, result);
+        }
+
+        [Theory]
+        [InlineData(0.0, 0.0, 0.0, 0.0)]
+        [InlineData(1.0, 0.0, 0.5, 0.0)]
+        [InlineData(0.0, 0.2, 0.0, 0.8)]
+        public void EqualsObjectTwoParamIsNull(double red, double green, double blue, double alpha)
+        {
+            var color = new Color(red, green, blue, alpha) as object;
+
+            var result = color.Equals(null);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void EqualsObjectIsNotColor()
+        {
+            var color = new Color() as object;
+
+            var result = color.Equals(new object());
+
+            Assert.False(result);
+        }
+
+        [Theory]
+        [InlineData(true, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)]
+        [InlineData(true, 1.0, 0.5, 2.0, 0.2, 1.0, 0.5, 2.0, 0.2)]
+        [InlineData(false, 1.0, 0.7, 2.0, 0.2, 1.0, 0.5, 2.0, 0.2)]
+        [InlineData(false, 1.0, 0.5, 2.0, 0.2, 0.0, 0.5, 2.0, 0.2)]
+        [InlineData(false, 1.0, 0.5, 2.0, 0.2, 1.0, 0.0, 2.0, 0.2)]
+        [InlineData(false, 1.0, 0.5, 2.0, 0.2, 1.0, 0.5, 0.0, 0.2)]
+        [InlineData(false, 1.0, 0.5, 2.0, 0.2, 1.0, 0.5, 2.0, 0.0)]
+        public void Equal(bool equal, double red1, double green1, double blue1, double alpha1, double red2, double green2, double blue2, double alpha2)
+        {
+            var color1 = new Color(red1, green1, blue1, alpha1) as IEquatable<Color>;
+            var color2 = new Color(red2, green2, blue2, alpha2);
+
+            var result = color1.Equals(color2);
+
+            Assert.Equal(equal, result);
+        }
+
+        [Theory]
+        [InlineData(0.0, 0.0, 0.0, 0.0)]
+        [InlineData(1.0, 0.0, 0.5, 0.0)]
+        [InlineData(0.0, 0.2, 0.0, 0.8)]
+        public void EqualsTwoParamIsNull(double red, double green, double blue, double alpha)
+        {
+            var color = new Color(red, green, blue, alpha) as IEquatable<Color>;
+
+            var result = color.Equals(null);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void EqualsIsNotColor()
+        {
+            var color = new Color() as IEquatable<Color>;
+
+            var result = color.Equals(new object());
+
+            Assert.False(result);
         }
     }
 
