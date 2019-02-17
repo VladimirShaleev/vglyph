@@ -48,6 +48,12 @@ namespace VGlyph
                     return new RgbaUintFormat(handle);
             }
 
+            using (var type = Face.Type)
+            {
+                if (handle.IsCast(type))
+                    return new Face(handle);
+            }
+
             using (var type = Glyph.Type)
             {
                 if (handle.IsCast(type))

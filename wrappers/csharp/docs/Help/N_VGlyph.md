@@ -6,7 +6,8 @@ Namespace contains all important objects
 
 ## Classes
 &nbsp;<table><tr><th></th><th>Class</th><th>Description</th></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_Color.md">Color</a></td><td>
-Color</td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_Figure.md">Figure</a></td><td>
+Color</td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_Face.md">Face</a></td><td>
+Face</td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_Figure.md">Figure</a></td><td>
 Figure</td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_Format.md">Format</a></td><td>
 Format of <a href="T_VGlyph_Surface.md">Surface</a></td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_Glyph.md">Glyph</a></td><td>
 Glyph</td></tr><tr><td>![Public class](media/pubclass.gif "Public class")</td><td><a href="T_VGlyph_Library.md">Library</a></td><td>

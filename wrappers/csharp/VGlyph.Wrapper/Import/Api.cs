@@ -151,7 +151,19 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_glyph_set_vertical_advance", CallingConvention = _callingConvention)]
         public static extern void GlyphSetVerticalAdvance(ObjectHandle glyph, float advance);
+        
+        [DllImport(_library, EntryPoint = "vglyph_face_create", CallingConvention = _callingConvention)]
+        public static extern ObjectHandle FaceCreate();
+        
+        [DllImport(_library, EntryPoint = "vglyph_face_get_glyph", CallingConvention = _callingConvention)]
+        public static extern ObjectHandle FaceGetGlyph(ObjectHandle face, uint charCode);
+        
+        [DllImport(_library, EntryPoint = "vglyph_face_add_glyph", CallingConvention = _callingConvention)]
+        public static extern void FaceAddGlyph(ObjectHandle face, ObjectHandle glyph, uint charCode);
 
+        [DllImport(_library, EntryPoint = "vglyph_face_remove_glyph", CallingConvention = _callingConvention)]
+        public static extern bool FaceRemoveGlyph(ObjectHandle face, uint charCode);
+        
         [DllImport(_library, EntryPoint = "vglyph_format_get_bits_per_pixel", CallingConvention = _callingConvention)]
         public static extern uint FormatGetBitsPerPixel(ObjectHandle format);
 
@@ -232,7 +244,7 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_surface_set_multisampling", CallingConvention = _callingConvention)]
         public static extern void SurfaceSetMultisampling(ObjectHandle surface, Multisampling quality);
-        
+
         [DllImport(_library, EntryPoint = "vglyph_surface_lock", CallingConvention = _callingConvention)]
         public static extern IntPtr SurfaceLock(ObjectHandle surface, uint x, uint y, uint width, uint height);
 
@@ -253,7 +265,25 @@ namespace VGlyph.Import
 
         [DllImport(_library, EntryPoint = "vglyph_surface_draw_glyph_viewport", CallingConvention = _callingConvention)]
         public static extern void SurfaceDrawGlyphViewport(ObjectHandle surface, ObjectHandle glyph, ref Color color, ref Point position, ref Point viewport, ref Point origin, float angle, bool fitToViewport);
-        
+
+        //vglyph_public vglyph_bool_t
+        //vglyph_surface_draw_glyph_transform(vglyph_surface_t* surface,
+        //                                    vglyph_glyph_t* glyph,
+        //                                    const vglyph_color_t* color,
+        //                                    const vglyph_transform_t* transform);
+
+        //vglyph_public vglyph_bool_t
+        //vglyph_surface_draw_text(vglyph_surface_t* surface,
+        //                         vglyph_face_t* face,
+        //                         vglyph_float32_t pt,
+        //                         const char* text,
+        //                         const vglyph_color_t* color,
+        //                         const vglyph_point_t* position,
+        //                         const vglyph_point_t* origin,
+        //                         const vglyph_point_t* scale,
+        //                         vglyph_float32_t angle,
+        //                         vglyph_bool_t vertical_layout);
+
         private const string _library =
 #if (WIN || WIN_X64 || WIN_X86)
             "vglyph.dll";

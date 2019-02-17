@@ -60,6 +60,8 @@ static void show_object_type(vglyph_object_t* object)
             printf("object type: vglyph_rgba_uint_format_t\n");
         else if (vglyph_object_is_cast(object, vglyph_get_format_type()))
             printf("object type: vglyph_format_t\n");
+        else if (vglyph_object_is_cast(object, vglyph_get_face_type()))
+            printf("object type: vglyph_face_t\n");
         else if (vglyph_object_is_cast(object, vglyph_get_glyph_type()))
             printf("object type: vglyph_glyph_t\n");
         else if (vglyph_object_is_cast(object, vglyph_get_figure_type()))
