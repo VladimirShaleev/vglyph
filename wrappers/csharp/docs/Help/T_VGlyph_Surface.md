@@ -54,7 +54,8 @@ Capture stream bytes of surface</td></tr><tr><td>![Public method](media/pubmetho
 Dispose object</td></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="M_VGlyph_Surface_Dispose_1.md">Dispose(Boolean)</a></td><td>
 Dispose object</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="M_VGlyph_Surface_DrawGlyph.md">DrawGlyph</a></td><td>
 Draw glyph on surface</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="M_VGlyph_Surface_DrawGlyphViewport.md">DrawGlyphViewport</a></td><td>
-Draw glyph on surface to viewport</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/bsc2ak47" target="_blank">Equals</a></td><td>
+Draw glyph on surface to viewport</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="M_VGlyph_Surface_DrawText.md">DrawText</a></td><td>
+Draw text on surface</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/bsc2ak47" target="_blank">Equals</a></td><td>
 Determines whether the specified object is equal to the current object.
  (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">Object</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="M_VGlyph_Surface_Fill.md">Fill</a></td><td>
 Fills the surface with a solid color.</td></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="M_VGlyph_Surface_Finalize.md">Finalize</a></td><td>

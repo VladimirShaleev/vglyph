@@ -302,7 +302,7 @@ namespace VGlyph
 
             if (color == null)
                 throw new ArgumentNullException(nameof(color));
-            
+
             var unmanagedColor = new Import.Color
             {
                 red = color.Red,
@@ -384,9 +384,77 @@ namespace VGlyph
                 x = origin.X,
                 y = origin.Y
             };
-            
+
             Api.SurfaceDrawGlyphViewport(Object, glyph.Object, ref unmanagedColor, ref unmanagedPosition, ref unmanagedViewport, ref unmanagedOrigin, angle, fitToViewport);
             Object.CheckState();
+        }
+
+        /// <summary>
+        /// Draw text on surface
+        /// </summary>
+        /// <param name="face">Draw glyphs in <see cref="Face"/></param>
+        /// <param name="pt">Size glyph in punkt</param>
+        /// <param name="text">Text for drawing</param>
+        /// <param name="color"><see cref="Color"/> of <see cref="Glyph"/></param>
+        /// <param name="position">Position to draw on <see cref="Surface"/></param>
+        /// <param name="origin">Origin of <see cref="Glyph"/></param>
+        /// <param name="scale">Scale of <see cref="Glyph"/></param>
+        /// <param name="angle">Rotation of <see cref="Glyph"/></param>
+        /// <param name="verticalLayout"><see cref="Glyph"/> orientation</param>
+        /// <exception cref="ArgumentNullException">parameter is null</exception>
+        /// <exception cref="ArgumentException"><see cref="Face"/> handle is invalid</exception>
+        /// <exception cref="ObjectDisposedException">Object disposed</exception>
+        public void DrawText(Face face, float pt, string text, Color color, Point position, Point origin, Point scale, float angle, bool verticalLayout)
+        {
+            CheckDisposed();
+
+            if (face == null)
+                throw new ArgumentNullException(nameof(face));
+
+            if (face.Object.IsInvalid)
+                throw new ArgumentException("face invalid", nameof(face));
+
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            if (color == null)
+                throw new ArgumentNullException(nameof(color));
+
+            if (text.Length != 0)
+            {
+                var unmanagedColor = new Import.Color
+                {
+                    red = color.Red,
+                    green = color.Green,
+                    blue = color.Blue,
+                    alpha = color.Alpha
+                };
+
+                var unmanagedPosition = new Import.Point
+                {
+                    x = position.X,
+                    y = position.Y
+                };
+
+                var unmanagedOrigin = new Import.Point
+                {
+                    x = origin.X,
+                    y = origin.Y
+                };
+
+                var unmanagedScale = new Import.Point
+                {
+                    x = scale.X,
+                    y = scale.Y
+                };
+
+                using (var unmanagedText = new StringHandle(text))
+                {
+                    Api.SurfaceDrawText(Object, face.Object, pt, unmanagedText, ref unmanagedColor, ref unmanagedPosition, ref unmanagedOrigin, ref unmanagedScale, angle, verticalLayout);
+                }
+
+                Object.CheckState();
+            }
         }
 
         /// <summary>

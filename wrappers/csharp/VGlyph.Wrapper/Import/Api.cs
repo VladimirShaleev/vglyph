@@ -272,18 +272,9 @@ namespace VGlyph.Import
         //                                    const vglyph_color_t* color,
         //                                    const vglyph_transform_t* transform);
 
-        //vglyph_public vglyph_bool_t
-        //vglyph_surface_draw_text(vglyph_surface_t* surface,
-        //                         vglyph_face_t* face,
-        //                         vglyph_float32_t pt,
-        //                         const char* text,
-        //                         const vglyph_color_t* color,
-        //                         const vglyph_point_t* position,
-        //                         const vglyph_point_t* origin,
-        //                         const vglyph_point_t* scale,
-        //                         vglyph_float32_t angle,
-        //                         vglyph_bool_t vertical_layout);
-
+        [DllImport(_library, EntryPoint = "vglyph_surface_draw_text", CallingConvention = _callingConvention)]
+        public static extern void SurfaceDrawText(ObjectHandle surface, ObjectHandle face, float pt, StringHandle text, ref Color color, ref Point position, ref Point origin, ref Point scale, float angle, bool verticalLayout);
+        
         private const string _library =
 #if (WIN || WIN_X64 || WIN_X86)
             "vglyph.dll";
