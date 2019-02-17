@@ -181,13 +181,10 @@ namespace VGlyph.Import
         
         [DllImport(_library, EntryPoint = "vglyph_transform_create", CallingConvention = _callingConvention)]
         public static extern ObjectHandle TransformCreate();
-
-        //vglyph_public vglyph_transform_t*
-        //vglyph_transform_create_copy(vglyph_transform_t* transform);
-
-        //vglyph_public vglyph_object_t*
-        //vglyph_transform_to_object(vglyph_transform_t* transform);
-
+        
+        [DllImport(_library, EntryPoint = "vglyph_transform_create_copy", CallingConvention = _callingConvention)]
+        public static extern ObjectHandle TransformCreateCopy(ObjectHandle transform);
+        
         //vglyph_public void
         //vglyph_transform_clear(vglyph_transform_t* transform);
 

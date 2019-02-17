@@ -5,7 +5,9 @@ The <a href="T_VGlyph_Transform.md">Transform</a> type exposes the following mem
 
 
 ## Methods
-&nbsp;<table><tr><th></th><th>Name</th><th>Description</th></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="M_VGlyph_Transform_Dispose.md">Dispose()</a></td><td>
+&nbsp;<table><tr><th></th><th>Name</th><th>Description</th></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="M_VGlyph_Transform_Clone.md">Clone</a></td><td>
+Clone of <a href="T_VGlyph_Transform.md">Transform</a></td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="M_VGlyph_Transform_CreateCopy.md">CreateCopy</a></td><td>
+Create copy of <a href="T_VGlyph_Transform.md">Transform</a></td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="M_VGlyph_Transform_Dispose.md">Dispose()</a></td><td>
 Dispose object</td></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="M_VGlyph_Transform_Dispose_1.md">Dispose(Boolean)</a></td><td>
 Dispose object</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/bsc2ak47" target="_blank">Equals</a></td><td>
 Determines whether the specified object is equal to the current object.

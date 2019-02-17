@@ -174,6 +174,8 @@
       - [Transform Properties](Properties_T_VGlyph_Transform.md)
         - [Transform.Handle Property](P_VGlyph_Transform_Handle.md)
       - [Transform Methods](Methods_T_VGlyph_Transform.md)
+        - [Transform.Clone Method](M_VGlyph_Transform_Clone.md)
+        - [Transform.CreateCopy Method](M_VGlyph_Transform_CreateCopy.md)
         - [Transform.Dispose Method](Overload_VGlyph_Transform_Dispose.md)
           - [Transform.Dispose Method](M_VGlyph_Transform_Dispose.md)
           - [Transform.Dispose Method (Boolean)](M_VGlyph_Transform_Dispose_1.md)

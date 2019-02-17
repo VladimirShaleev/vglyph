@@ -6,7 +6,7 @@ namespace VGlyph
     /// <summary>
     /// Transform
     /// </summary>
-    public class Transform : IDisposable
+    public class Transform : IDisposable, ICloneable
     {
         private bool _disposed;
 
@@ -57,7 +57,22 @@ namespace VGlyph
         {
             Dispose(false);
         }
-        
+
+        /// <summary>
+        /// Create copy of <see cref="Transform"/>
+        /// </summary>
+        /// <returns>Return copy of this <see cref="Transform"/></returns>
+        /// <exception cref="ObjectDisposedException">Object disposed</exception>
+        public Transform CreateCopy()
+        {
+            CheckDisposed();
+
+            var result = Api.TransformCreateCopy(Object);
+            Object.CheckState();
+
+            return new Transform(result);
+        }
+
         /// <summary>
         /// Dispose object
         /// </summary>
@@ -83,6 +98,16 @@ namespace VGlyph
 
                 _disposed = true;
             }
+        }
+
+        /// <summary>
+        /// Clone of <see cref="Transform"/>
+        /// </summary>
+        /// <returns>Return copy of this <see cref="Transform"/></returns>
+        /// <exception cref="ObjectDisposedException">Object disposed</exception>
+        public object Clone()
+        {
+            return CreateCopy();
         }
 
         private void CheckDisposed()
