@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using VGlyph;
 using Xunit;
 
@@ -311,24 +313,30 @@ public class ColorTest
         }
     }
 
-    //public class T
-    //{
-    //    [Fact]
-    //    public void S()
-    //    {
-    //        var color = new Color(0.5, 0.3, 0.33333333, 1.0);
-    //
-    //        var s = new MemoryStream();
-    //        var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-    //
-    //        formatter.Serialize(s, color);
-    //        s.Position = 0;
-    //        s.ToArray();
-    //
-    //        var t = (Color)formatter.Deserialize(s);
-    //        var str = t.ToString();
-    //
-    //        s.Close();
-    //    }
-    //}
+    public class Serializable
+    {
+        [Theory]
+        [InlineData(-0.2, 0.0, 0.0, 2.0)]
+        [InlineData(0.0, 0.0, 0.0, 0.0)]
+        [InlineData(0.4, 0.1, 0.5, -0.4)]
+        [InlineData(0.8, 0.0, 0.5, 0.7)]
+        [InlineData(1.0, 0.0, 0.0, 1.0)]
+        [InlineData(1.5, 1.0, 1.0, 0.5)]
+        public void SerializeDeserialize(double red, double green, double blue, double alpha)
+        {
+            var color1 = new Color(red, green, blue, alpha);
+            var color2 = null as Color;
+
+            using (var stream = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(stream, color1);
+
+                stream.Position = 0;
+                color2 = (Color)formatter.Deserialize(stream);
+            }
+
+            Assert.True(color1.Equals(color2));
+        }
+    }
 }
