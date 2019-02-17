@@ -284,6 +284,33 @@ public class ColorTest
         }
     }
 
+    public class HashCode
+    {
+        [Fact]
+        public void GetHash()
+        {
+            var color1 = new Color(1.0, 0.2, 0.8, 0.5);
+            var color2 = new Color(1.0, 0.2, 0.8, 0.5);
+            var color3 = new Color(1.0, 0.2, 0.7, 0.5);
+
+            Assert.Equal(color1.GetHashCode(), color2.GetHashCode());
+            Assert.NotEqual(color2.GetHashCode(), color3.GetHashCode());
+        }
+    }
+
+    public class Stringize
+    {
+        [Theory]
+        [InlineData("{0,0,0,0}", 0.0, 0.0, 0.0, 0.0)]
+        [InlineData("{0.5,0.4,0.8,0.3}", 0.5, 0.4, 0.8, 0.3)]
+        [InlineData("{1,1,1,1}", 1.0, 1.0, 1.0, 1.0)]
+        public void GetString(string color, double red, double green, double blue, double alpha)
+        {
+            var c = new Color(red, green, blue, alpha).ToString();
+            Assert.Equal(color, c);
+        }
+    }
+
     //public class T
     //{
     //    [Fact]
