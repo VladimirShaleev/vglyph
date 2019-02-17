@@ -9,25 +9,25 @@ Defines bits per alpha channel
 
 **C#**<br />
 ``` C#
-public int Alpha { get; set; }
+public byte Alpha { get; set; }
 ```
 
 **VB**<br />
 ``` VB
-Public Property Alpha As Integer
+Public Property Alpha As Byte
 	Get
 	Set
 ```
 
 **F#**<br />
 ``` F#
-member Alpha : int with get, set
+member Alpha : byte with get, set
 
 ```
 
 
 #### Property Value
-Type: <a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">Int32</a>
+Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">Byte</a>
 
 ## See Also
 

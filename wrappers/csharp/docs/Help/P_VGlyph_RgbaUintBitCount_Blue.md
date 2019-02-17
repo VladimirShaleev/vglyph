@@ -9,25 +9,25 @@ Defines bits per blue channel
 
 **C#**<br />
 ``` C#
-public int Blue { get; set; }
+public byte Blue { get; set; }
 ```
 
 **VB**<br />
 ``` VB
-Public Property Blue As Integer
+Public Property Blue As Byte
 	Get
 	Set
 ```
 
 **F#**<br />
 ``` F#
-member Blue : int with get, set
+member Blue : byte with get, set
 
 ```
 
 
 #### Property Value
-Type: <a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">Int32</a>
+Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">Byte</a>
 
 ## See Also
 

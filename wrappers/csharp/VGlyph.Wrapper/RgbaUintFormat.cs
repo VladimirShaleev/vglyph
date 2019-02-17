@@ -70,10 +70,10 @@ namespace VGlyph
 
                 return new RgbaUintBitCount
                 {
-                    Red = (int)result.r,
-                    Green = (int)result.g,
-                    Blue = (int)result.b,
-                    Alpha = (int)result.a
+                    Red = result.r,
+                    Green = result.g,
+                    Blue = result.b,
+                    Alpha = result.a
                 };
             }
         }
@@ -105,10 +105,10 @@ namespace VGlyph
 
             var unmanagedBitCount = new Import.RgbaUintBitCount
             {
-                r = (uint)bitCount.Red,
-                g = (uint)bitCount.Green,
-                b = (uint)bitCount.Blue,
-                a = (uint)bitCount.Alpha,
+                r = bitCount.Red,
+                g = bitCount.Green,
+                b = bitCount.Blue,
+                a = bitCount.Alpha,
             };
 
             return Api.RgbaUintFormatCreate(ref unmanagedPackagingBytes, ref unmanagedComponents, ref unmanagedBitCount);

@@ -9,25 +9,25 @@ Defines bits per green channel
 
 **C#**<br />
 ``` C#
-public int Green { get; set; }
+public byte Green { get; set; }
 ```
 
 **VB**<br />
 ``` VB
-Public Property Green As Integer
+Public Property Green As Byte
 	Get
 	Set
 ```
 
 **F#**<br />
 ``` F#
-member Green : int with get, set
+member Green : byte with get, set
 
 ```
 
 
 #### Property Value
-Type: <a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">Int32</a>
+Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">Byte</a>
 
 ## See Also
 

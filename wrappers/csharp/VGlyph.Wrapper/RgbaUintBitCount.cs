@@ -8,21 +8,21 @@
         /// <summary>
         /// Defines bits per red channel
         /// </summary>
-        public int Red { get; set; }
+        public byte Red { get; set; }
 
         /// <summary>
         /// Defines bits per green channel
         /// </summary>
-        public int Green { get; set; }
+        public byte Green { get; set; }
 
         /// <summary>
         /// Defines bits per blue channel
         /// </summary>
-        public int Blue { get; set; }
+        public byte Blue { get; set; }
 
         /// <summary>
         /// Defines bits per alpha channel
         /// </summary>
-        public int Alpha { get; set; }
+        public byte Alpha { get; set; }
     }
 }

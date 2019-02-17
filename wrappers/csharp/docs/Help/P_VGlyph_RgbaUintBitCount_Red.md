@@ -9,25 +9,25 @@ Defines bits per red channel
 
 **C#**<br />
 ``` C#
-public int Red { get; set; }
+public byte Red { get; set; }
 ```
 
 **VB**<br />
 ``` VB
-Public Property Red As Integer
+Public Property Red As Byte
 	Get
 	Set
 ```
 
 **F#**<br />
 ``` F#
-member Red : int with get, set
+member Red : byte with get, set
 
 ```
 
 
 #### Property Value
-Type: <a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">Int32</a>
+Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">Byte</a>
 
 ## See Also
 
