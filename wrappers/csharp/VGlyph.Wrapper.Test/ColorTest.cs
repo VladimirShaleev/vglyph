@@ -5,6 +5,17 @@ public class ColorTest
 {
     public class Cctor
     {
+        [Fact]
+        public void NoParams()
+        {
+            var color = new Color();
+
+            Assert.Equal(0.0, color.Red);
+            Assert.Equal(0.0, color.Green);
+            Assert.Equal(0.0, color.Blue);
+            Assert.Equal(1.0, color.Alpha);
+        }
+
         [Theory]
         [InlineData(0)]
         [InlineData(128)]
@@ -138,4 +149,25 @@ public class ColorTest
             Assert.Equal(alpha, color.Alpha);
         }
     }
+
+    //public class T
+    //{
+    //    [Fact]
+    //    public void S()
+    //    {
+    //        var color = new Color(0.5, 0.3, 0.33333333, 1.0);
+    //
+    //        var s = new MemoryStream();
+    //        var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+    //
+    //        formatter.Serialize(s, color);
+    //        s.Position = 0;
+    //        s.ToArray();
+    //
+    //        var t = (Color)formatter.Deserialize(s);
+    //        var str = t.ToString();
+    //
+    //        s.Close();
+    //    }
+    //}
 }

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Globalization;
+using System.Runtime.Serialization;
+using System.Security;
 
 namespace VGlyph
 {
@@ -6,7 +9,7 @@ namespace VGlyph
     /// Color
     /// </summary>
     [Serializable]
-    public class Color
+    public sealed class Color : ICloneable, IEquatable<Color>, ISerializable
     {
         [Explicit] private double _red;
         [Explicit] private double _green;
@@ -47,6 +50,16 @@ namespace VGlyph
         {
             get => _alpha;
             set => _alpha = value;
+        }
+
+        /// <summary>
+        /// Initialize <see cref="Color"/>
+        /// </summary>
+        /// <remarks>
+        /// Initialize RGB components to 0.0 and <see cref="Alpha"/> component to 1.0
+        /// </remarks>
+        public Color() : this(0.0, 0.0, 0.0, 1.0)
+        {
         }
 
         /// <summary>
@@ -107,7 +120,7 @@ namespace VGlyph
         /// </remarks>
         /// <param name="grayscale">Initialize components <see cref="Red"/>, <see cref="Green"/>
         /// , <see cref="Blue"/> to <paramref name="grayscale"/>.</param>
-        public Color(double grayscale) 
+        public Color(double grayscale)
             : this(grayscale, grayscale, grayscale)
         {
         }
@@ -150,6 +163,93 @@ namespace VGlyph
             Green = green;
             Blue = blue;
             Alpha = alpha;
+        }
+
+        private Color(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            Red = info.GetDouble(nameof(Red));
+            Green = info.GetDouble(nameof(Green));
+            Blue = info.GetDouble(nameof(Blue));
+            Alpha = info.GetDouble(nameof(Alpha));
+        }
+
+        /// <summary>
+        /// Clone of object <see cref="Color"/>
+        /// </summary>
+        /// <returns>Return clone object</returns>
+        public object Clone()
+        {
+            return new Color(Red, Green, Blue, Alpha);
+        }
+
+        /// <summary>
+        /// Equals colors
+        /// </summary>
+        /// <param name="color">Equals color</param> 
+        /// <returns>Result of equal</returns>
+        public override bool Equals(object color)
+        {
+            if (color is Color c)
+                return Equals(c);
+
+            return false;
+        }
+
+        /// <summary>
+        /// Equals colors
+        /// </summary>
+        /// <param name="color">Equals color</param> 
+        /// <returns>Result of equal</returns>
+        public bool Equals(Color color)
+        {
+            if (color is null)
+                return false;
+
+            return
+                Red == color.Red &&
+                Green == color.Green &&
+                Blue == color.Blue &&
+                Alpha == color.Alpha;
+        }
+
+        /// <summary>
+        /// Get hash code of <see cref="Color"/>
+        /// </summary>
+        /// <returns>Return hash code</returns>
+        public override int GetHashCode()
+        {
+            return CombineHashCodes(
+                CombineHashCodes(Red.GetHashCode(), Green.GetHashCode()), 
+                CombineHashCodes(Blue.GetHashCode(), Alpha.GetHashCode()));
+        }
+
+        /// <summary>
+        /// Convert <see cref="Color"/> to string
+        /// </summary>
+        /// <returns>String representation of <see cref="Color"/></returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "{{{0},{1},{2},{3}}}", Red, Green, Blue, Alpha);
+        }
+
+        [SecurityCritical]
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            info.AddValue(nameof(Red), Red);
+            info.AddValue(nameof(Green), Green);
+            info.AddValue(nameof(Blue), Blue);
+            info.AddValue(nameof(Alpha), Alpha);
+        }
+
+        private static int CombineHashCodes(int h1, int h2)
+        {
+            return ((h1 << 5) + h1) ^ h2;
         }
     }
 }
