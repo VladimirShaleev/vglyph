@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.Serialization;
+using System.Security;
 
 namespace VGlyph
 {
@@ -7,7 +9,7 @@ namespace VGlyph
     /// Version
     /// </summary>
     [Serializable]
-    public sealed class Version : ICloneable, IComparable, IComparable<Version>, IEquatable<Version>
+    public sealed class Version : ICloneable, IComparable, IComparable<Version>, IEquatable<Version>, ISerializable
     {
         [Explicit] private byte _major { get; set; }
         [Explicit] private byte _minor { get; set; }
@@ -93,6 +95,16 @@ namespace VGlyph
             (byte)((version >> 8) & 0xFF),
             (byte)((version >> 0) & 0xFF))
         {
+        }
+
+        private Version(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            Major = info.GetByte(nameof(Major));
+            Minor = info.GetByte(nameof(Minor));
+            Micro = info.GetByte(nameof(Micro));
         }
 
         /// <summary>
@@ -191,6 +203,17 @@ namespace VGlyph
         public override string ToString()
         {
             return $"{Major}.{Minor}.{Micro}";
+        }
+
+        [SecurityCritical]
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            info.AddValue(nameof(Major), Major);
+            info.AddValue(nameof(Minor), Minor);
+            info.AddValue(nameof(Micro), Micro);
         }
 
         /// <summary>

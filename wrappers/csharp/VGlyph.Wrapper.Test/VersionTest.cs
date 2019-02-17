@@ -1,3 +1,5 @@
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using VGlyph;
 using Xunit;
 
@@ -718,6 +720,34 @@ public class VersionTest
         {
             var version = new Version(major, minor, micro).ToString();
             Assert.Equal(ver, version);
+        }
+    }
+
+    public class Serializable
+    {
+        [Theory]
+        [InlineData(0, 0, 0)]
+        [InlineData(4, 100, 2)]
+        [InlineData(80, 255, 150)]
+        [InlineData(4, 100, 100)]
+        [InlineData(7, 1, 2)]
+        [InlineData(0, 0, 1)]
+        [InlineData(byte.MaxValue, byte.MaxValue, byte.MaxValue)]
+        public void SerializeDeserialize(byte major, byte minor, byte micro)
+        {
+            var version1 = new Version(major, minor, micro);
+            var version2 = null as Version;
+
+            using (var stream = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(stream, version1);
+
+                stream.Position = 0;
+                version2 = (Version)formatter.Deserialize(stream);
+            }
+
+            Assert.True(version1.Equals(version2));
         }
     }
 
