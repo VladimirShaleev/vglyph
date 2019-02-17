@@ -2,19 +2,22 @@
 <topic id="v1.0.0" revisionNumber="1">
 	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<introduction>
-			<para>Version [TODO: Version] was released on [TODO: Date].
+			<para>Version 1.0.0 was released on [Date].
 			</para>
 		</introduction>
 
 		<section>
-			<title>Changes in This Release</title>
+			<title>In This Release</title>
 			<content>
 
 				<list class="bullet">
 					<listItem>
-						<para>[TODO: Add change items here]</para>
+						<para>Add wrapper VGlyph for library vglyph</para>
 					</listItem>
-
+                    
+                    <listItem>
+                        <para>Add CLS compliant API</para>
+                    </listItem>
 				</list>
 
 			</content>

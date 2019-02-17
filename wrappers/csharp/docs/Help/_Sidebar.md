@@ -166,6 +166,6 @@
         - [Version.Inequality Operator](M_VGlyph_Version_op_Inequality.md)
         - [Version.LessThan Operator](M_VGlyph_Version_op_LessThan.md)
         - [Version.LessThanOrEqual Operator](M_VGlyph_Version_op_LessThanOrEqual.md)
-- [Welcome to the VGlyph](Welcome.md)
+- [VGlyph - library for visualize glyphs](Welcome.md)
 - [Version History](Versions.md)
   - [Version 1.0.0](v1.0.0.md)

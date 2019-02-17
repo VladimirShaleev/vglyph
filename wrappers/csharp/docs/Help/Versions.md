@@ -1,6 +1,6 @@
 # Version History
 
-The topics in this section describe the various changes made to the [TODO: Project Title] over the life of the project.
+The topics in this section describe the various changes made to the VGlyph.Wrapper over the life of the project.
 
 
 
@@ -13,4 +13,4 @@ Select a version below to see a description of its changes.
 
 
 #### Other Resources
-<a href="Welcome.md">Welcome to the VGlyph</a><br />
+<a href="Welcome.md">VGlyph - library for visualize glyphs</a><br />

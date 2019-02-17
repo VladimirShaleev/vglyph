@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Topics>
-  <Topic id="Welcome" visible="True" isDefault="true" isSelected="true" title="Welcome to the VGlyph">
+  <Topic id="Welcome" visible="True" isDefault="true" isSelected="true" title="VGlyph - library for visualize glyphs">
     <HelpKeywords>
       <HelpKeyword index="K" term="Welcome" />
     </HelpKeywords>
