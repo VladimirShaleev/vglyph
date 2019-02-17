@@ -1,4 +1,4 @@
-# Color Constructor (Double, Double)
+# Color Constructor (Double)
 Back to <a href="Home.md">Home page</a> 
 
 Initialize <a href="T_VGlyph_Color.md">Color</a>
@@ -10,29 +10,29 @@ Initialize <a href="T_VGlyph_Color.md">Color</a>
 **C#**<br />
 ``` C#
 public Color(
-	double grayscale,
-	double alpha
+	double grayscale
 )
 ```
 
 **VB**<br />
 ``` VB
 Public Sub New ( 
-	grayscale As Double,
-	alpha As Double
+	grayscale As Double
 )
 ```
 
 **F#**<br />
 ``` F#
 new : 
-        grayscale : float * 
-        alpha : float -> Color
+        grayscale : float -> Color
 ```
 
 
 #### Parameters
-&nbsp;<dl><dt>grayscale</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/643eft0t" target="_blank">System.Double</a><br />Initialize components <a href="P_VGlyph_Color_Red.md">Red</a>, <a href="P_VGlyph_Color_Green.md">Green</a> , <a href="P_VGlyph_Color_Blue.md">Blue</a> to *grayscale*.</dd><dt>alpha</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/643eft0t" target="_blank">System.Double</a><br />Initialize <a href="P_VGlyph_Color_Alpha.md">Alpha</a> component to *alpha*</dd></dl>
+&nbsp;<dl><dt>grayscale</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/643eft0t" target="_blank">System.Double</a><br />Initialize components <a href="P_VGlyph_Color_Red.md">Red</a>, <a href="P_VGlyph_Color_Green.md">Green</a> , <a href="P_VGlyph_Color_Blue.md">Blue</a> to *grayscale*.</dd></dl>
+
+## Remarks
+Initialize RGB components and <a href="P_VGlyph_Color_Alpha.md">Alpha</a> component to 1.0
 
 ## See Also
 

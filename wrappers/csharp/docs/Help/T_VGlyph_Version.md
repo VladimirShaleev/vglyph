@@ -14,7 +14,8 @@ Version
 ``` C#
 [SerializableAttribute]
 public sealed class Version : ICloneable, 
-	IComparable, IComparable<Version>, IEquatable<Version>
+	IComparable, IComparable<Version>, IEquatable<Version>, 
+	ISerializable
 ```
 
 **VB**<br />
@@ -22,7 +23,7 @@ public sealed class Version : ICloneable,
 <SerializableAttribute>
 Public NotInheritable Class Version
 	Implements ICloneable, IComparable, IComparable(Of Version), 
-	IEquatable(Of Version)
+	IEquatable(Of Version), ISerializable
 ```
 
 **F#**<br />
@@ -35,6 +36,7 @@ type Version =
         interface IComparable
         interface IComparable<Version>
         interface IEquatable<Version>
+        interface ISerializable
     end
 ```
 

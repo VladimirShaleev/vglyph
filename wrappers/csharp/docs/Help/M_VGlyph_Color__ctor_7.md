@@ -1,4 +1,4 @@
-# Color Constructor (Double, Double, Double, Double)
+# Color Constructor (Double, Double, Double)
 Back to <a href="Home.md">Home page</a> 
 
 Initialize <a href="T_VGlyph_Color.md">Color</a>
@@ -12,8 +12,7 @@ Initialize <a href="T_VGlyph_Color.md">Color</a>
 public Color(
 	double red,
 	double green,
-	double blue,
-	double alpha
+	double blue
 )
 ```
 
@@ -22,8 +21,7 @@ public Color(
 Public Sub New ( 
 	red As Double,
 	green As Double,
-	blue As Double,
-	alpha As Double
+	blue As Double
 )
 ```
 
@@ -32,13 +30,15 @@ Public Sub New (
 new : 
         red : float * 
         green : float * 
-        blue : float * 
-        alpha : float -> Color
+        blue : float -> Color
 ```
 
 
 #### Parameters
-&nbsp;<dl><dt>red</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/643eft0t" target="_blank">System.Double</a><br /><a href="P_VGlyph_Color_Red.md">Red</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>green</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/643eft0t" target="_blank">System.Double</a><br /><a href="P_VGlyph_Color_Green.md">Green</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>blue</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/643eft0t" target="_blank">System.Double</a><br /><a href="P_VGlyph_Color_Blue.md">Blue</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>alpha</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/643eft0t" target="_blank">System.Double</a><br /><a href="P_VGlyph_Color_Alpha.md">Alpha</a> component of <a href="T_VGlyph_Color.md">Color</a></dd></dl>
+&nbsp;<dl><dt>red</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/643eft0t" target="_blank">System.Double</a><br /><a href="P_VGlyph_Color_Red.md">Red</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>green</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/643eft0t" target="_blank">System.Double</a><br /><a href="P_VGlyph_Color_Green.md">Green</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>blue</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/643eft0t" target="_blank">System.Double</a><br /><a href="P_VGlyph_Color_Blue.md">Blue</a> component of <a href="T_VGlyph_Color.md">Color</a></dd></dl>
+
+## Remarks
+Initialize RGB components and <a href="P_VGlyph_Color_Alpha.md">Alpha</a> component to 1.0
 
 ## See Also
 

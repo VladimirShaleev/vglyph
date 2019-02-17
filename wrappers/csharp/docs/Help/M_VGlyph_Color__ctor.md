@@ -1,4 +1,4 @@
-# Color Constructor (Byte)
+# Color Constructor 
 Back to <a href="Home.md">Home page</a> 
 
 Initialize <a href="T_VGlyph_Color.md">Color</a>
@@ -9,30 +9,22 @@ Initialize <a href="T_VGlyph_Color.md">Color</a>
 
 **C#**<br />
 ``` C#
-public Color(
-	byte grayscale
-)
+public Color()
 ```
 
 **VB**<br />
 ``` VB
-Public Sub New ( 
-	grayscale As Byte
-)
+Public Sub New
 ```
 
 **F#**<br />
 ``` F#
-new : 
-        grayscale : byte -> Color
+new : unit -> Color
 ```
 
 
-#### Parameters
-&nbsp;<dl><dt>grayscale</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br />Initialize components <a href="P_VGlyph_Color_Red.md">Red</a>, <a href="P_VGlyph_Color_Green.md">Green</a> , <a href="P_VGlyph_Color_Blue.md">Blue</a> to *grayscale*.</dd></dl>
-
 ## Remarks
-Initialize RGB components and <a href="P_VGlyph_Color_Alpha.md">Alpha</a> component to 1.0
+Initialize RGB components to 0.0 and <a href="P_VGlyph_Color_Alpha.md">Alpha</a> component to 1.0
 
 ## See Also
 

@@ -1,4 +1,4 @@
-# Color Constructor (Byte, Byte, Byte, Byte)
+# Color Constructor (Byte, Byte, Byte)
 Back to <a href="Home.md">Home page</a> 
 
 Initialize <a href="T_VGlyph_Color.md">Color</a>
@@ -12,8 +12,7 @@ Initialize <a href="T_VGlyph_Color.md">Color</a>
 public Color(
 	byte red,
 	byte green,
-	byte blue,
-	byte alpha
+	byte blue
 )
 ```
 
@@ -22,8 +21,7 @@ public Color(
 Public Sub New ( 
 	red As Byte,
 	green As Byte,
-	blue As Byte,
-	alpha As Byte
+	blue As Byte
 )
 ```
 
@@ -32,13 +30,15 @@ Public Sub New (
 new : 
         red : byte * 
         green : byte * 
-        blue : byte * 
-        alpha : byte -> Color
+        blue : byte -> Color
 ```
 
 
 #### Parameters
-&nbsp;<dl><dt>red</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br /><a href="P_VGlyph_Color_Red.md">Red</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>green</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br /><a href="P_VGlyph_Color_Green.md">Green</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>blue</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br /><a href="P_VGlyph_Color_Blue.md">Blue</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>alpha</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br /><a href="P_VGlyph_Color_Alpha.md">Alpha</a> component of <a href="T_VGlyph_Color.md">Color</a></dd></dl>
+&nbsp;<dl><dt>red</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br /><a href="P_VGlyph_Color_Red.md">Red</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>green</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br /><a href="P_VGlyph_Color_Green.md">Green</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>blue</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br /><a href="P_VGlyph_Color_Blue.md">Blue</a> component of <a href="T_VGlyph_Color.md">Color</a></dd></dl>
+
+## Remarks
+Initialize RGB components and <a href="P_VGlyph_Color_Alpha.md">Alpha</a> component to 1.0
 
 ## See Also
 

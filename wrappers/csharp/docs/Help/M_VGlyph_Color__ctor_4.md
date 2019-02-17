@@ -1,4 +1,4 @@
-# Color Constructor (Double)
+# Color Constructor (Byte, Byte, Byte, Byte)
 Back to <a href="Home.md">Home page</a> 
 
 Initialize <a href="T_VGlyph_Color.md">Color</a>
@@ -10,29 +10,35 @@ Initialize <a href="T_VGlyph_Color.md">Color</a>
 **C#**<br />
 ``` C#
 public Color(
-	double grayscale
+	byte red,
+	byte green,
+	byte blue,
+	byte alpha
 )
 ```
 
 **VB**<br />
 ``` VB
 Public Sub New ( 
-	grayscale As Double
+	red As Byte,
+	green As Byte,
+	blue As Byte,
+	alpha As Byte
 )
 ```
 
 **F#**<br />
 ``` F#
 new : 
-        grayscale : float -> Color
+        red : byte * 
+        green : byte * 
+        blue : byte * 
+        alpha : byte -> Color
 ```
 
 
 #### Parameters
-&nbsp;<dl><dt>grayscale</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/643eft0t" target="_blank">System.Double</a><br />Initialize components <a href="P_VGlyph_Color_Red.md">Red</a>, <a href="P_VGlyph_Color_Green.md">Green</a> , <a href="P_VGlyph_Color_Blue.md">Blue</a> to *grayscale*.</dd></dl>
-
-## Remarks
-Initialize RGB components and <a href="P_VGlyph_Color_Alpha.md">Alpha</a> component to 1.0
+&nbsp;<dl><dt>red</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br /><a href="P_VGlyph_Color_Red.md">Red</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>green</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br /><a href="P_VGlyph_Color_Green.md">Green</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>blue</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br /><a href="P_VGlyph_Color_Blue.md">Blue</a> component of <a href="T_VGlyph_Color.md">Color</a></dd><dt>alpha</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/yyb1w04y" target="_blank">System.Byte</a><br /><a href="P_VGlyph_Color_Alpha.md">Alpha</a> component of <a href="T_VGlyph_Color.md">Color</a></dd></dl>
 
 ## See Also
 
