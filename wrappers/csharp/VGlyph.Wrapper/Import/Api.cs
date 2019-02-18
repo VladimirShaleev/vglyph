@@ -184,32 +184,25 @@ namespace VGlyph.Import
         
         [DllImport(_library, EntryPoint = "vglyph_transform_create_copy", CallingConvention = _callingConvention)]
         public static extern ObjectHandle TransformCreateCopy(ObjectHandle transform);
+
+        [DllImport(_library, EntryPoint = "vglyph_transform_clear", CallingConvention = _callingConvention)]
+        public static extern void TransformClear(ObjectHandle transform);
+
+        [DllImport(_library, EntryPoint = "vglyph_transform_combine", CallingConvention = _callingConvention)]
+        public static extern void TransformCombine(ObjectHandle transform, ObjectHandle value);
+
+        [DllImport(_library, EntryPoint = "vglyph_transform_translate", CallingConvention = _callingConvention)]
+        public static extern void TransformTranslate(ObjectHandle transform, float x, float y);
+
+        [DllImport(_library, EntryPoint = "vglyph_transform_scale", CallingConvention = _callingConvention)]
+        public static extern void TransformScale(ObjectHandle transform, float sx, float sy);
+
+        [DllImport(_library, EntryPoint = "vglyph_transform_rotate", CallingConvention = _callingConvention)]
+        public static extern void TransformRotate(ObjectHandle transform, float angle);
+
+        [DllImport(_library, EntryPoint = "vglyph_transform_transform_point", CallingConvention = _callingConvention)]
+        public static extern void TransformTransformPoint(ObjectHandle transform, ref Point point);
         
-        //vglyph_public void
-        //vglyph_transform_clear(vglyph_transform_t* transform);
-
-        //vglyph_public void
-        //vglyph_transform_combine(vglyph_transform_t* transform,
-        //                         vglyph_transform_t* value);
-
-        //vglyph_public void
-        //vglyph_transform_translate(vglyph_transform_t* transform,
-        //                           vglyph_float32_t x,
-        //                           vglyph_float32_t y);
-
-        //vglyph_public void
-        //vglyph_transform_scale(vglyph_transform_t* transform,
-        //                       vglyph_float32_t sx,
-        //                       vglyph_float32_t sy);
-
-        //vglyph_public void
-        //vglyph_transform_rotate(vglyph_transform_t* transform,
-        //                        vglyph_float32_t angle);
-
-        //vglyph_public void
-        //vglyph_transform_transform_point(vglyph_transform_t* transform,
-        //                                 vglyph_point_t* point);
-
         [DllImport(_library, EntryPoint = "vglyph_surface_get_data_size", CallingConvention = _callingConvention)]
         public static extern uint SurfaceGetDataSize(ObjectHandle format, uint width, uint height, Alignment rowAlignment);
 

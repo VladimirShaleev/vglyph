@@ -10,29 +10,29 @@ Initialize <a href="T_VGlyph_Point.md">Point</a>
 **C#**<br />
 ``` C#
 public Point(
-	int x,
-	int y
+	float x,
+	float y
 )
 ```
 
 **VB**<br />
 ``` VB
 Public Sub New ( 
-	x As Integer,
-	y As Integer
+	x As Single,
+	y As Single
 )
 ```
 
 **F#**<br />
 ``` F#
 new : 
-        x : int * 
-        y : int -> Point
+        x : float32 * 
+        y : float32 -> Point
 ```
 
 
 #### Parameters
-&nbsp;<dl><dt>x</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">System.Int32</a><br />X coordinate</dd><dt>y</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">System.Int32</a><br />Y coordinate</dd></dl>
+&nbsp;<dl><dt>x</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/3www918f" target="_blank">System.Single</a><br />X coordinate</dd><dt>y</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/3www918f" target="_blank">System.Single</a><br />Y coordinate</dd></dl>
 
 ## See Also
 

@@ -34,7 +34,7 @@ namespace VGlyph
         /// </summary>
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
-        public Point(int x, int y)
+        public Point(float x, float y)
         {
             _x = x;
             _y = y;
