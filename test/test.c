@@ -427,6 +427,8 @@ int main(int argc, char* argv[])
     ADD_TEST(test_save_bitmap_r8g8b8)
     END_TESTS(result)
 
+    vglyph_format_create("A2g11G2B10", VGLYPH_ENDIANNESS_LITTLE);
+
     //vglyph_point_t point1;
     //point1.x = 0.1f;
     //point1.y = 0.9f;

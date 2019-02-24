@@ -439,8 +439,9 @@ vglyph_public vglyph_bool_t
 vglyph_face_remove_glyph(vglyph_face_t* face,
                          vglyph_uint32_t char_code);
 
-//vglyph_public vglyph_format_t*
-//vglyph_format_create(const char* format);
+vglyph_public vglyph_format_t*
+vglyph_format_create(const char* format,
+                     vglyph_endianness_t endianness);
 
 vglyph_public vglyph_object_t*
 vglyph_format_to_object(vglyph_format_t* format);
