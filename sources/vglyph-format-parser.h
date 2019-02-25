@@ -19,7 +19,7 @@ typedef enum _vglyph_format_type
 vglyph_format_type_t
 _vglyph_format_parse(const char* format,
                      vglyph_rgba_components_t* components,
-                     vglyph_sint_t channels[4],
+                     vglyph_uint8_t channels[4],
                      vglyph_uint_t* byte_count);
 
 #endif
