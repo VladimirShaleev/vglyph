@@ -72,7 +72,7 @@ _vglyph_format_parse_get_next_token(const char* format,
         while (*format >= '0' && *format <= '9')
         {
             if (format - start > VGLYPH_FORMAT_MAX_TOKEN_SIZE)
-                return NULL;
+                return format;
 
             value *= 10;
             value += *format++ - '0';
@@ -86,7 +86,7 @@ _vglyph_format_parse_get_next_token(const char* format,
         while (*format != '\0')
         {
             if (format - start > VGLYPH_FORMAT_MAX_TOKEN_SIZE)
-                return NULL;
+                return format;
 
             format++;
         }
@@ -129,10 +129,10 @@ _vglyph_format_move_component(vglyph_component_t component,
     vglyph_uint_t index = component - VGLYPH_COMPONENT_RED;
     vglyph_uint_t next_index;
 
-    vglyph_component_t* update_component = &(&components->r)[index];
+    vglyph_component_t* update_component = &components->r + index;
     vglyph_component_t* current_component;
 
-    if (*update_component != component)
+    if (*update_component == VGLYPH_COMPONENT_ZERO)
     {
         for (vglyph_uint_t i = 0; i < index; ++i)
         {
@@ -177,11 +177,10 @@ _vglyph_format_parse(const char* format,
     channels[2] = 0;
     channels[3] = 0;
 
-    *byte_count = 0;
-
-    vglyph_format_type_t type      = VGLYPH_FORMAT_TYPE_UINT;
-    vglyph_component_t* component  = &components->r;
-    vglyph_uint8_t* curent_channel = channels;
+    vglyph_format_type_t type            = VGLYPH_FORMAT_TYPE_UINT;
+    vglyph_component_t*  component       = &components->r;
+    vglyph_uint8_t*      current_channel = channels;
+    vglyph_uint_t        bits_count      = 0;
 
     vglyph_format_token_t token; 
 
@@ -210,22 +209,22 @@ _vglyph_format_parse(const char* format,
                 return VGLYPH_FORMAT_TYPE_UNKNOWN;
 
             ++component;
-            *curent_channel++ = (vglyph_uint8_t)token.value;
-            *byte_count += token.value;
+            *current_channel++ = (vglyph_uint8_t)token.value;
+            bits_count += token.value;
         }
         else if (token.type == VGLYPH_FORMAT_TOKEN_TYPE_TYPE)
         {
             type = token.value;
         }
     }
-
-    if ((vglyph_uint_t)channels[0] + channels[1] + channels[2] + channels[3] == 0)
+    
+    if (bits_count == 0)
         return VGLYPH_FORMAT_TYPE_UNKNOWN;
 
     _vglyph_format_move_component(VGLYPH_COMPONENT_ALPHA, components, channels);
-    _vglyph_format_move_component(VGLYPH_COMPONENT_BLUE, components, channels);
+    _vglyph_format_move_component(VGLYPH_COMPONENT_BLUE,  components, channels);
     _vglyph_format_move_component(VGLYPH_COMPONENT_GREEN, components, channels);
 
-    *byte_count = (*byte_count + 7) >> 3;
+    *byte_count = (bits_count + 7) >> 3;
     return type;
 }
