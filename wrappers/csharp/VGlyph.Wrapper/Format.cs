@@ -6,7 +6,7 @@ namespace VGlyph
     /// <summary>
     /// Format of <see cref="Surface"/>
     /// </summary>
-    public abstract class Format : IDisposable
+    public abstract partial class Format : IDisposable
     {
         private bool _disposed;
 
@@ -94,6 +94,28 @@ namespace VGlyph
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Create <see cref="Format"/>
+        /// </summary>
+        /// <param name="format">Format</param>
+        /// <param name="endianness">Byte order</param>
+        /// <exception cref="ArgumentException">Format string is empty of param <paramref name="format"/></exception>  
+        /// <exception cref="FormatException">Invalid format of param <paramref name="format"/></exception>
+        /// <returns>Return <see cref="Format"/></returns>
+        public static Format Create(string format, Endianness endianness)
+        {
+            if (string.IsNullOrWhiteSpace(format))
+                throw new ArgumentException("Format is empty", nameof(format));
+
+            using (var unmanagedFormat = new StringHandle(format.Trim()))
+            {
+                var result = Api.FormatCreate(unmanagedFormat, endianness.GetUnmanagedEndianness());
+                result.CheckState();
+
+                return Library.CreateObjectFromHandle<Format>(result);
+            }
         }
 
         /// <summary>

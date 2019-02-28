@@ -164,6 +164,9 @@ namespace VGlyph.Import
         [DllImport(_library, EntryPoint = "vglyph_face_remove_glyph", CallingConvention = _callingConvention)]
         public static extern bool FaceRemoveGlyph(ObjectHandle face, uint charCode);
         
+        [DllImport(_library, EntryPoint = "vglyph_format_create", CallingConvention = _callingConvention)]
+        public static extern ObjectHandle FormatCreate(StringHandle format, Endianness endianness);
+        
         [DllImport(_library, EntryPoint = "vglyph_format_get_bits_per_pixel", CallingConvention = _callingConvention)]
         public static extern uint FormatGetBitsPerPixel(ObjectHandle format);
 
