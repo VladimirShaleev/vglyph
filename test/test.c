@@ -8,7 +8,7 @@
 #include "test-save-bitmap.h"
 #include "test-save-glyph.h"
 
-static void show_glyph_info(void)
+static void show_vglyph_info(void)
 {
 #ifdef VGLYPH_STATIC_BUILD
     printf("=================================================\n");
@@ -76,7 +76,7 @@ void show_object_type(vglyph_object_t* object)
 
 int main(int argc, char* argv[])
 {
-    show_glyph_info();
+    show_vglyph_info();
 
     char* app_name = argv[0];
     char* last = strrchr(app_name, '\\');
