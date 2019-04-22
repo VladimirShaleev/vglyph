@@ -594,6 +594,21 @@ vglyph_surface_set_pixel(vglyph_surface_t* surface,
                          vglyph_sint32_t y,
                          const vglyph_color_t* color);
 
+vglyph_public void
+vglyph_surface_get_glyph_extent(vglyph_surface_t* surface,
+                                vglyph_glyph_t* glyph,
+                                vglyph_float32_t pt,
+                                const vglyph_point_t* position,
+                                const vglyph_point_t* origin,
+                                const vglyph_point_t* scale,
+                                vglyph_float32_t angle,
+                                vglyph_bool_t vertical_layout,
+                                vglyph_point_t* bound,
+                                vglyph_point_t* left_bottom,
+                                vglyph_point_t* right_bottom,
+                                vglyph_point_t* left_top,
+                                vglyph_point_t* right_top);
+
 vglyph_public vglyph_bool_t
 vglyph_surface_draw_glyph(vglyph_surface_t* surface,
                           vglyph_glyph_t* glyph,
@@ -620,6 +635,22 @@ vglyph_surface_draw_glyph_transform(vglyph_surface_t* surface,
                                     vglyph_glyph_t* glyph,
                                     const vglyph_color_t* color,
                                     const vglyph_transform_t* transform);
+
+vglyph_public void
+vglyph_surface_get_text_extent(vglyph_surface_t* surface,
+                               vglyph_face_t* face,
+                               vglyph_float32_t pt,
+                               const char* text,
+                               const vglyph_point_t* position,
+                               const vglyph_point_t* origin,
+                               const vglyph_point_t* scale,
+                               vglyph_float32_t angle,
+                               vglyph_bool_t vertical_layout,
+                               vglyph_point_t* bound,
+                               vglyph_point_t* left_bottom,
+                               vglyph_point_t* right_bottom,
+                               vglyph_point_t* left_top,
+                               vglyph_point_t* right_top);
 
 vglyph_public vglyph_bool_t
 vglyph_surface_draw_text(vglyph_surface_t* surface,
