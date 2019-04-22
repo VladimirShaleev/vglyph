@@ -351,9 +351,6 @@ vglyph_surface_draw_text(vglyph_surface_t* surface,
         if (position)
             current_position = *position;
 
-        if (origin)
-            _vglyph_point_sub(&current_position, &current_position, origin);
-
         while (*text != '\0')
         {
             vglyph_glyph_t* glyph = _vglyph_face_find_glyph(face, *text, NULL);
@@ -365,7 +362,7 @@ vglyph_surface_draw_text(vglyph_surface_t* surface,
                                              pt, 
                                              color, 
                                              &current_position, 
-                                             0,
+                                             origin,
                                              scale, 
                                              angle, 
                                              vertical_layout,
