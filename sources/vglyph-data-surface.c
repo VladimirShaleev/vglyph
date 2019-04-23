@@ -1171,9 +1171,9 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     }
 
     if (vertical_layout)
-        _vglyph_matrix_translate(&mat, &mat, -glyph->vertical_bearing_x * width, -glyph->vertical_bearing_y * height);
+        _vglyph_matrix_translate(&mat, &mat, -glyph->vertical_bearing_x * width, 0.0f);
     else
-        _vglyph_matrix_translate(&mat, &mat, -glyph->horizontal_bearing_x * width, -glyph->horizontal_bearing_y * height);
+        _vglyph_matrix_translate(&mat, &mat, 0.0f, -glyph->horizontal_bearing_y * height);
 
     vglyph_matrix_t transform = mat;
     vglyph_point_t  point_origin;
@@ -1189,7 +1189,7 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     }
 
     if (vertical_layout)
-        point_origin.y += (glyph->vertical_advance - glyph->vertical_bearing_y) * size_glyph;
+        point_origin.y += glyph->vertical_advance * size_glyph;
 
     _vglyph_matrix_translate(&mat,
                              &mat,
@@ -1200,12 +1200,12 @@ _vglyph_data_surface_draw_glyph(vglyph_surface_t* surface,
     {
         if (vertical_layout)
         {
-            next_position->x = glyph->vertical_bearing_x * surface->width * multisampling;
-            next_position->y = (glyph->vertical_bearing_y - glyph->vertical_advance) * surface->height * multisampling;
+            next_position->x =  glyph->vertical_bearing_x * surface->width  * multisampling;
+            next_position->y = -glyph->vertical_advance   * surface->height * multisampling;
         }
         else
         {
-            next_position->x = (glyph->horizontal_advance - glyph->horizontal_bearing_x) * surface->width * multisampling;
+            next_position->x = glyph->horizontal_advance   * surface->width  * multisampling;
             next_position->y = glyph->horizontal_bearing_y * surface->height * multisampling;
         }
 
